@@ -10,6 +10,7 @@ if ($pos !== false) {
 $currentPage = basename($currentPath);
 $userManagementPages = ['User_management.php', 'Students.php', 'Owners.php', 'Admins.php', 'Blocked_Users.php', 'verification_requests.php'];
 $propertyManagementPages = ['All_property.php', 'pending_approval.php', 'approved_properties.php', 'rejected_properties.php', 'reported_properties.php', 'property_categories.php'];
+$bookingManagementPages = ['all_bookings.php', 'pending.php', 'approved.php', 'completed.php', 'cancelled.php', 'booking_history.php'];
 ?>
 <aside class="sidebar" id="sidebar">
 
@@ -52,15 +53,17 @@ $propertyManagementPages = ['All_property.php', 'pending_approval.php', 'approve
 
     <!-- Booking Management -->
     <div class="nav-section">Booking Management</div>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Booking Management/all_bookings.php" class="nav-item <?php echo in_array($currentPage, $bookingManagementPages) ? 'active' : ''; ?>">
       <i class="fas fa-calendar-check"></i>
       <span>All Bookings</span>
       <span class="badge-nav">342</span>
     </a>
     <div class="nav-sub">
-      <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Pending</span><span class="badge-nav danger">28</span></a>
-      <a href="#" class="nav-item"><i class="fas fa-check-circle"></i><span>Active</span><span class="badge-nav">45</span></a>
-      <a href="#" class="nav-item"><i class="fas fa-check-double"></i><span>Completed</span><span class="badge-nav">269</span></a>
+      <a href="<?php echo $adminRoot; ?>/Booking Management/pending.php" class="nav-item <?php echo $currentPage == 'pending.php' ? 'active' : ''; ?>"><i class="fas fa-clock"></i><span>Pending</span><span class="badge-nav danger">28</span></a>
+      <a href="<?php echo $adminRoot; ?>/Booking Management/approved.php" class="nav-item <?php echo $currentPage == 'approved.php' ? 'active' : ''; ?>"><i class="fas fa-check-circle"></i><span>Approved</span><span class="badge-nav">45</span></a>
+      <a href="<?php echo $adminRoot; ?>/Booking Management/completed.php" class="nav-item <?php echo $currentPage == 'completed.php' ? 'active' : ''; ?>"><i class="fas fa-check-double"></i><span>Completed</span><span class="badge-nav">269</span></a>
+      <a href="<?php echo $adminRoot; ?>/Booking Management/cancelled.php" class="nav-item <?php echo $currentPage == 'cancelled.php' ? 'active' : ''; ?>"><i class="fas fa-times-circle"></i><span>Cancelled</span></a>
+      <a href="<?php echo $adminRoot; ?>/Booking Management/booking_history.php" class="nav-item <?php echo $currentPage == 'booking_history.php' ? 'active' : ''; ?>"><i class="fas fa-history"></i><span>Booking History</span></a>
     </div>
 
     <!-- Financial -->
