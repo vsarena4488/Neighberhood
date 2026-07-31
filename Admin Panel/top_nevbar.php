@@ -6,20 +6,6 @@
     <button class="toggle-sidebar" id="toggleSidebar" aria-label="Toggle sidebar">
       <i class="fas fa-bars"></i>
     </button>
-    <div class="breadcrumb-custom">
-      <a href="index.php" class="home-link"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-      <?php if (isset($breadcrumb) && !empty($breadcrumb)): ?>
-        <span class="separator"><i class="fas fa-chevron-right"></i></span>
-        <span class="current"><?php echo htmlspecialchars($breadcrumb); ?></span>
-      <?php endif; ?>
-    </div>
-  </div>
-
-  <div class="navbar-center">
-    <div class="search-bar">
-      <i class="fas fa-search"></i>
-      <input type="text" placeholder="Search across platform..." aria-label="Search" />
-    </div>
   </div>
 
   <div class="navbar-right">

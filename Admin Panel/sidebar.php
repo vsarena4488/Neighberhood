@@ -12,15 +12,16 @@
 
     <!-- User Management -->
     <div class="nav-section">User Management</div>
-    <a href="#" class="nav-item">
+    <a href="All_Users.php" class="nav-item">
       <i class="fas fa-users"></i>
       <span>All Users</span>
       <span class="badge-nav">156</span>
     </a>
     <div class="nav-sub">
-      <a href="#" class="nav-item"><i class="fas fa-user-graduate"></i><span>Students</span><span class="badge-nav">98</span></a>
-      <a href="#" class="nav-item"><i class="fas fa-user-tie"></i><span>Owners</span><span class="badge-nav">42</span></a>
-      <a href="#" class="nav-item"><i class="fas fa-user-slash"></i><span>Blocked Users</span><span class="badge-nav danger">16</span></a>
+      <a href="Students.php" class="nav-item"><i class="fas fa-user-graduate"></i><span>Students</span><span class="badge-nav">98</span></a>
+      <a href="Owners.php" class="nav-item"><i class="fas fa-user-tie"></i><span>Owners</span><span class="badge-nav">42</span></a>
+      <a href="Admins.php" class="nav-item"><i class="fas fa-user"></i><span>Admins</span><span class="badge-nav danger">16</span></a>
+      <a href="Blocked_Users.php" class="nav-item"><i class="fas fa-user-slash"></i><span>Blocked Users</span><span class="badge-nav danger">16</span></a>
     </div>
 
     <!-- Property Management -->
@@ -156,7 +157,7 @@
 
 
 
- 
+
 
   .sidebar-nav {
     flex: 1;
@@ -284,7 +285,7 @@
     width: var(--nn-sidebar-collapsed);
   }
 
-  
+
   .sidebar.collapsed .nav-item span:not(.badge-nav),
   .sidebar.collapsed .nav-section,
   .sidebar.collapsed .nav-sub {
@@ -309,7 +310,7 @@
     padding: 0.1rem 0.4rem;
   }
 
- 
+
 
   .sidebar::-webkit-scrollbar {
     width: 4px;
@@ -360,7 +361,7 @@
       transform: translateX(0);
     }
 
-    
+
     .sidebar.collapsed .nav-item span:not(.badge-nav),
     .sidebar.collapsed .nav-section,
     .sidebar.collapsed .nav-sub {
@@ -377,6 +378,6 @@
       margin-right: 12px;
     }
 
-  
+
   }
 </style>
