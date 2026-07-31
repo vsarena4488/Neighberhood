@@ -1,7 +1,7 @@
 <?php
-// users/owner_verification.php - Owner Verification Requests
-$breadcrumb = 'User Management > Owner Verification';
-$pageTitle = 'Owner Verification Requests';
+// properties/rejected_properties.php - Rejected Properties
+$breadcrumb = 'Property Management > Rejected Properties';
+$pageTitle = 'Rejected Properties';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +9,7 @@ $pageTitle = 'Owner Verification Requests';
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NeighborNest · Owner Verification</title>
+    <title>NeighborNest · Rejected Properties</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,6 +18,7 @@ $pageTitle = 'Owner Verification Requests';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
+        /* Include all styles from all_properties.php - compact version */
         :root {
             --nn-primary: #1E3A5F;
             --nn-primary-light: #4F46E5;
@@ -111,7 +112,6 @@ $pageTitle = 'Owner Verification Requests';
             margin: 0;
         }
 
-        /* Stats Cards */
         .stat-card {
             background: var(--nn-white);
             border-radius: var(--nn-radius-sm);
@@ -130,7 +130,7 @@ $pageTitle = 'Owner Verification Requests';
         .stat-card .stat-number {
             font-size: 1.8rem;
             font-weight: 800;
-            color: var(--nn-primary);
+            color: var(--nn-danger);
             line-height: 1.1;
         }
 
@@ -142,11 +142,10 @@ $pageTitle = 'Owner Verification Requests';
 
         .stat-card .stat-icon {
             font-size: 1.6rem;
-            color: var(--nn-primary-light);
+            color: var(--nn-danger);
             opacity: 0.6;
         }
 
-        /* Table */
         .table-nn {
             background: var(--nn-white);
             border-radius: var(--nn-radius-sm);
@@ -177,42 +176,11 @@ $pageTitle = 'Owner Verification Requests';
             background: var(--nn-bg-light);
         }
 
-        /* Status Badges */
-        .status-badge {
-            font-size: 0.65rem;
-            font-weight: 600;
-            padding: 0.15rem 0.7rem;
-            border-radius: 40px;
-            display: inline-block;
-            white-space: nowrap;
-        }
-
-        .status-badge.pending {
-            background: #FEF3C7;
-            color: #D97706;
-        }
-
-        .status-badge.verified {
-            background: #D1FAE5;
-            color: #059669;
-        }
-
         .status-badge.rejected {
             background: #FEE2E2;
             color: #DC2626;
         }
 
-        .status-badge.reviewing {
-            background: #DBEAFE;
-            color: #2563EB;
-        }
-
-        .status-badge.document-missing {
-            background: #FCE4EC;
-            color: #DC2626;
-        }
-
-        /* Buttons */
         .btn-sm-nn {
             padding: 0.2rem 0.8rem;
             font-size: 0.7rem;
@@ -277,28 +245,6 @@ $pageTitle = 'Owner Verification Requests';
             color: #fff;
         }
 
-        .btn-nn-outline {
-            background: transparent;
-            border: 1.5px solid var(--nn-primary-light);
-            color: var(--nn-primary-light);
-            padding: 0.5rem 1.5rem;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: var(--nn-transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-nn-outline:hover {
-            background: var(--nn-primary-light);
-            color: #fff;
-            transform: translateY(-3px);
-        }
-
-        /* Filter Section */
         .filter-section {
             background: var(--nn-white);
             border-radius: var(--nn-radius-sm);
@@ -321,62 +267,24 @@ $pageTitle = 'Owner Verification Requests';
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
         }
 
-        /* Document Preview */
-        .document-preview {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+        .property-image-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--nn-border);
         }
 
-        .document-preview .doc-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--nn-lavender);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: var(--nn-primary-light);
-            cursor: pointer;
-            transition: var(--nn-transition);
-        }
-
-        .document-preview .doc-icon:hover {
-            background: var(--nn-primary-light);
-            color: #fff;
-        }
-
-        .document-preview .doc-icon.missing {
-            background: #FEE2E2;
-            color: var(--nn-danger);
-        }
-
-        /* Document Status Badge inside table */
-        .doc-status {
-            font-size: 0.6rem;
-            font-weight: 600;
-            padding: 0.1rem 0.5rem;
+        .reason-tag {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.6rem;
             border-radius: 40px;
+            background: var(--nn-bg-light);
+            border: 1px solid var(--nn-border);
             display: inline-block;
+            color: var(--nn-text-secondary);
         }
 
-        .doc-status.uploaded {
-            background: #D1FAE5;
-            color: #059669;
-        }
-
-        .doc-status.missing {
-            background: #FEE2E2;
-            color: #DC2626;
-        }
-
-        .doc-status.pending {
-            background: #FEF3C7;
-            color: #D97706;
-        }
-
-        /* Pagination */
         .pagination-custom .page-link {
             color: var(--nn-text-secondary);
             border-color: var(--nn-border);
@@ -389,7 +297,6 @@ $pageTitle = 'Owner Verification Requests';
             color: #fff;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .page-content {
                 padding: 1rem;
@@ -418,7 +325,6 @@ $pageTitle = 'Owner Verification Requests';
             }
         }
 
-        /* Animations */
         .fade-up {
             opacity: 0;
             transform: translateY(20px);
@@ -444,27 +350,6 @@ $pageTitle = 'Owner Verification Requests';
         .delay-4 {
             animation-delay: 0.2s;
         }
-
-        /* Owner badge */
-        .owner-badge {
-            background: #EEF2FF;
-            color: #4F46E5;
-            padding: 0.15rem 0.6rem;
-            border-radius: 40px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .property-count-badge {
-            background: var(--nn-bg-light);
-            color: var(--nn-text-secondary);
-            padding: 0.1rem 0.6rem;
-            border-radius: 40px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-block;
-        }
     </style>
 </head>
 
@@ -482,13 +367,10 @@ $pageTitle = 'Owner Verification Requests';
             <div class="page-header fade-up">
                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                     <div>
-                        <h1>🔐 Owner Verification</h1>
-                        <p>Review and verify property owner identity, business, and property ownership documents.</p>
+                        <h1>❌ Rejected Properties</h1>
+                        <p>View property listings that were rejected during the approval process.</p>
                     </div>
-                    <div>
-                        <span class="badge bg-primary me-2" style="font-size:0.8rem;padding:0.4rem 1rem;">12 Pending</span>
-                        <span class="badge bg-success" style="font-size:0.8rem;padding:0.4rem 1rem;">34 Verified Today</span>
-                    </div>
+                    <span class="badge bg-danger" style="font-size:0.8rem;padding:0.4rem 1rem;">24 Rejected</span>
                 </div>
             </div>
 
@@ -498,10 +380,10 @@ $pageTitle = 'Owner Verification Requests';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">12</div>
-                                <div class="stat-label">Pending Verification</div>
+                                <div class="stat-number">24</div>
+                                <div class="stat-label">Total Rejected</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-clock" style="color:var(--nn-amber);"></i></div>
+                            <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
                         </div>
                     </div>
                 </div>
@@ -509,10 +391,10 @@ $pageTitle = 'Owner Verification Requests';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">6</div>
-                                <div class="stat-label">Under Review</div>
+                                <div class="stat-number">12</div>
+                                <div class="stat-label">This Month</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-search" style="color:var(--nn-primary-light);"></i></div>
+                            <div class="stat-icon"><i class="fas fa-calendar-alt" style="color:var(--nn-amber);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -520,10 +402,10 @@ $pageTitle = 'Owner Verification Requests';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">34</div>
-                                <div class="stat-label">Verified (Today)</div>
+                                <div class="stat-number">8</div>
+                                <div class="stat-label">Resubmitted</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-check-circle" style="color:var(--nn-success);"></i></div>
+                            <div class="stat-icon"><i class="fas fa-redo" style="color:var(--nn-primary-light);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -531,10 +413,10 @@ $pageTitle = 'Owner Verification Requests';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">5</div>
-                                <div class="stat-label">Rejected</div>
+                                <div class="stat-number">4</div>
+                                <div class="stat-label">Permanent Reject</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-times-circle" style="color:var(--nn-danger);"></i></div>
+                            <div class="stat-icon"><i class="fas fa-ban" style="color:var(--nn-danger);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -543,27 +425,18 @@ $pageTitle = 'Owner Verification Requests';
             <!-- Filter Section -->
             <div class="filter-section fade-up delay-1">
                 <div class="row g-2 align-items-end">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label small fw-semibold text-secondary-custom">Search</label>
-                        <input type="text" class="form-control" placeholder="Search by name, email, or business..." />
+                        <input type="text" class="form-control" placeholder="Search by name or location..." />
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label small fw-semibold text-secondary-custom">Verification Status</label>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-secondary-custom">Rejection Reason</label>
                         <select class="form-select">
-                            <option value="">All Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="reviewing">Under Review</option>
-                            <option value="verified">Verified</option>
-                            <option value="rejected">Rejected</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label small fw-semibold text-secondary-custom">Document Status</label>
-                        <select class="form-select">
-                            <option value="">All</option>
-                            <option value="all-uploaded">All Uploaded</option>
-                            <option value="partial">Partial Upload</option>
-                            <option value="missing">Missing Docs</option>
+                            <option value="">All Reasons</option>
+                            <option value="incomplete">Incomplete Info</option>
+                            <option value="fake">Fake Listing</option>
+                            <option value="duplicate">Duplicate</option>
+                            <option value="policy">Policy Violation</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -579,156 +452,99 @@ $pageTitle = 'Owner Verification Requests';
                 </div>
             </div>
 
-            <!-- Owner Verification Table -->
+            <!-- Rejected Properties Table -->
             <div class="fade-up delay-2">
                 <div class="table-responsive">
                     <table class="table table-nn mb-0">
                         <thead>
                             <tr>
+                                <th>Property</th>
                                 <th>Owner</th>
-                                <th>Business Name</th>
-                                <th>Properties</th>
-                                <th>Documents</th>
-                                <th>Submitted</th>
-                                <th>Status</th>
+                                <th>Type</th>
+                                <th>Rejected Date</th>
+                                <th>Reason</th>
                                 <th class="text-end">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>
-                                    <span class="fw-medium">Priya Sharma</span><br />
-                                    <span class="text-muted-custom small">priya@example.com</span>
-                                </td>
-                                <td>Green Nest Hostels</td>
-                                <td><span class="property-count-badge">3 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon" title="PAN - Uploaded"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon" title="Property Deed - Uploaded"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon" title="Business License - Uploaded"><i class="fas fa-briefcase"></i></span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=100&h=100&fit=crop" alt="Property" class="property-image-thumb" />
+                                        <div>
+                                            <span class="fw-medium">Lake View Apartments</span><br />
+                                            <span class="text-muted-custom small">Queens, NYC</span>
+                                        </div>
                                     </div>
                                 </td>
-                                <td>Jun 15, 2024</td>
-                                <td><span class="status-badge pending">Pending</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn primary me-1">Review</button>
-                                    <button class="btn-sm-nn success me-1">Verify</button>
-                                    <button class="btn-sm-nn danger">Reject</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Rajesh Verma</span><br />
-                                    <span class="text-muted-custom small">rajesh@example.com</span>
-                                </td>
-                                <td>Verma Realty</td>
-                                <td><span class="property-count-badge">8 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon" title="PAN - Uploaded"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon missing" title="Property Deed - Missing"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon" title="Business License - Uploaded"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
-                                <td>Jun 14, 2024</td>
-                                <td><span class="status-badge reviewing">Reviewing</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn primary me-1">Review</button>
-                                    <button class="btn-sm-nn success me-1">Verify</button>
-                                    <button class="btn-sm-nn danger">Reject</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Amit Singh</span><br />
-                                    <span class="text-muted-custom small">amit@example.com</span>
-                                </td>
-                                <td>Singh PG Homes</td>
-                                <td><span class="property-count-badge">6 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon missing" title="PAN - Missing"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon" title="Property Deed - Uploaded"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon missing" title="Business License - Missing"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
+                                <td>Amit Verma</td>
+                                <td><span class="badge bg-secondary">Apartment</span></td>
                                 <td>Jun 13, 2024</td>
-                                <td><span class="status-badge pending">Pending</span></td>
+                                <td><span class="reason-tag">Incomplete Documents</span></td>
                                 <td class="text-end">
-                                    <button class="btn-sm-nn primary me-1">Review</button>
-                                    <button class="btn-sm-nn success me-1">Verify</button>
-                                    <button class="btn-sm-nn danger">Reject</button>
+                                    <button class="btn-sm-nn outline me-1">View</button>
+                                    <button class="btn-sm-nn success me-1">Resubmit</button>
+                                    <button class="btn-sm-nn danger">Delete</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="fw-medium">Sara Khan</span><br />
-                                    <span class="text-muted-custom small">sara@example.com</span>
-                                </td>
-                                <td>Khan Apartments</td>
-                                <td><span class="property-count-badge">2 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon" title="PAN - Uploaded"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon" title="Property Deed - Uploaded"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon" title="Business License - Uploaded"><i class="fas fa-briefcase"></i></span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=100&h=100&fit=crop" alt="Property" class="property-image-thumb" />
+                                        <div>
+                                            <span class="fw-medium">Sky PG</span><br />
+                                            <span class="text-muted-custom small">Manhattan, NYC</span>
+                                        </div>
                                     </div>
                                 </td>
+                                <td>Sara Khan</td>
+                                <td><span class="badge bg-secondary">PG</span></td>
                                 <td>Jun 12, 2024</td>
-                                <td><span class="status-badge verified">Verified</span></td>
+                                <td><span class="reason-tag">Fake Images</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
-                                    <span class="text-success small"><i class="fas fa-check-circle"></i> Verified</span>
+                                    <button class="btn-sm-nn outline me-1">Report</button>
+                                    <button class="btn-sm-nn danger">Delete</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="fw-medium">Vikram Reddy</span><br />
-                                    <span class="text-muted-custom small">vikram@example.com</span>
-                                </td>
-                                <td>Reddy Estates</td>
-                                <td><span class="property-count-badge">4 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon" title="PAN - Uploaded"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon missing" title="Property Deed - Missing"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon missing" title="Business License - Missing"><i class="fas fa-briefcase"></i></span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=100&h=100&fit=crop" alt="Property" class="property-image-thumb" />
+                                        <div>
+                                            <span class="fw-medium">Hillside Apartments</span><br />
+                                            <span class="text-muted-custom small">Brooklyn, NYC</span>
+                                        </div>
                                     </div>
                                 </td>
-                                <td>Jun 11, 2024</td>
-                                <td><span class="status-badge rejected">Rejected</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn outline me-1">View</button>
-                                    <span class="text-danger small">Insufficient docs</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Meera Patel</span><br />
-                                    <span class="text-muted-custom small">meera@example.com</span>
-                                </td>
-                                <td>Patel Hostels</td>
-                                <td><span class="property-count-badge">1 Property</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon missing" title="PAN - Missing"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon missing" title="Property Deed - Missing"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon missing" title="Business License - Missing"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
+                                <td>Vikram Singh</td>
+                                <td><span class="badge bg-secondary">Apartment</span></td>
                                 <td>Jun 10, 2024</td>
-                                <td><span class="status-badge document-missing">Docs Missing</span></td>
+                                <td><span class="reason-tag">Policy Violation</span></td>
                                 <td class="text-end">
-                                    <button class="btn-sm-nn primary me-1">Review</button>
-                                    <button class="btn-sm-nn outline me-1">Remind</button>
-                                    <button class="btn-sm-nn danger">Reject</button>
+                                    <button class="btn-sm-nn outline me-1">View</button>
+                                    <button class="btn-sm-nn outline me-1">Review</button>
+                                    <button class="btn-sm-nn danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=100&h=100&fit=crop" alt="Property" class="property-image-thumb" />
+                                        <div>
+                                            <span class="fw-medium">Riverside Hostel</span><br />
+                                            <span class="text-muted-custom small">Brooklyn, NYC</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Meera Patel</td>
+                                <td><span class="badge bg-secondary">Hostel</span></td>
+                                <td>Jun 8, 2024</td>
+                                <td><span class="reason-tag">Duplicate Listing</span></td>
+                                <td class="text-end">
+                                    <button class="btn-sm-nn outline me-1">View</button>
+                                    <button class="btn-sm-nn success me-1">Resubmit</button>
+                                    <button class="btn-sm-nn danger">Delete</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -737,7 +553,7 @@ $pageTitle = 'Owner Verification Requests';
 
                 <!-- Pagination -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
-                    <span class="small text-secondary-custom">Showing 1-6 of 42 owner verification requests</span>
+                    <span class="small text-secondary-custom">Showing 1-4 of 24 rejected properties</span>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-custom mb-0">
                             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
@@ -745,18 +561,11 @@ $pageTitle = 'Owner Verification Requests';
                             <li class="page-item"><a class="page-link" href="#">2</a></li>
                             <li class="page-item"><a class="page-link" href="#">3</a></li>
                             <li class="page-item"><a class="page-link" href="#">4</a></li>
+                            <li class="page-item"><a class="page-link" href="#">5</a></li>
+                            <li class="page-item"><a class="page-link" href="#">6</a></li>
                             <li class="page-item"><a class="page-link" href="#">Next</a></li>
                         </ul>
                     </nav>
-                </div>
-
-                <!-- Document Legend -->
-                <div class="mt-3 p-3 bg-white rounded-3 border d-flex flex-wrap align-items-center gap-3" style="border-color:var(--nn-border);">
-                    <span class="small fw-semibold text-secondary-custom">Document Status:</span>
-                    <span class="d-flex align-items-center gap-1"><span class="doc-icon" style="width:20px;height:20px;font-size:0.6rem;background:var(--nn-lavender);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-check" style="color:var(--nn-success);"></i></span> <span class="small">Uploaded</span></span>
-                    <span class="d-flex align-items-center gap-1"><span class="doc-icon" style="width:20px;height:20px;font-size:0.6rem;background:#FEE2E2;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-times" style="color:var(--nn-danger);"></i></span> <span class="small">Missing</span></span>
-                    <span class="d-flex align-items-center gap-1"><span class="doc-icon" style="width:20px;height:20px;font-size:0.6rem;background:#FEF3C7;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-clock" style="color:var(--nn-amber);"></i></span> <span class="small">Pending</span></span>
-                    <span class="text-muted-custom small ms-2">Hover over document icons to see details</span>
                 </div>
             </div>
 
@@ -832,7 +641,7 @@ $pageTitle = 'Owner Verification Requests';
 
             window.addEventListener('resize', handleResize);
 
-            console.log('NeighborNest · Owner Verification loaded.');
+            console.log('NeighborNest · Rejected Properties loaded.');
         })();
     </script>
 

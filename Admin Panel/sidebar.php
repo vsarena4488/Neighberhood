@@ -9,6 +9,7 @@ if ($pos !== false) {
 }
 $currentPage = basename($currentPath);
 $userManagementPages = ['User_management.php', 'Students.php', 'Owners.php', 'Admins.php', 'Blocked_Users.php', 'verification_requests.php'];
+$propertyManagementPages = ['All_property.php', 'pending_approval.php', 'approved_properties.php', 'rejected_properties.php', 'reported_properties.php', 'property_categories.php'];
 ?>
 <aside class="sidebar" id="sidebar">
 
@@ -36,16 +37,17 @@ $userManagementPages = ['User_management.php', 'Students.php', 'Owners.php', 'Ad
 
     <!-- Property Management -->
     <div class="nav-section">Property Management</div>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Property Management/All_property.php" class="nav-item <?php echo in_array($currentPage, $propertyManagementPages) ? 'active' : ''; ?>">
       <i class="fas fa-building"></i>
       <span>All Properties</span>
       <span class="badge-nav">234</span>
     </a>
     <div class="nav-sub">
-      <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Pending Approval</span><span class="badge-nav danger">12</span></a>
-      <a href="#" class="nav-item"><i class="fas fa-check-circle"></i><span>Approved</span><span class="badge-nav">198</span></a>
-      <a href="#" class="nav-item"><i class="fas fa-times-circle"></i><span>Rejected</span><span class="badge-nav">24</span></a>
-      <a href="#" class="nav-item"><i class="fas fa-flag"></i><span>Reported</span><span class="badge-nav danger">5</span></a>
+      <a href="<?php echo $adminRoot; ?>/Property Management/pending_approval.php" class="nav-item <?php echo $currentPage == 'pending_approval.php' ? 'active' : ''; ?>"><i class="fas fa-clock"></i><span>Pending Approval</span><span class="badge-nav danger">12</span></a>
+      <a href="<?php echo $adminRoot; ?>/Property Management/approved_properties.php" class="nav-item <?php echo $currentPage == 'approved_properties.php' ? 'active' : ''; ?>"><i class="fas fa-check-circle"></i><span>Approved</span><span class="badge-nav">198</span></a>
+      <a href="<?php echo $adminRoot; ?>/Property Management/rejected_properties.php" class="nav-item <?php echo $currentPage == 'rejected_properties.php' ? 'active' : ''; ?>"><i class="fas fa-times-circle"></i><span>Rejected</span><span class="badge-nav">24</span></a>
+      <a href="<?php echo $adminRoot; ?>/Property Management/reported_properties.php" class="nav-item <?php echo $currentPage == 'reported_properties.php' ? 'active' : ''; ?>"><i class="fas fa-flag"></i><span>Reported</span><span class="badge-nav danger">5</span></a>
+      <a href="<?php echo $adminRoot; ?>/Property Management/property_categories.php" class="nav-item <?php echo $currentPage == 'property_categories.php' ? 'active' : ''; ?>"><i class="fas fa-tags"></i><span>Property Categories</span></a>
     </div>
 
     <!-- Booking Management -->
