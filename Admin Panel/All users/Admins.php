@@ -390,11 +390,11 @@ $pageTitle = 'Admins Management';
 
 <body>
 
-    <?php include 'sidebar.php'; ?>
+    <?php include '../sidebar.php'; ?>
 
     <div class="main-content" id="mainContent">
 
-        <?php include 'top_nevbar.php'; ?>
+        <?php include '../top_nevbar.php'; ?>
 
         <div class="page-content">
 

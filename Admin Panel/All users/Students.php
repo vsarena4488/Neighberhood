@@ -1,7 +1,7 @@
 <?php
-// users/property_owners.php - Property Owners Management
-$breadcrumb = 'User Management > Property Owners';
-$pageTitle = 'Property Owners Management';
+// users/students.php - Students Management
+$breadcrumb = 'User Management > Students';
+$pageTitle = 'Students Management';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +9,7 @@ $pageTitle = 'Property Owners Management';
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NeighborNest · Property Owners</title>
+    <title>NeighborNest · Students</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,7 +18,7 @@ $pageTitle = 'Property Owners Management';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
-        /* Include all styles from students.php above */
+        /* Include all styles from index.php above */
         :root {
             --nn-primary: #1E3A5F;
             --nn-primary-light: #4F46E5;
@@ -89,6 +89,7 @@ $pageTitle = 'Property Owners Management';
             .main-content {
                 margin-left: 0 !important;
             }
+
             .main-content.expanded {
                 margin-left: 0 !important;
             }
@@ -326,15 +327,19 @@ $pageTitle = 'Property Owners Management';
             .page-content {
                 padding: 1rem;
             }
+
             .page-header h1 {
                 font-size: 1.3rem;
             }
+
             .stat-card .stat-number {
                 font-size: 1.4rem;
             }
+
             .table-nn {
                 font-size: 0.75rem;
             }
+
             .table-nn thead th,
             .table-nn tbody td {
                 padding: 0.4rem 0.6rem;
@@ -345,6 +350,7 @@ $pageTitle = 'Property Owners Management';
             .stat-card {
                 padding: 0.8rem;
             }
+
             .stat-card .stat-number {
                 font-size: 1.2rem;
             }
@@ -366,12 +372,15 @@ $pageTitle = 'Property Owners Management';
         .delay-1 {
             animation-delay: 0.05s;
         }
+
         .delay-2 {
             animation-delay: 0.1s;
         }
+
         .delay-3 {
             animation-delay: 0.15s;
         }
+
         .delay-4 {
             animation-delay: 0.2s;
         }
@@ -380,11 +389,11 @@ $pageTitle = 'Property Owners Management';
 
 <body>
 
-    <?php include 'sidebar.php'; ?>
+    <?php include '../sidebar.php'; ?>
 
     <div class="main-content" id="mainContent">
 
-        <?php include 'top_nevbar.php'; ?>
+        <?php include '../top_nevbar.php'; ?>
 
         <div class="page-content">
 
@@ -392,10 +401,10 @@ $pageTitle = 'Property Owners Management';
             <div class="page-header fade-up">
                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                     <div>
-                        <h1> Property Owners</h1>
-                        <p>Manage all property owner accounts and their verification status.</p>
+                        <h1> Students</h1>
+                        <p>Manage all student accounts registered on the platform.</p>
                     </div>
-                    <a href="#" class="btn-nn-primary"><i class="fas fa-user-plus me-1"></i> Add Owner</a>
+                    <a href="#" class="btn-nn-primary"><i class="fas fa-user-plus me-1"></i> Add Student</a>
                 </div>
             </div>
 
@@ -405,10 +414,10 @@ $pageTitle = 'Property Owners Management';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">42</div>
-                                <div class="stat-label">Total Owners</div>
+                                <div class="stat-number">156</div>
+                                <div class="stat-label">Total Students</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
                         </div>
                     </div>
                 </div>
@@ -416,7 +425,7 @@ $pageTitle = 'Property Owners Management';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">35</div>
+                                <div class="stat-number">132</div>
                                 <div class="stat-label">Active</div>
                             </div>
                             <div class="stat-icon"><i class="fas fa-check-circle" style="color:var(--nn-success);"></i></div>
@@ -427,10 +436,10 @@ $pageTitle = 'Property Owners Management';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">7</div>
-                                <div class="stat-label">Pending Verification</div>
+                                <div class="stat-number">24</div>
+                                <div class="stat-label">Inactive</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-clock" style="color:var(--nn-amber);"></i></div>
+                            <div class="stat-icon"><i class="fas fa-user-slash" style="color:var(--nn-danger);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -438,10 +447,10 @@ $pageTitle = 'Property Owners Management';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">234</div>
-                                <div class="stat-label">Total Properties</div>
+                                <div class="stat-number">8</div>
+                                <div class="stat-label">Pending Verification</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-building"></i></div>
+                            <div class="stat-icon"><i class="fas fa-clock" style="color:var(--nn-amber);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -452,25 +461,24 @@ $pageTitle = 'Property Owners Management';
                 <div class="row g-2 align-items-end">
                     <div class="col-md-4">
                         <label class="form-label small fw-semibold text-secondary-custom">Search</label>
-                        <input type="text" class="form-control" placeholder="Search by name, email, or business..." />
+                        <input type="text" class="form-control" placeholder="Search by name, email, or phone..." />
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label small fw-semibold text-secondary-custom">Verification Status</label>
+                        <label class="form-label small fw-semibold text-secondary-custom">Status</label>
                         <select class="form-select">
                             <option value="">All Status</option>
-                            <option value="verified">Verified</option>
-                            <option value="pending">Pending</option>
-                            <option value="rejected">Rejected</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending Verification</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label small fw-semibold text-secondary-custom">Property Type</label>
+                        <label class="form-label small fw-semibold text-secondary-custom">College</label>
                         <select class="form-select">
-                            <option value="">All Types</option>
-                            <option value="pg">PG</option>
-                            <option value="hostel">Hostel</option>
-                            <option value="apartment">Apartment</option>
-                            <option value="house">House</option>
+                            <option value="">All Colleges</option>
+                            <option value="1">Delhi University</option>
+                            <option value="2">Mumbai University</option>
+                            <option value="3">Bangalore University</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -479,28 +487,28 @@ $pageTitle = 'Property Owners Management';
                 </div>
             </div>
 
-            <!-- Property Owners Table -->
+            <!-- Students Table -->
             <div class="fade-up delay-2">
                 <div class="table-responsive">
                     <table class="table table-nn mb-0">
                         <thead>
                             <tr>
-                                <th>Owner</th>
+                                <th>Student</th>
                                 <th>Email</th>
-                                <th>Business Name</th>
-                                <th>Properties</th>
-                                <th>Verified</th>
+                                <th>Phone</th>
+                                <th>College</th>
+                                <th>Joined</th>
                                 <th>Status</th>
                                 <th class="text-end">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><span class="fw-medium">Rajesh Sharma</span></td>
-                                <td>rajesh@example.com</td>
-                                <td>Sharma PG Services</td>
-                                <td>5</td>
-                                <td><span class="status-badge verified">Verified</span></td>
+                                <td><span class="fw-medium">Ravi Kumar</span></td>
+                                <td>ravi@example.com</td>
+                                <td>+91 98765 43210</td>
+                                <td>Delhi University</td>
+                                <td>Jun 15, 2024</td>
                                 <td><span class="status-badge active">Active</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
@@ -509,50 +517,50 @@ $pageTitle = 'Property Owners Management';
                                 </td>
                             </tr>
                             <tr>
-                                <td><span class="fw-medium">Priya Patel</span></td>
+                                <td><span class="fw-medium">Priya Sharma</span></td>
                                 <td>priya@example.com</td>
-                                <td>Green Nest Hostels</td>
-                                <td>3</td>
+                                <td>+91 98765 43211</td>
+                                <td>Mumbai University</td>
+                                <td>Jun 14, 2024</td>
                                 <td><span class="status-badge pending">Pending</span></td>
-                                <td><span class="status-badge active">Active</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
                                     <button class="btn-sm-nn success me-1">Verify</button>
-                                    <button class="btn-sm-nn outline me-1">Edit</button>
+                                    <button class="btn-sm-nn danger">Block</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td><span class="fw-medium">Amit Verma</span></td>
+                                <td><span class="fw-medium">Amit Singh</span></td>
                                 <td>amit@example.com</td>
-                                <td>Verma Realty</td>
-                                <td>8</td>
-                                <td><span class="status-badge verified">Verified</span></td>
-                                <td><span class="status-badge inactive">Inactive</span></td>
+                                <td>+91 98765 43212</td>
+                                <td>Bangalore University</td>
+                                <td>Jun 13, 2024</td>
+                                <td><span class="status-badge active">Active</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn success me-1">Activate</button>
-                                    <button class="btn-sm-nn outline me-1">Edit</button>
+                                    <button class="btn-sm-nn primary me-1">Edit</button>
+                                    <button class="btn-sm-nn danger">Block</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td><span class="fw-medium">Sara Khan</span></td>
                                 <td>sara@example.com</td>
-                                <td>Khan Apartments</td>
-                                <td>2</td>
-                                <td><span class="status-badge rejected" style="background:#FEE2E2;color:#DC2626;">Rejected</span></td>
+                                <td>+91 98765 43213</td>
+                                <td>Delhi University</td>
+                                <td>Jun 12, 2024</td>
                                 <td><span class="status-badge inactive">Inactive</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn outline me-1">Edit</button>
-                                    <button class="btn-sm-nn danger">Delete</button>
+                                    <button class="btn-sm-nn success me-1">Activate</button>
+                                    <button class="btn-sm-nn outline">Edit</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td><span class="fw-medium">Vikram Singh</span></td>
+                                <td><span class="fw-medium">Vikram Reddy</span></td>
                                 <td>vikram@example.com</td>
-                                <td>Singh PG Homes</td>
-                                <td>6</td>
-                                <td><span class="status-badge verified">Verified</span></td>
+                                <td>+91 98765 43214</td>
+                                <td>Mumbai University</td>
+                                <td>Jun 11, 2024</td>
                                 <td><span class="status-badge active">Active</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
@@ -566,7 +574,7 @@ $pageTitle = 'Property Owners Management';
 
                 <!-- Pagination -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
-                    <span class="small text-secondary-custom">Showing 1-5 of 42 property owners</span>
+                    <span class="small text-secondary-custom">Showing 1-5 of 156 students</span>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-custom mb-0">
                             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
@@ -652,7 +660,7 @@ $pageTitle = 'Property Owners Management';
 
             window.addEventListener('resize', handleResize);
 
-            console.log('NeighborNest · Property Owners Management loaded.');
+            console.log('NeighborNest · Students Management loaded.');
         })();
     </script>
 

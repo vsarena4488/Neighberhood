@@ -1,7 +1,7 @@
 <?php
-// users/index.php - User Management Overview
-$breadcrumb = 'User Management';
-$pageTitle = 'User Management';
+// users/blocked_users.php - Blocked Users
+$breadcrumb = 'User Management > Blocked Users';
+$pageTitle = 'Blocked Users';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,23 +9,16 @@ $pageTitle = 'User Management';
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NeighborNest · User Management</title>
+    <title>NeighborNest · Blocked Users</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
-        /* ===================================================
-           MAIN LAYOUT STYLES
-           =================================================== */
+        /* Include all styles from students.php */
         :root {
             --nn-primary: #1E3A5F;
             --nn-primary-light: #4F46E5;
@@ -121,7 +114,6 @@ $pageTitle = 'User Management';
             margin: 0;
         }
 
-        /* Stats Cards */
         .stat-card {
             background: var(--nn-white);
             border-radius: var(--nn-radius-sm);
@@ -130,18 +122,17 @@ $pageTitle = 'User Management';
             border: 1px solid var(--nn-border);
             transition: var(--nn-transition);
             height: 100%;
-            cursor: pointer;
         }
 
         .stat-card:hover {
             box-shadow: var(--nn-shadow-hover);
-            transform: translateY(-4px);
+            transform: translateY(-2px);
         }
 
         .stat-card .stat-number {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
-            color: var(--nn-primary);
+            color: var(--nn-danger);
             line-height: 1.1;
         }
 
@@ -152,67 +143,11 @@ $pageTitle = 'User Management';
         }
 
         .stat-card .stat-icon {
-            font-size: 1.8rem;
-            color: var(--nn-primary-light);
-            opacity: 0.5;
+            font-size: 1.6rem;
+            color: var(--nn-danger);
+            opacity: 0.6;
         }
 
-        .stat-card .stat-link {
-            font-size: 0.7rem;
-            color: var(--nn-primary-light);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .stat-card .stat-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Quick Access Grid */
-        .quick-access-card {
-            background: var(--nn-white);
-            border-radius: var(--nn-radius-sm);
-            padding: 1.5rem;
-            box-shadow: var(--nn-shadow);
-            border: 1px solid var(--nn-border);
-            transition: var(--nn-transition);
-            text-decoration: none;
-            color: var(--nn-text-primary);
-            display: block;
-            height: 100%;
-            text-align: center;
-        }
-
-        .quick-access-card:hover {
-            box-shadow: var(--nn-shadow-hover);
-            transform: translateY(-4px);
-        }
-
-        .quick-access-card .icon-wrap {
-            width: 56px;
-            height: 56px;
-            background: var(--nn-lavender);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.75rem;
-            font-size: 1.5rem;
-            color: var(--nn-primary-light);
-        }
-
-        .quick-access-card h6 {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .quick-access-card .count {
-            font-size: 0.75rem;
-            color: var(--nn-text-secondary);
-        }
-
-        /* Table */
         .table-nn {
             background: var(--nn-white);
             border-radius: var(--nn-radius-sm);
@@ -252,22 +187,17 @@ $pageTitle = 'User Management';
             white-space: nowrap;
         }
 
-        .status-badge.active {
-            background: #D1FAE5;
-            color: #059669;
-        }
-
-        .status-badge.inactive {
+        .status-badge.blocked {
             background: #FEE2E2;
             color: #DC2626;
         }
 
-        .status-badge.pending {
+        .status-badge.permanent {
             background: #FEF3C7;
             color: #D97706;
         }
 
-        .status-badge.verified {
+        .status-badge.temporary {
             background: #DBEAFE;
             color: #2563EB;
         }
@@ -310,24 +240,93 @@ $pageTitle = 'User Management';
             background: var(--nn-bg-light);
         }
 
-        /* Responsive */
+        .btn-nn-primary {
+            background: var(--nn-gradient);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--nn-transition);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.25);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-nn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(79, 70, 229, 0.35);
+            color: #fff;
+        }
+
+        .btn-nn-outline {
+            background: transparent;
+            border: 1.5px solid var(--nn-primary-light);
+            color: var(--nn-primary-light);
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--nn-transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-nn-outline:hover {
+            background: var(--nn-primary-light);
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .filter-section {
+            background: var(--nn-white);
+            border-radius: var(--nn-radius-sm);
+            padding: 1rem 1.2rem;
+            box-shadow: var(--nn-shadow);
+            border: 1px solid var(--nn-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-section .form-control,
+        .filter-section .form-select {
+            font-size: 0.85rem;
+            border-radius: 8px;
+            border-color: var(--nn-border);
+        }
+
+        .filter-section .form-control:focus,
+        .filter-section .form-select:focus {
+            border-color: var(--nn-primary-light);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+        }
+
+        .reason-tag {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.6rem;
+            border-radius: 40px;
+            background: var(--nn-bg-light);
+            border: 1px solid var(--nn-border);
+            display: inline-block;
+        }
+
         @media (max-width: 768px) {
             .page-content {
                 padding: 1rem;
             }
-
             .page-header h1 {
                 font-size: 1.3rem;
             }
-
             .stat-card .stat-number {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
-
             .table-nn {
                 font-size: 0.75rem;
             }
-
             .table-nn thead th,
             .table-nn tbody td {
                 padding: 0.4rem 0.6rem;
@@ -338,18 +337,7 @@ $pageTitle = 'User Management';
             .stat-card {
                 padding: 0.8rem;
             }
-
             .stat-card .stat-number {
-                font-size: 1.2rem;
-            }
-
-            .quick-access-card {
-                padding: 1rem;
-            }
-
-            .quick-access-card .icon-wrap {
-                width: 44px;
-                height: 44px;
                 font-size: 1.2rem;
             }
         }
@@ -379,162 +367,113 @@ $pageTitle = 'User Management';
         .delay-4 {
             animation-delay: 0.2s;
         }
-        .delay-5 {
-            animation-delay: 0.25s;
-        }
-        .delay-6 {
-            animation-delay: 0.3s;
-        }
     </style>
 </head>
 
 <body>
 
-    <!-- Include Sidebar -->
-    <?php include 'sidebar.php'; ?>
+    <?php include '../sidebar.php'; ?>
 
-    <!-- Main Content Wrapper -->
     <div class="main-content" id="mainContent">
 
-        <!-- Include Top Navbar -->
-        <?php include 'top_nevbar.php'; ?>
+        <?php include '../top_nevbar.php'; ?>
 
-        <!-- ============================================================
-             PAGE CONTENT - User Management Overview
-             ============================================================ -->
         <div class="page-content">
 
             <!-- Page Header -->
             <div class="page-header fade-up">
                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                     <div>
-                        <h1>👥 User Management</h1>
-                        <p>Manage all users across the platform including students, owners, and admins.</p>
+                        <h1>🚫 Blocked Users</h1>
+                        <p>View and manage all users who have been blocked from the platform.</p>
                     </div>
-                    <a href="#" class="btn btn-nn-primary"><i class="fas fa-user-plus me-1"></i> Add New User</a>
+                    <div>
+                        <span class="badge bg-danger me-2" style="font-size:0.8rem;padding:0.4rem 1rem;">16 Blocked</span>
+                        <span class="badge bg-warning text-dark" style="font-size:0.8rem;padding:0.4rem 1rem;">5 Temporary</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Stats Cards -->
             <div class="row g-3 g-md-4 mb-4">
                 <div class="col-6 col-md-3 fade-up delay-1">
-                    <a href="students.php" class="text-decoration-none">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="stat-number">156</div>
-                                    <div class="stat-label">Total Students</div>
-                                </div>
-                                <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="stat-number">16</div>
+                                <div class="stat-label">Total Blocked</div>
                             </div>
-                            <div class="mt-2">
-                                <span class="stat-link">View All →</span>
-                            </div>
+                            <div class="stat-icon"><i class="fas fa-user-slash"></i></div>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 <div class="col-6 col-md-3 fade-up delay-2">
-                    <a href="property_owners.php" class="text-decoration-none">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="stat-number">42</div>
-                                    <div class="stat-label">Property Owners</div>
-                                </div>
-                                <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="stat-number">11</div>
+                                <div class="stat-label">Permanent</div>
                             </div>
-                            <div class="mt-2">
-                                <span class="stat-link">View All →</span>
-                            </div>
+                            <div class="stat-icon"><i class="fas fa-ban" style="color:var(--nn-danger);"></i></div>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 <div class="col-6 col-md-3 fade-up delay-3">
-                    <a href="admins.php" class="text-decoration-none">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="stat-number">5</div>
-                                    <div class="stat-label">Admins</div>
-                                </div>
-                                <div class="stat-icon"><i class="fas fa-user-shield"></i></div>
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="stat-number">5</div>
+                                <div class="stat-label">Temporary</div>
                             </div>
-                            <div class="mt-2">
-                                <span class="stat-link">View All →</span>
-                            </div>
+                            <div class="stat-icon"><i class="fas fa-clock" style="color:var(--nn-amber);"></i></div>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 <div class="col-6 col-md-3 fade-up delay-4">
-                    <a href="verification_requests.php" class="text-decoration-none">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="stat-number">12</div>
-                                    <div class="stat-label">Verification Requests</div>
-                                </div>
-                                <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="stat-number">8</div>
+                                <div class="stat-label">Appeals Pending</div>
                             </div>
-                            <div class="mt-2">
-                                <span class="stat-link text-warning">Pending Review →</span>
-                            </div>
+                            <div class="stat-icon"><i class="fas fa-gavel" style="color:var(--nn-primary-light);"></i></div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Quick Access Grid -->
-            <div class="row g-3 g-md-4 mb-4">
-                <div class="col-6 col-md-4 col-lg-2 fade-up delay-1">
-                    <a href="students.php" class="quick-access-card">
-                        <div class="icon-wrap"><i class="fas fa-user-graduate"></i></div>
-                        <h6>Students</h6>
-                        <span class="count">156 active</span>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2 fade-up delay-2">
-                    <a href="property_owners.php" class="quick-access-card">
-                        <div class="icon-wrap"><i class="fas fa-user-tie"></i></div>
-                        <h6>Property Owners</h6>
-                        <span class="count">42 active</span>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2 fade-up delay-3">
-                    <a href="admins.php" class="quick-access-card">
-                        <div class="icon-wrap"><i class="fas fa-user-shield"></i></div>
-                        <h6>Admins</h6>
-                        <span class="count">5 total</span>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2 fade-up delay-4">
-                    <a href="verification_requests.php" class="quick-access-card">
-                        <div class="icon-wrap"><i class="fas fa-shield-alt"></i></div>
-                        <h6>Verification</h6>
-                        <span class="count text-warning">12 pending</span>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2 fade-up delay-5">
-                    <a href="blocked_users.php" class="quick-access-card">
-                        <div class="icon-wrap"><i class="fas fa-user-slash"></i></div>
-                        <h6>Blocked Users</h6>
-                        <span class="count text-danger">16 blocked</span>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2 fade-up delay-6">
-                    <a href="user_activity.php" class="quick-access-card">
-                        <div class="icon-wrap"><i class="fas fa-clock"></i></div>
-                        <h6>User Activity</h6>
-                        <span class="count">Last 24 hours</span>
-                    </a>
+            <!-- Filter Section -->
+            <div class="filter-section fade-up delay-1">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold text-secondary-custom">Search</label>
+                        <input type="text" class="form-control" placeholder="Search by name or email..." />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-secondary-custom">Block Type</label>
+                        <select class="form-select">
+                            <option value="">All Types</option>
+                            <option value="permanent">Permanent</option>
+                            <option value="temporary">Temporary</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-secondary-custom">Role</label>
+                        <select class="form-select">
+                            <option value="">All Roles</option>
+                            <option value="student">Student</option>
+                            <option value="owner">Owner</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn-nn-primary w-100"><i class="fas fa-search me-1"></i> Filter</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Recent Users Table -->
-            <div class="fade-up delay-3">
-                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-                    <h5 class="fw-bold mb-0">📋 Recent Users</h5>
-                    <a href="students.php" class="text-primary text-decoration-none small fw-semibold">View All <i class="fas fa-arrow-right ms-1"></i></a>
-                </div>
+            <!-- Blocked Users Table -->
+            <div class="fade-up delay-2">
                 <div class="table-responsive">
                     <table class="table table-nn mb-0">
                         <thead>
@@ -542,69 +481,103 @@ $pageTitle = 'User Management';
                                 <th>User</th>
                                 <th>Email</th>
                                 <th>Role</th>
-                                <th>Joined</th>
-                                <th>Status</th>
-                                <th class="text-end">Action</th>
+                                <th>Block Type</th>
+                                <th>Reason</th>
+                                <th>Blocked On</th>
+                                <th class="text-end">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><span class="fw-medium">Ravi Kumar</span></td>
-                                <td>ravi@example.com</td>
+                                <td><span class="fw-medium">Rahul Gupta</span></td>
+                                <td>rahul@example.com</td>
                                 <td><span class="badge bg-primary">Student</span></td>
+                                <td><span class="status-badge permanent">Permanent</span></td>
+                                <td><span class="reason-tag">Spam/Fake Listings</span></td>
                                 <td>Jun 15, 2024</td>
-                                <td><span class="status-badge active">Active</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn danger">Block</button>
+                                    <button class="btn-sm-nn success">Unblock</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td><span class="fw-medium">Priya Shah</span></td>
+                                <td><span class="fw-medium">Priya Mehta</span></td>
                                 <td>priya@example.com</td>
                                 <td><span class="badge bg-success">Owner</span></td>
+                                <td><span class="status-badge temporary">Temporary</span></td>
+                                <td><span class="reason-tag">Payment Dispute</span></td>
                                 <td>Jun 14, 2024</td>
-                                <td><span class="status-badge pending">Pending</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn success me-1">Verify</button>
+                                    <button class="btn-sm-nn success me-1">Unblock</button>
+                                    <button class="btn-sm-nn danger">Make Permanent</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td><span class="fw-medium">Amit Singh</span></td>
                                 <td>amit@example.com</td>
-                                <td><span class="badge bg-danger">Admin</span></td>
+                                <td><span class="badge bg-success">Owner</span></td>
+                                <td><span class="status-badge permanent">Permanent</span></td>
+                                <td><span class="reason-tag">Multiple Complaints</span></td>
                                 <td>Jun 13, 2024</td>
-                                <td><span class="status-badge active">Active</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn outline">Edit</button>
+                                    <button class="btn-sm-nn outline me-1">Review</button>
+                                    <button class="btn-sm-nn success">Unblock</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td><span class="fw-medium">Sara Khan</span></td>
                                 <td>sara@example.com</td>
-                                <td><span class="badge bg-success">Owner</span></td>
+                                <td><span class="badge bg-primary">Student</span></td>
+                                <td><span class="status-badge temporary">Temporary</span></td>
+                                <td><span class="reason-tag">Suspicious Activity</span></td>
                                 <td>Jun 12, 2024</td>
-                                <td><span class="status-badge inactive">Blocked</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
+                                    <button class="btn-sm-nn success me-1">Unblock</button>
+                                    <button class="btn-sm-nn danger">Make Permanent</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="fw-medium">Vikram Reddy</span></td>
+                                <td>vikram@example.com</td>
+                                <td><span class="badge bg-success">Owner</span></td>
+                                <td><span class="status-badge permanent">Permanent</span></td>
+                                <td><span class="reason-tag">Fraudulent Listings</span></td>
+                                <td>Jun 11, 2024</td>
+                                <td class="text-end">
+                                    <button class="btn-sm-nn outline me-1">View</button>
+                                    <button class="btn-sm-nn outline me-1">Review</button>
                                     <button class="btn-sm-nn success">Unblock</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Pagination -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
+                    <span class="small text-secondary-custom">Showing 1-5 of 16 blocked users</span>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-custom mb-0">
+                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">4</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
 
-        </div><!-- /page-content -->
-    </div><!-- /main-content -->
+        </div>
+    </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
     </script>
 
-    <!-- Custom JS -->
     <script>
         (function() {
             'use strict';
@@ -671,7 +644,7 @@ $pageTitle = 'User Management';
 
             window.addEventListener('resize', handleResize);
 
-            console.log('NeighborNest · User Management loaded.');
+            console.log('NeighborNest · Blocked Users loaded.');
         })();
     </script>
 

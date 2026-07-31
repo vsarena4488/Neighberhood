@@ -1,27 +1,37 @@
 <?php
 // sidebar.php - Admin Panel Sidebar Navigation
+$currentPath = $_SERVER['PHP_SELF'];
+$adminDirName = '/Admin Panel';
+$adminRoot = $currentPath;
+$pos = strpos($currentPath, $adminDirName);
+if ($pos !== false) {
+  $adminRoot = substr($currentPath, 0, $pos + strlen($adminDirName));
+}
+$currentPage = basename($currentPath);
+$userManagementPages = ['User_management.php', 'Students.php', 'Owners.php', 'Admins.php', 'Blocked_Users.php', 'verification_requests.php'];
 ?>
 <aside class="sidebar" id="sidebar">
 
   <nav class="sidebar-nav">
     <!-- Dashboard -->
-    <a href="index.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' || basename($_SERVER['PHP_SELF']) == '') ? 'active' : ''; ?>">
+    <a href="<?php echo $adminRoot; ?>/index.php" class="nav-item <?php echo ($currentPage == 'index.php' || $currentPage == '') ? 'active' : ''; ?>">
       <i class="fas fa-th-large"></i>
       <span>Dashboard</span>
     </a>
 
     <!-- User Management -->
     <div class="nav-section">User Management</div>
-    <a href="All_Users.php" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/All users/User_management.php" class="nav-item <?php echo in_array($currentPage, $userManagementPages) ? 'active' : ''; ?>">
       <i class="fas fa-users"></i>
       <span>All Users</span>
       <span class="badge-nav">156</span>
     </a>
     <div class="nav-sub">
-      <a href="Students.php" class="nav-item"><i class="fas fa-user-graduate"></i><span>Students</span><span class="badge-nav">98</span></a>
-      <a href="Owners.php" class="nav-item"><i class="fas fa-user-tie"></i><span>Owners</span><span class="badge-nav">42</span></a>
-      <a href="Admins.php" class="nav-item"><i class="fas fa-user"></i><span>Admins</span><span class="badge-nav danger">16</span></a>
-      <a href="Blocked_Users.php" class="nav-item"><i class="fas fa-user-slash"></i><span>Blocked Users</span><span class="badge-nav danger">16</span></a>
+      <a href="<?php echo $adminRoot; ?>/All users/Students.php" class="nav-item <?php echo $currentPage == 'Students.php' ? 'active' : ''; ?>"><i class="fas fa-user-graduate"></i><span>Students</span><span class="badge-nav">98</span></a>
+      <a href="<?php echo $adminRoot; ?>/All users/Owners.php" class="nav-item <?php echo $currentPage == 'Owners.php' ? 'active' : ''; ?>"><i class="fas fa-user-tie"></i><span>Owners</span><span class="badge-nav">42</span></a>
+      <a href="<?php echo $adminRoot; ?>/All users/Admins.php" class="nav-item <?php echo $currentPage == 'Admins.php' ? 'active' : ''; ?>"><i class="fas fa-user"></i><span>Admins</span><span class="badge-nav danger">16</span></a>
+      <a href="<?php echo $adminRoot; ?>/All users/Blocked_Users.php" class="nav-item <?php echo $currentPage == 'Blocked_Users.php' ? 'active' : ''; ?>"><i class="fas fa-user-slash"></i><span>Blocked Users</span><span class="badge-nav danger">16</span></a>
+      <a href="<?php echo $adminRoot; ?>/All users/verification_requests.php" class="nav-item <?php echo $currentPage == 'verification_requests.php' ? 'active' : ''; ?>"><i class="fas fa-user-check"></i><span>Verification Requests</span></a>
     </div>
 
     <!-- Property Management -->

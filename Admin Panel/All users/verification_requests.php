@@ -1,7 +1,7 @@
 <?php
-// users/students.php - Students Management
-$breadcrumb = 'User Management > Students';
-$pageTitle = 'Students Management';
+// users/verification_requests.php - Verification Requests
+$breadcrumb = 'User Management > Verification Requests';
+$pageTitle = 'Verification Requests';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +9,7 @@ $pageTitle = 'Students Management';
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NeighborNest · Students</title>
+    <title>NeighborNest · Verification Requests</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,7 +18,7 @@ $pageTitle = 'Students Management';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
-        /* Include all styles from index.php above */
+        /* Include all styles from students.php */
         :root {
             --nn-primary: #1E3A5F;
             --nn-primary-light: #4F46E5;
@@ -188,22 +188,22 @@ $pageTitle = 'Students Management';
             white-space: nowrap;
         }
 
-        .status-badge.active {
-            background: #D1FAE5;
-            color: #059669;
-        }
-
-        .status-badge.inactive {
-            background: #FEE2E2;
-            color: #DC2626;
-        }
-
         .status-badge.pending {
             background: #FEF3C7;
             color: #D97706;
         }
 
         .status-badge.verified {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .status-badge.rejected {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .status-badge.reviewing {
             background: #DBEAFE;
             color: #2563EB;
         }
@@ -311,15 +311,28 @@ $pageTitle = 'Students Management';
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
         }
 
-        .pagination-custom .page-link {
-            color: var(--nn-text-secondary);
-            border-color: var(--nn-border);
-            font-size: 0.8rem;
+        .document-preview {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .pagination-custom .page-item.active .page-link {
+        .document-preview .doc-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--nn-lavender);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: var(--nn-primary-light);
+            cursor: pointer;
+            transition: var(--nn-transition);
+        }
+
+        .document-preview .doc-icon:hover {
             background: var(--nn-primary-light);
-            border-color: var(--nn-primary-light);
             color: #fff;
         }
 
@@ -389,11 +402,11 @@ $pageTitle = 'Students Management';
 
 <body>
 
-    <?php include 'sidebar.php'; ?>
+    <?php include '../sidebar.php'; ?>
 
     <div class="main-content" id="mainContent">
 
-        <?php include 'top_nevbar.php'; ?>
+        <?php include '../top_nevbar.php'; ?>
 
         <div class="page-content">
 
@@ -401,10 +414,13 @@ $pageTitle = 'Students Management';
             <div class="page-header fade-up">
                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                     <div>
-                        <h1> Students</h1>
-                        <p>Manage all student accounts registered on the platform.</p>
+                        <h1>🔐 Verification Requests</h1>
+                        <p>Review and verify user identity and property ownership documents.</p>
                     </div>
-                    <a href="#" class="btn-nn-primary"><i class="fas fa-user-plus me-1"></i> Add Student</a>
+                    <div>
+                        <span class="badge bg-primary me-2" style="font-size:0.8rem;padding:0.4rem 1rem;">12 Pending</span>
+                        <span class="badge bg-success" style="font-size:0.8rem;padding:0.4rem 1rem;">45 Verified Today</span>
+                    </div>
                 </div>
             </div>
 
@@ -414,10 +430,10 @@ $pageTitle = 'Students Management';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">156</div>
-                                <div class="stat-label">Total Students</div>
+                                <div class="stat-number">12</div>
+                                <div class="stat-label">Pending</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-icon"><i class="fas fa-clock" style="color:var(--nn-amber);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -425,10 +441,10 @@ $pageTitle = 'Students Management';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">132</div>
-                                <div class="stat-label">Active</div>
+                                <div class="stat-number">8</div>
+                                <div class="stat-label">Under Review</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-check-circle" style="color:var(--nn-success);"></i></div>
+                            <div class="stat-icon"><i class="fas fa-search" style="color:var(--nn-primary-light);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -436,10 +452,10 @@ $pageTitle = 'Students Management';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">24</div>
-                                <div class="stat-label">Inactive</div>
+                                <div class="stat-number">45</div>
+                                <div class="stat-label">Verified (Today)</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-user-slash" style="color:var(--nn-danger);"></i></div>
+                            <div class="stat-icon"><i class="fas fa-check-circle" style="color:var(--nn-success);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -447,10 +463,10 @@ $pageTitle = 'Students Management';
                     <div class="stat-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <div class="stat-number">8</div>
-                                <div class="stat-label">Pending Verification</div>
+                                <div class="stat-number">3</div>
+                                <div class="stat-label">Rejected</div>
                             </div>
-                            <div class="stat-icon"><i class="fas fa-clock" style="color:var(--nn-amber);"></i></div>
+                            <div class="stat-icon"><i class="fas fa-times-circle" style="color:var(--nn-danger);"></i></div>
                         </div>
                     </div>
                 </div>
@@ -459,113 +475,149 @@ $pageTitle = 'Students Management';
             <!-- Filter Section -->
             <div class="filter-section fade-up delay-1">
                 <div class="row g-2 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label small fw-semibold text-secondary-custom">Search</label>
-                        <input type="text" class="form-control" placeholder="Search by name, email, or phone..." />
+                        <input type="text" class="form-control" placeholder="Search by name or email..." />
                     </div>
                     <div class="col-md-3">
                         <label class="form-label small fw-semibold text-secondary-custom">Status</label>
                         <select class="form-select">
                             <option value="">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="pending">Pending Verification</option>
+                            <option value="pending">Pending</option>
+                            <option value="reviewing">Under Review</option>
+                            <option value="verified">Verified</option>
+                            <option value="rejected">Rejected</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label small fw-semibold text-secondary-custom">College</label>
+                        <label class="form-label small fw-semibold text-secondary-custom">Verification Type</label>
                         <select class="form-select">
-                            <option value="">All Colleges</option>
-                            <option value="1">Delhi University</option>
-                            <option value="2">Mumbai University</option>
-                            <option value="3">Bangalore University</option>
+                            <option value="">All Types</option>
+                            <option value="identity">Identity Proof</option>
+                            <option value="property">Property Proof</option>
+                            <option value="both">Both</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <button class="btn-nn-primary w-100"><i class="fas fa-search me-1"></i> Filter</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Students Table -->
+            <!-- Verification Requests Table -->
             <div class="fade-up delay-2">
                 <div class="table-responsive">
                     <table class="table table-nn mb-0">
                         <thead>
                             <tr>
-                                <th>Student</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>College</th>
-                                <th>Joined</th>
+                                <th>User</th>
+                                <th>Type</th>
+                                <th>Documents</th>
+                                <th>Submitted</th>
                                 <th>Status</th>
                                 <th class="text-end">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><span class="fw-medium">Ravi Kumar</span></td>
-                                <td>ravi@example.com</td>
-                                <td>+91 98765 43210</td>
-                                <td>Delhi University</td>
-                                <td>Jun 15, 2024</td>
-                                <td><span class="status-badge active">Active</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn primary me-1">Edit</button>
-                                    <button class="btn-sm-nn danger">Block</button>
+                                <td>
+                                    <span class="fw-medium">Priya Sharma</span><br />
+                                    <span class="text-muted-custom small">priya@example.com</span>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td><span class="fw-medium">Priya Sharma</span></td>
-                                <td>priya@example.com</td>
-                                <td>+91 98765 43211</td>
-                                <td>Mumbai University</td>
-                                <td>Jun 14, 2024</td>
+                                <td><span class="badge bg-success">Owner</span></td>
+                                <td>
+                                    <div class="document-preview">
+                                        <span class="doc-icon" title="Aadhaar"><i class="fas fa-id-card"></i></span>
+                                        <span class="doc-icon" title="PAN"><i class="fas fa-file-alt"></i></span>
+                                        <span class="doc-icon" title="Property Deed"><i class="fas fa-home"></i></span>
+                                    </div>
+                                </td>
+                                <td>Jun 15, 2024</td>
                                 <td><span class="status-badge pending">Pending</span></td>
                                 <td class="text-end">
-                                    <button class="btn-sm-nn outline me-1">View</button>
+                                    <button class="btn-sm-nn primary me-1">Review</button>
                                     <button class="btn-sm-nn success me-1">Verify</button>
-                                    <button class="btn-sm-nn danger">Block</button>
+                                    <button class="btn-sm-nn danger">Reject</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td><span class="fw-medium">Amit Singh</span></td>
-                                <td>amit@example.com</td>
-                                <td>+91 98765 43212</td>
-                                <td>Bangalore University</td>
+                                <td>
+                                    <span class="fw-medium">Amit Verma</span><br />
+                                    <span class="text-muted-custom small">amit@example.com</span>
+                                </td>
+                                <td><span class="badge bg-success">Owner</span></td>
+                                <td>
+                                    <div class="document-preview">
+                                        <span class="doc-icon" title="Aadhaar"><i class="fas fa-id-card"></i></span>
+                                        <span class="doc-icon" title="Business License"><i class="fas fa-briefcase"></i></span>
+                                    </div>
+                                </td>
+                                <td>Jun 14, 2024</td>
+                                <td><span class="status-badge reviewing">Reviewing</span></td>
+                                <td class="text-end">
+                                    <button class="btn-sm-nn primary me-1">Review</button>
+                                    <button class="btn-sm-nn success me-1">Verify</button>
+                                    <button class="btn-sm-nn danger">Reject</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="fw-medium">Ravi Kumar</span><br />
+                                    <span class="text-muted-custom small">ravi@example.com</span>
+                                </td>
+                                <td><span class="badge bg-primary">Student</span></td>
+                                <td>
+                                    <div class="document-preview">
+                                        <span class="doc-icon" title="Aadhaar"><i class="fas fa-id-card"></i></span>
+                                        <span class="doc-icon" title="Student ID"><i class="fas fa-graduation-cap"></i></span>
+                                    </div>
+                                </td>
                                 <td>Jun 13, 2024</td>
-                                <td><span class="status-badge active">Active</span></td>
+                                <td><span class="status-badge pending">Pending</span></td>
                                 <td class="text-end">
-                                    <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn primary me-1">Edit</button>
-                                    <button class="btn-sm-nn danger">Block</button>
+                                    <button class="btn-sm-nn primary me-1">Review</button>
+                                    <button class="btn-sm-nn success me-1">Verify</button>
+                                    <button class="btn-sm-nn danger">Reject</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td><span class="fw-medium">Sara Khan</span></td>
-                                <td>sara@example.com</td>
-                                <td>+91 98765 43213</td>
-                                <td>Delhi University</td>
+                                <td>
+                                    <span class="fw-medium">Sara Khan</span><br />
+                                    <span class="text-muted-custom small">sara@example.com</span>
+                                </td>
+                                <td><span class="badge bg-success">Owner</span></td>
+                                <td>
+                                    <div class="document-preview">
+                                        <span class="doc-icon" title="Aadhaar"><i class="fas fa-id-card"></i></span>
+                                        <span class="doc-icon" title="PAN"><i class="fas fa-file-alt"></i></span>
+                                        <span class="doc-icon" title="Property Photos"><i class="fas fa-camera"></i></span>
+                                        <span class="doc-icon" title="Rental Agreement"><i class="fas fa-file-signature"></i></span>
+                                    </div>
+                                </td>
                                 <td>Jun 12, 2024</td>
-                                <td><span class="status-badge inactive">Inactive</span></td>
+                                <td><span class="status-badge verified">Verified</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn success me-1">Activate</button>
-                                    <button class="btn-sm-nn outline">Edit</button>
+                                    <span class="text-success small">✓ Verified</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td><span class="fw-medium">Vikram Reddy</span></td>
-                                <td>vikram@example.com</td>
-                                <td>+91 98765 43214</td>
-                                <td>Mumbai University</td>
+                                <td>
+                                    <span class="fw-medium">Vikram Reddy</span><br />
+                                    <span class="text-muted-custom small">vikram@example.com</span>
+                                </td>
+                                <td><span class="badge bg-success">Owner</span></td>
+                                <td>
+                                    <div class="document-preview">
+                                        <span class="doc-icon" title="Aadhaar"><i class="fas fa-id-card"></i></span>
+                                        <span class="doc-icon" title="Property Deed"><i class="fas fa-home"></i></span>
+                                    </div>
+                                </td>
                                 <td>Jun 11, 2024</td>
-                                <td><span class="status-badge active">Active</span></td>
+                                <td><span class="status-badge rejected">Rejected</span></td>
                                 <td class="text-end">
                                     <button class="btn-sm-nn outline me-1">View</button>
-                                    <button class="btn-sm-nn primary me-1">Edit</button>
-                                    <button class="btn-sm-nn danger">Block</button>
+                                    <span class="text-danger small">Insufficient docs</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -574,7 +626,7 @@ $pageTitle = 'Students Management';
 
                 <!-- Pagination -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
-                    <span class="small text-secondary-custom">Showing 1-5 of 156 students</span>
+                    <span class="small text-secondary-custom">Showing 1-5 of 68 verification requests</span>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-custom mb-0">
                             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
@@ -660,7 +712,7 @@ $pageTitle = 'Students Management';
 
             window.addEventListener('resize', handleResize);
 
-            console.log('NeighborNest · Students Management loaded.');
+            console.log('NeighborNest · Verification Requests loaded.');
         })();
     </script>
 
