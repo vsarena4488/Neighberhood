@@ -961,8 +961,8 @@
           <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
         </ul>
         <div class="d-flex align-items-center gap-2">
-          <a href="#" class="btn btn-nn-outline btn-sm px-4">Login</a>
-          <a href="#" class="btn btn-nn-primary btn-sm px-4">Sign Up</a>
+          <a href="login.php" class="btn btn-nn-outline btn-sm px-4">Login</a>
+          <a href="register.php" class="btn btn-nn-primary btn-sm px-4">Sign Up</a>
         </div>
       </div>
     </div>
@@ -991,8 +991,8 @@
           </div>
 
           <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
-            <a href="#" class="btn btn-nn-primary">Browse Homes</a>
-            <a href="#" class="btn btn-nn-outline">Learn More</a>
+            <a href="#properties" class="btn btn-nn-primary">Browse Homes</a>
+            <a href="register.php" class="btn btn-nn-outline">Get Started</a>
           </div>
 
           <!-- social proof -->
