@@ -348,6 +348,15 @@
       font-weight: 400;
     }
 
+    .hero-search input:-webkit-autofill,
+    .hero-search input:-webkit-autofill:hover,
+    .hero-search input:-webkit-autofill:focus,
+    .hero-search input:-webkit-autofill:active {
+      -webkit-text-fill-color: var(--nn-text-primary) !important;
+      -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
     .hero-search input::placeholder {
       color: var(--nn-text-secondary);
       opacity: 0.7;
@@ -675,43 +684,63 @@
     }
 
     .newsletter-wrap .input-group {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.18);
       border-radius: 80px;
-      padding: 4px;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     }
 
-    .newsletter-wrap .input-group input {
-      background: transparent;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      color: #fff;
-      font-weight: 400;
+    .newsletter-wrap .input-group .form-control {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #ffffff !important;
+      padding: 0.8rem 1.5rem !important;
+      font-size: 0.95rem;
     }
 
-    .newsletter-wrap .input-group input::placeholder {
-      color: rgba(255, 255, 255, 0.7);
+    .newsletter-wrap .input-group .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.75) !important;
     }
 
-    .newsletter-wrap .input-group input:focus {
-      outline: none;
-      box-shadow: none;
+    .newsletter-wrap .input-group .form-control:focus {
+      background: transparent !important;
+      box-shadow: none !important;
+      color: #ffffff !important;
+    }
+
+    /* Override browser autofill background (Fixes user screenshot issue) */
+    .newsletter-wrap .input-group .form-control:-webkit-autofill,
+    .newsletter-wrap .input-group .form-control:-webkit-autofill:hover,
+    .newsletter-wrap .input-group .form-control:-webkit-autofill:focus,
+    .newsletter-wrap .input-group .form-control:-webkit-autofill:active {
+      -webkit-text-fill-color: #ffffff !important;
+      -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.18) inset !important;
+      transition: background-color 5000s ease-in-out 0s;
+      border-radius: 60px !important;
     }
 
     .newsletter-wrap .input-group button {
       background: var(--nn-white);
       border: none;
       border-radius: 60px;
-      padding: 0.6rem 2rem;
+      padding: 0.75rem 2.2rem;
       font-weight: 700;
       color: var(--nn-primary);
       transition: var(--nn-transition);
+      white-space: nowrap;
     }
 
     .newsletter-wrap .input-group button:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      transform: scale(1.03);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      background: #ffffff;
+      color: var(--nn-primary-light);
     }
 
     /* footer */
@@ -843,16 +872,21 @@
         flex-direction: column;
         background: transparent;
         border: none;
+        box-shadow: none;
+        padding: 0;
+        gap: 0.75rem;
       }
 
-      .newsletter-wrap .input-group input {
-        background: rgba(255, 255, 255, 0.12);
-        border-radius: 60px;
-        margin-bottom: 0.5rem;
+      .newsletter-wrap .input-group .form-control {
+        background: rgba(255, 255, 255, 0.18) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 60px !important;
+        width: 100%;
       }
 
       .newsletter-wrap .input-group button {
         width: 100%;
+        border-radius: 60px;
       }
     }
 
@@ -929,9 +963,6 @@
         <div class="d-flex align-items-center gap-2">
           <a href="#" class="btn btn-nn-outline btn-sm px-4">Login</a>
           <a href="#" class="btn btn-nn-primary btn-sm px-4">Sign Up</a>
-          <a href="#" class="btn btn-nn-primary btn-sm px-4 d-none d-lg-inline-flex">
-            <i class="fas fa-compass me-1"></i> Explore
-          </a>
         </div>
       </div>
     </div>
@@ -1088,7 +1119,7 @@
               </div>
               <h5 class="card-title fw-bold">The Grand Residence</h5>
               <p class="text-secondary-custom small"><i class="fas fa-map-pin me-1"></i> Manhattan, NYC</p>
-              <p class="fw-bold text-primary fs-5">$850K - $1.2M</p>
+              <p class="fw-bold text-primary fs-5">₹85 Lakh - ₹1.2 Cr</p>
               <div class="d-flex gap-3 small mb-2">
                 <span><i class="fas fa-bed"></i> 4</span>
                 <span><i class="fas fa-bath"></i> 3.5</span>
@@ -1117,7 +1148,7 @@
               </div>
               <h5 class="card-title fw-bold">Hudson Gardens</h5>
               <p class="text-secondary-custom small"><i class="fas fa-map-pin me-1"></i> Brooklyn, NYC</p>
-              <p class="fw-bold text-primary fs-5">$650K - $950K</p>
+              <p class="fw-bold text-primary fs-5">₹65 Lakh - ₹95 Lakh</p>
               <div class="d-flex gap-3 small mb-2">
                 <span><i class="fas fa-bed"></i> 3</span>
                 <span><i class="fas fa-bath"></i> 2.5</span>
@@ -1146,7 +1177,7 @@
               </div>
               <h5 class="card-title fw-bold">Park Place Residences</h5>
               <p class="text-secondary-custom small"><i class="fas fa-map-pin me-1"></i> Queens, NYC</p>
-              <p class="fw-bold text-primary fs-5">$550K - $780K</p>
+              <p class="fw-bold text-primary fs-5">₹55 Lakh - ₹78 Lakh</p>
               <div class="d-flex gap-3 small mb-2">
                 <span><i class="fas fa-bed"></i> 3</span>
                 <span><i class="fas fa-bath"></i> 2</span>
@@ -1391,10 +1422,12 @@
             <p>Stay updated with new neighborhoods, community events, and exclusive real estate insights.</p>
           </div>
           <div class="col-md-5">
-            <div class="input-group">
-              <input type="email" class="form-control" placeholder="Enter your email address" aria-label="Email" />
-              <button class="btn" type="button">Subscribe</button>
-            </div>
+            <form action="#" method="POST" class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to NeighborNest newsletter!');">
+              <div class="input-group">
+                <input type="email" class="form-control" placeholder="Enter your email address" aria-label="Email" required />
+                <button class="btn" type="submit">Subscribe</button>
+              </div>
+            </form>
             <small class="d-block mt-2 text-white-50"><i class="fas fa-lock me-1"></i> We'll never spam you. Unsubscribe anytime.</small>
           </div>
         </div>
@@ -1446,11 +1479,11 @@
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
         </div>
-        <div class="col-md-6 col-lg-1">
-          <h6>Contact</h6>
-          <a href="#"><i class="fas fa-envelope me-1"></i> info@...</a>
-          <a href="#"><i class="fas fa-phone me-1"></i> +1 (800)</a>
-          <a href="#"><i class="fas fa-map-pin me-1"></i> NYC, USA</a>
+        <div class="col-md-6 col-lg-3">
+          <h6>Contact Us</h6>
+          <a href="mailto:info@neighbornest.com"><i class="fas fa-envelope me-2 text-primary-light"></i> info@neighbornest.com</a>
+          <a href="tel:+919876543210"><i class="fas fa-phone me-2 text-primary-light"></i> +91 98765 43210</a>
+          <a href="#"><i class="fas fa-map-pin me-2 text-primary-light"></i> Mumbai, MH, India</a>
         </div>
       </div>
       <hr class="border-secondary opacity-25 my-4" />
@@ -1510,7 +1543,7 @@
         threshold: 0.3
       });
 
-      const statsSection = document.querySelector('.bg-lavender .stat-number');
+      const statsSection = document.querySelector('.stat-number');
       if (statsSection) {
         observer.observe(statsSection.closest('.row') || statsSection);
       }
@@ -1522,6 +1555,30 @@
           animateCounters();
         }
       }, 1200);
+
+      // ---- nav active link scrollspy ----
+      const sections = document.querySelectorAll('section[id], footer[id]');
+      const navLinks = document.querySelectorAll('.navbar-nn .nav-link');
+
+      window.addEventListener('scroll', () => {
+        let current = '';
+        const scrollPosition = window.scrollY + 120;
+
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+          }
+        });
+      });
 
       // ---- smooth hover for floating cards (optional) ----
       console.log('NeighborNest · Guest Panel loaded.');
