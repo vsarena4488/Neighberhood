@@ -533,19 +533,27 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
                 <?= htmlspecialchars($item['nearby'][0] ?? 'Prime location') ?>
               </div>
 
-              <div class="mt-auto pt-2 border-top d-flex align-items-center justify-content-between">
-                <div>
-                  <span class="extra-small text-secondary-custom d-block" style="line-height: 1;">Monthly Rent</span>
-                  <strong class="text-royal-blue fs-5">₹<?= number_format($item['rent']) ?></strong>
-                  <span class="extra-small text-secondary-custom">/mo</span>
+              <!-- Price & Actions Footer Box -->
+              <div class="mt-auto pt-2.5 border-top">
+                <div class="d-flex align-items-baseline justify-content-between mb-2">
+                  <div>
+                    <span class="extra-small text-secondary-custom d-block lh-1 mb-1">Monthly Rent</span>
+                    <div class="d-flex align-items-baseline gap-1">
+                      <strong class="text-royal-blue fs-5">₹<?= number_format($item['rent']) ?></strong>
+                      <span class="extra-small text-secondary-custom">/month</span>
+                    </div>
+                  </div>
+                  <span class="badge bg-light text-secondary border extra-small px-2 py-1">
+                    Deposit: ₹<?= number_format($item['deposit'] ?? ($item['rent'] * 2)) ?>
+                  </span>
                 </div>
 
-                <div class="d-flex align-items-center gap-2 ms-auto">
-                  <a href="compare.php?add=<?= $item['id'] ?>" class="btn btn-sm btn-light border p-2" title="Compare this property">
+                <div class="d-flex align-items-center gap-2">
+                  <a href="compare.php?add=<?= $item['id'] ?>" class="btn btn-sm btn-light border d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; border-radius: 10px;" title="Compare this property">
                     <i class="fas fa-scale-balanced text-secondary-custom"></i>
                   </a>
-                  <a href="property-details.php?id=<?= $item['id'] ?>" class="btn btn-sm btn-nh-primary px-3">
-                    View Details
+                  <a href="property-details.php?id=<?= $item['id'] ?>" class="btn btn-sm btn-nh-primary flex-grow-1 py-2" style="border-radius: 10px; font-size: 0.82rem;">
+                    <span>View Details</span> <i class="fas fa-arrow-right ms-1"></i>
                   </a>
                 </div>
               </div>
