@@ -6,7 +6,7 @@ if (!isset($currentPage)) {
 }
 
 if (!isset($pageTitle)) {
-  $pageTitle = 'NeighborNest · Student & Tenant Accommodation Portal';
+  $pageTitle = 'NeighborNest Â· Student & Tenant Accommodation Portal';
 }
 
 $user = $_SESSION['user'] ?? [];
@@ -408,6 +408,17 @@ $user = $_SESSION['user'] ?? [];
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--nh-lavender-border);
+    }
+
+    .topbar-profile-btn {
+      min-height: 42px;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      white-space: nowrap;
+    }
+
+    .topbar-profile-btn .topbar-user-avatar {
+      flex-shrink: 0;
     }
 
     /* Mobile Bottom Navigation Bar */

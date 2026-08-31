@@ -9,7 +9,7 @@ $notificationsList = $_SESSION['user_notifications'] ?? [];
 
 <!-- TOP NAVBAR (70px) -->
 <header class="app-topbar">
-  <div class="d-flex align-items-center gap-3">
+  <div class="d-flex align-items-center gap-2 gap-lg-3 flex-shrink-1">
     <!-- Hamburger for Mobile / Tablet -->
     <button class="btn btn-light d-lg-none p-2 rounded-3 border" type="button" id="sidebarToggleBtn" aria-label="Toggle Navigation">
       <i class="fas fa-bars"></i>
@@ -23,7 +23,7 @@ $notificationsList = $_SESSION['user_notifications'] ?? [];
   </div>
 
   <!-- Right Actions -->
-  <div class="d-flex align-items-center gap-2.5">
+  <div class="d-flex align-items-center gap-2 gap-md-3 flex-wrap justify-content-end">
     <!-- Notifications Dropdown -->
     <div class="dropdown">
       <button class="topbar-action-btn" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
@@ -41,7 +41,7 @@ $notificationsList = $_SESSION['user_notifications'] ?? [];
         <div style="max-height: 280px; overflow-y: auto;">
           <?php foreach (array_slice($notificationsList, 0, 3) as $notif): ?>
             <li>
-              <a class="dropdown-item p-3 border-bottom d-flex gap-2.5 align-items-start <?= $notif['unread'] ? 'bg-soft-lavender' : '' ?>" href="<?= $notif['link'] ?>">
+              <a class="dropdown-item p-3 border-bottom d-flex gap-2 align-items-start <?= $notif['unread'] ? 'bg-soft-lavender' : '' ?>" href="<?= $notif['link'] ?>">
                 <div class="p-2 rounded-circle bg-white text-<?= $notif['color'] ?> shadow-sm" style="flex-shrink: 0;">
                   <i class="fas <?= $notif['icon'] ?>"></i>
                 </div>
@@ -78,9 +78,9 @@ $notificationsList = $_SESSION['user_notifications'] ?? [];
 
     <!-- User Profile Menu Dropdown -->
     <div class="dropdown ms-1">
-      <button class="btn btn-light d-flex align-items-center gap-2 p-1.5 pe-3 rounded-pill border bg-white shadow-sm" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-light topbar-profile-btn d-flex align-items-center gap-2 py-1 ps-1 pe-3 rounded-pill border bg-white shadow-sm" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         <img src="<?= htmlspecialchars($user['avatar'] ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80') ?>" alt="<?= htmlspecialchars($user['name'] ?? 'User') ?>" class="topbar-user-avatar" />
-        <div class="text-start d-none d-sm-block">
+        <div class="text-start d-none d-md-block">
           <span class="d-block small fw-bold text-dark lh-1"><?= htmlspecialchars($user['name'] ?? 'Vishal Patel') ?></span>
           <span class="fs-xs text-secondary-custom">Student / Tenant</span>
         </div>
@@ -96,7 +96,9 @@ $notificationsList = $_SESSION['user_notifications'] ?? [];
         <li><a class="dropdown-item rounded-3 small py-2" href="bookings.php"><i class="fas fa-calendar-check me-2 text-primary"></i> My Bookings</a></li>
         <li><a class="dropdown-item rounded-3 small py-2" href="wishlist.php"><i class="fas fa-heart me-2 text-danger"></i> Wishlist</a></li>
         <li><a class="dropdown-item rounded-3 small py-2" href="settings.php"><i class="fas fa-gear me-2 text-secondary"></i> Settings</a></li>
-        <li><hr class="dropdown-divider my-1"></li>
+        <li>
+          <hr class="dropdown-divider my-1">
+        </li>
         <li><a class="dropdown-item rounded-3 small py-2 text-danger" href="../Guest Panel/login.php"><i class="fas fa-arrow-right-from-bracket me-2"></i> Log Out</a></li>
       </ul>
     </div>
