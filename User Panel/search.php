@@ -1,6 +1,6 @@
 <?php
 // search.php - Accommodation Search & Discovery
-$pageTitle = 'Find Accommodation · NeighborNest';
+$pageTitle = 'Find Accommodation - NeighborNest';
 require_once __DIR__ . '/includes/functions.php';
 
 // Initialize wishlist in session if not set
@@ -68,26 +68,26 @@ if ($sortBy === 'price_asc') {
 
   <main class="page-content">
     <!-- Header Title & Stats -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
       <div>
         <h3 class="fw-bold mb-1">Find Student Accommodations</h3>
         <span class="text-secondary-custom small">Search and discover verified PGs, hostels, and flats near your campus with zero brokerage</span>
       </div>
 
       <!-- View Switcher & Mobile Filter Button -->
-      <div class="d-flex align-items-center gap-2 flex-wrap">
+      <div class="d-flex align-items-center gap-2 flex-wrap justify-content-start justify-content-md-end">
         <button class="btn btn-sm btn-nh-outline d-lg-none px-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilterCollapse" aria-expanded="false">
           <i class="fas fa-sliders me-1"></i> Filters
         </button>
 
         <div class="btn-group btn-group-sm bg-white p-1 rounded-pill border shadow-sm" role="group">
-          <button type="button" class="btn btn-sm btn-outline-primary active rounded-pill px-2.5 px-sm-3" id="viewBtnGrid" onclick="switchView('grid')">
+          <button type="button" class="btn btn-sm btn-outline-primary active rounded-pill px-2 px-sm-3" id="viewBtnGrid" onclick="switchView('grid')">
             <i class="fas fa-th-large me-1"></i> Grid
           </button>
-          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 px-sm-3" id="viewBtnList" onclick="switchView('list')">
+          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2 px-sm-3" id="viewBtnList" onclick="switchView('list')">
             <i class="fas fa-list me-1"></i> List
           </button>
-          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 px-sm-3" id="viewBtnMap" onclick="switchView('map')">
+          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2 px-sm-3" id="viewBtnMap" onclick="switchView('map')">
             <i class="fas fa-map-marked-alt me-1"></i> Map
           </button>
         </div>
@@ -139,7 +139,7 @@ if ($sortBy === 'price_asc') {
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <label class="form-label extra-small fw-bold text-secondary mb-0">Max Budget:</label>
-              <span class="fw-bold text-royal-blue small">₹<?= number_format($maxBudget) ?></span>
+              <span class="fw-bold text-royal-blue small">Ã¢â€šÂ¹<?= number_format($maxBudget) ?></span>
             </div>
             <input type="range" name="budget" min="5000" max="40000" step="1000" value="<?= $maxBudget ?>" class="form-range" />
           </div>
@@ -209,9 +209,9 @@ if ($sortBy === 'price_asc') {
             <div class="mb-3">
               <div class="d-flex justify-content-between align-items-center mb-1">
                 <label class="form-label extra-small fw-bold text-secondary mb-0">Max Budget:</label>
-                <span class="fw-bold text-royal-blue small" id="budgetLabel">₹<?= number_format($maxBudget) ?></span>
+                <span class="fw-bold text-royal-blue small" id="budgetLabel">Rs.<?= number_format($maxBudget) ?></span>
               </div>
-              <input type="range" name="budget" min="5000" max="40000" step="1000" value="<?= $maxBudget ?>" class="form-range" oninput="document.getElementById('budgetLabel').innerText = '₹' + parseInt(this.value).toLocaleString();" />
+              <input type="range" name="budget" min="5000" max="40000" step="1000" value="<?= $maxBudget ?>" class="form-range" oninput="document.getElementById('budgetLabel').innerText = 'Rs.' + parseInt(this.value).toLocaleString();" />
             </div>
 
             <!-- Verified Only Toggle -->
@@ -231,13 +231,13 @@ if ($sortBy === 'price_asc') {
       <div class="col-lg-9">
         <!-- Results Bar & Sorting -->
         <div class="card border-0 rounded-4 shadow-sm bg-white p-3 mb-4">
-          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
             <span class="small fw-semibold text-dark">
               Showing <strong class="text-royal-blue"><?= count($filteredProperties) ?></strong> accommodations available
             </span>
 
-            <div class="d-flex align-items-center gap-2">
-              <span class="extra-small text-secondary-custom d-none d-sm-inline">Sort by:</span>
+            <div class="d-flex align-items-center gap-2 flex-wrap justify-content-start justify-content-md-end">
+              <span class="extra-small text-secondary-custom d-none d-sm-inline flex-shrink-0">Sort by:</span>
               <form action="search.php" method="GET" id="sortForm" class="d-inline-block">
                 <?php if (!empty($searchQuery)): ?>
                   <input type="hidden" name="q" value="<?= htmlspecialchars($searchQuery) ?>" />
@@ -324,14 +324,14 @@ if ($sortBy === 'price_asc') {
                       <i class="fas fa-route me-1 text-bright-indigo"></i> <?= htmlspecialchars($item['nearby'][0] ?? 'Close to transit') ?>
                     </div>
 
-                    <div class="mt-auto pt-2 border-top d-flex align-items-center justify-content-between">
+                    <div class="mt-auto pt-2 border-top d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2">
                       <div>
                         <span class="extra-small text-secondary-custom d-block" style="line-height: 1;">Monthly Rent</span>
-                        <strong class="text-royal-blue fs-5">₹<?= number_format($item['rent']) ?></strong>
+                        <strong class="text-royal-blue fs-5">Rs.<?= number_format($item['rent']) ?></strong>
                         <span class="extra-small text-secondary-custom">/mo</span>
                       </div>
 
-                      <div class="d-flex align-items-center gap-1 ms-auto">
+                      <div class="d-flex align-items-center gap-2 ms-sm-auto">
                         <a href="compare.php?add=<?= $item['id'] ?>" class="btn btn-sm btn-light border p-2" title="Compare">
                           <i class="fas fa-scale-balanced text-secondary-custom"></i>
                         </a>
@@ -353,10 +353,10 @@ if ($sortBy === 'price_asc') {
             $genderLabel = ($item['gender'] === 'male_only') ? 'Boys Only' : (($item['gender'] === 'female_only') ? 'Girls Only' : 'Unisex');
             $isWishlisted = in_array($item['id'], $_SESSION['user_wishlist'] ?? []);
           ?>
-            <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden p-3">
-              <div class="row g-3 align-items-center">
+            <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden p-3 p-md-3">
+              <div class="row g-3 align-items-stretch">
                 <div class="col-md-4">
-                  <div class="rounded-3 overflow-hidden position-relative" style="height: 160px;">
+                  <div class="rounded-3 overflow-hidden position-relative h-100" style="min-height: 180px;">
                     <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="w-100 h-100" style="object-fit: cover;" />
                     <span class="badge bg-primary position-absolute top-0 start-0 m-2 small"><?= htmlspecialchars($item['type']) ?></span>
                   </div>
@@ -375,11 +375,11 @@ if ($sortBy === 'price_asc') {
                     <?php endforeach; ?>
                   </div>
                 </div>
-                <div class="col-md-3 text-md-end border-start-md ps-md-3">
+                <div class="col-md-3 text-md-end d-flex flex-column justify-content-between align-items-stretch align-items-md-end gap-2 border-start-md ps-md-3">
                   <span class="extra-small text-secondary-custom d-block">Starting from</span>
-                  <h4 class="fw-bold text-royal-blue mb-1">₹<?= number_format($item['rent']) ?><span class="fs-xs fw-normal text-secondary-custom">/mo</span></h4>
-                  <span class="extra-small text-muted d-block mb-3">Deposit: ₹<?= number_format($item['deposit']) ?></span>
-                  <div class="d-flex flex-column gap-2">
+                  <h4 class="fw-bold text-royal-blue mb-1">Rs.<?= number_format($item['rent']) ?><span class="fs-xs fw-normal text-secondary-custom">/mo</span></h4>
+                  <span class="extra-small text-muted d-block mb-3">Deposit: Rs.<?= number_format($item['deposit']) ?></span>
+                  <div class="d-flex flex-column gap-2 w-100">
                     <a href="property-details.php?id=<?= $item['id'] ?>" class="btn btn-sm btn-nh-primary w-100">View Details</a>
                     <a href="booking-request.php?property_id=<?= $item['id'] ?>" class="btn btn-sm btn-nh-outline w-100">Book Now</a>
                   </div>
@@ -467,7 +467,7 @@ if ($sortBy === 'price_asc') {
         searchLeafletMap = L.map('searchLeafletMap').setView([12.9716, 77.5946], 12);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
-          attribution: '© OpenStreetMap contributors'
+          attribution: 'Ã‚Â© OpenStreetMap contributors'
         }).addTo(searchLeafletMap);
 
         var bounds = [];
@@ -479,7 +479,7 @@ if ($sortBy === 'price_asc') {
             marker.bindPopup(
               '<div style="font-family: sans-serif; min-width: 150px;">' +
               '<strong style="color: #4338CA;">' + p.title + '</strong><br/>' +
-              '<strong>₹' + p.rent.toLocaleString() + '/mo</strong> (' + p.type + ')<br/>' +
+              '<strong>Ã¢â€šÂ¹' + p.rent.toLocaleString() + '/mo</strong> (' + p.type + ')<br/>' +
               '<small class="text-muted">' + p.area + '</small><br/>' +
               '<a href="property-details.php?id=' + p.id + '" style="display:inline-block; margin-top:6px; background:#4F46E5; color:#fff; padding:3px 8px; border-radius:12px; font-size:11px; text-decoration:none;">View Details</a>' +
               '</div>'
