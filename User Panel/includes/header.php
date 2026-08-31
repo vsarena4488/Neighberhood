@@ -906,6 +906,7 @@ $user = $_SESSION['user'] ?? [];
       line-height: 1.3;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       min-height: 42px;
