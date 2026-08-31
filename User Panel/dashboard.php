@@ -313,12 +313,29 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
     }
   }
 
-  .delay-1 { animation-delay: 0.05s; }
-  .delay-2 { animation-delay: 0.1s; }
-  .delay-3 { animation-delay: 0.15s; }
-  .delay-4 { animation-delay: 0.2s; }
-  .delay-5 { animation-delay: 0.25s; }
-  .delay-6 { animation-delay: 0.3s; }
+  .delay-1 {
+    animation-delay: 0.05s;
+  }
+
+  .delay-2 {
+    animation-delay: 0.1s;
+  }
+
+  .delay-3 {
+    animation-delay: 0.15s;
+  }
+
+  .delay-4 {
+    animation-delay: 0.2s;
+  }
+
+  .delay-5 {
+    animation-delay: 0.25s;
+  }
+
+  .delay-6 {
+    animation-delay: 0.3s;
+  }
 </style>
 
 <div class="main-wrapper">
@@ -671,4 +688,4 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
 
   </main>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/footer.php'; ?>
