@@ -135,6 +135,5 @@ require_once __DIR__ . '/includes/sidebar.php';
       </div>
     </form>
   </main>
-</div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

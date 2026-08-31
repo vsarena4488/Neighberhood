@@ -75,6 +75,5 @@ $notifications = $_SESSION['user_notifications'] ?? [];
       <?php endif; ?>
     </div>
   </main>
-</div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

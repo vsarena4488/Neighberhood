@@ -1,6 +1,6 @@
 <?php
 // dashboard.php - User Dashboard
-$pageTitle = 'Dashboard Ã‚Â· NeighborNest User Portal';
+$pageTitle = 'Dashboard · NeighborNest User Portal';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/includes/sidebar.php';
@@ -253,14 +253,6 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
       height: 170px;
     }
 
-    .dashboard-header-card {
-      padding: 1.25rem !important;
-    }
-
-    .dashboard-header-card .display-6 {
-      font-size: 1.5rem !important;
-    }
-
     .badge-status {
       font-size: 0.6rem;
       padding: 0.15rem 0.6rem;
@@ -321,29 +313,12 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
     }
   }
 
-  .delay-1 {
-    animation-delay: 0.05s;
-  }
-
-  .delay-2 {
-    animation-delay: 0.1s;
-  }
-
-  .delay-3 {
-    animation-delay: 0.15s;
-  }
-
-  .delay-4 {
-    animation-delay: 0.2s;
-  }
-
-  .delay-5 {
-    animation-delay: 0.25s;
-  }
-
-  .delay-6 {
-    animation-delay: 0.3s;
-  }
+  .delay-1 { animation-delay: 0.05s; }
+  .delay-2 { animation-delay: 0.1s; }
+  .delay-3 { animation-delay: 0.15s; }
+  .delay-4 { animation-delay: 0.2s; }
+  .delay-5 { animation-delay: 0.25s; }
+  .delay-6 { animation-delay: 0.3s; }
 </style>
 
 <div class="main-wrapper">
@@ -475,7 +450,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
         <h5 class="fw-bold mb-0">Recommended for You</h5>
         <span class="extra-small text-secondary-custom">Handpicked student accommodations near <?= htmlspecialchars($user['college'] ?? 'your college') ?></span>
       </div>
-      <a href="search.php" class="btn btn-sm btn-nh-outline px-3">View All Listings -></a>
+      <a href="search.php" class="btn btn-sm btn-nh-outline px-3">View All Listings -&gt;</a>
     </div>
 
     <div class="row g-4 mb-5 fade-up delay-4">
@@ -544,7 +519,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
               <div class="mt-auto pt-2 border-top d-flex align-items-center justify-content-between">
                 <div>
                   <span class="extra-small text-secondary-custom d-block" style="line-height: 1;">Monthly Rent</span>
-                  <strong class="text-royal-blue fs-5">Rs.<?= number_format($item['rent']) ?></strong>
+                  <strong class="text-royal-blue fs-5">₹<?= number_format($item['rent']) ?></strong>
                   <span class="extra-small text-secondary-custom">/mo</span>
                 </div>
 
@@ -566,7 +541,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
     <!-- ============================================================
          RECENT BOOKINGS & MESSAGES ROW
          ============================================================ -->
-    <div class="row g-4 fade-up delay-5">
+    <div class="row g-4 fade-up delay-5 mb-4">
 
       <!-- RECENT BOOKINGS TABLE -->
       <div class="col-lg-8">
@@ -695,6 +670,5 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
     </div>
 
   </main>
-</div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

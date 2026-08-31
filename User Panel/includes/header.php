@@ -6,7 +6,7 @@ if (!isset($currentPage)) {
 }
 
 if (!isset($pageTitle)) {
-  $pageTitle = 'NeighborNest Â· Student & Tenant Accommodation Portal';
+  $pageTitle = 'NeighborNest · Student & Tenant Accommodation Portal';
 }
 
 $user = $_SESSION['user'] ?? [];

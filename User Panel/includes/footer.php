@@ -1,9 +1,40 @@
 <?php
-// includes/footer.php - Closing Tags, Mobile Nav, JavaScript
+// includes/footer.php - Closing Tags, Page Footer, Mobile Nav, JavaScript
 $currentPage = $currentPage ?? basename($_SERVER['PHP_SELF'], '.php');
 $unreadMessages = function_exists('getUnreadMessagesCount') ? getUnreadMessagesCount() : 0;
 $bookingsCount = count($_SESSION['user_bookings'] ?? []);
 ?>
+
+    <!-- ============================================================
+         GLOBAL IN-PAGE FOOTER (VISIBLE ON DESKTOP & MOBILE)
+         ============================================================ -->
+    <footer class="app-page-footer mt-auto py-4 px-4 bg-white border-top">
+      <div class="container-fluid p-0">
+        <div class="row align-items-center gy-3">
+          <div class="col-md-6 text-center text-md-start">
+            <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
+              <span class="badge bg-soft-lavender text-royal-blue fw-bold px-2 py-1">
+                <i class="fas fa-shield-halved text-bright-indigo me-1"></i> Verified Student Housing
+              </span>
+              <span class="extra-small text-secondary-custom">• Zero Brokerage</span>
+            </div>
+            <p class="extra-small text-secondary-custom mb-0">
+              © <?= date('Y') ?> <strong>NeighborNest</strong>. All rights reserved. Designed for students and working professionals.
+            </p>
+          </div>
+
+          <div class="col-md-6 text-center text-md-end">
+            <div class="d-flex flex-wrap justify-content-center justify-content-md-end gap-3 extra-small">
+              <a href="search.php" class="text-secondary-custom text-decoration-none hover-primary">Explore PGs</a>
+              <a href="bookings.php" class="text-secondary-custom text-decoration-none hover-primary">My Bookings</a>
+              <a href="messages.php" class="text-secondary-custom text-decoration-none hover-primary">Chat Support</a>
+              <a href="settings.php" class="text-secondary-custom text-decoration-none hover-primary">Privacy & Terms</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
     </div><!-- .main-wrapper -->
   </div><!-- .app-layout -->
 

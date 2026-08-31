@@ -266,7 +266,6 @@ $genderLabel = ($property['gender'] === 'male_only') ? 'Boys Only' : (($property
       </div>
     </div>
   </main>
-</div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {

@@ -321,6 +321,5 @@ require_once __DIR__ . '/includes/sidebar.php';
       </div>
     <?php endif; ?>
   </main>
-</div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

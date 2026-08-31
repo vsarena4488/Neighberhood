@@ -375,7 +375,6 @@ if ($sortBy === 'price_asc') {
       </div>
     </div>
   </main>
-</div>
 
 <script>
   let searchLeafletMap = null;
