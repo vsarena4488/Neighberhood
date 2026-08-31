@@ -173,44 +173,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
     min-height: 32px;
   }
 
-  /* Property Card Overrides */
-  .property-card {
-    background: var(--nh-white);
-    border-radius: var(--nh-radius-lg);
-    border: 1px solid var(--nh-border);
-    box-shadow: var(--nh-shadow-card);
-    overflow: hidden;
-    transition: var(--nh-transition);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
 
-  .property-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--nh-shadow-hover);
-    border-color: var(--nh-lavender-border);
-  }
-
-  .card-img-wrapper {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-    background: #e2e8f0;
-    flex-shrink: 0;
-  }
-
-  .card-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-
-  .property-card:hover .card-img-wrapper img {
-    transform: scale(1.04);
-  }
 
   /* Table Styling */
   .table-nh th {
@@ -480,80 +443,75 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
       ?>
         <div class="col-md-6 col-lg-4">
           <div class="property-card">
-            <div class="card-img-wrapper">
-              <img src="<?= htmlspecialchars($item['image']) ?>"
-                alt="<?= htmlspecialchars($item['title']) ?>"
-                loading="lazy" />
-              <div class="position-absolute top-0 start-0 m-2 d-flex flex-column gap-1">
-                <?php if ($item['verified']): ?>
-                  <span class="badge bg-success small"><i class="fas fa-check-circle me-1"></i> Verified</span>
+            <!-- Image Wrapper -->
+            <div class="card-image-wrapper">
+              <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy" />
+
+              <!-- Badges - Top Left -->
+              <div class="card-badges">
+                <?php if (!empty($item['verified'])): ?>
+                  <span class="badge-tag badge-verified">
+                    <i class="fas fa-check-circle"></i> Verified
+                  </span>
                 <?php endif; ?>
-                <span class="badge bg-primary small"><?= htmlspecialchars($item['type']) ?></span>
-                <span class="badge bg-dark small"><?= htmlspecialchars($genderLabel) ?></span>
+                <span class="badge-tag badge-type"><?= htmlspecialchars($item['type']) ?></span>
+                <span class="badge-tag badge-gender"><?= htmlspecialchars($genderLabel) ?></span>
               </div>
-              <button class="btn btn-sm bg-white text-dark position-absolute top-0 end-0 m-2 rounded-circle shadow-sm border-0"
-                onclick="toggleWishlist(<?= $item['id'] ?>, this)"
-                title="Save to Wishlist">
+
+              <!-- Wishlist Button - Top Right -->
+              <button class="btn-wishlist <?= $isWishlisted ? 'active' : '' ?>" onclick="toggleWishlist(<?= $item['id'] ?>, this)" aria-label="Add to wishlist">
                 <i class="<?= $isWishlisted ? 'fas fa-heart text-danger' : 'far fa-heart' ?>"></i>
               </button>
             </div>
 
-            <div class="p-3 d-flex flex-column flex-grow-1">
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="extra-small text-secondary-custom fw-medium text-truncate">
-                  <i class="fas fa-location-dot text-danger me-1"></i>
-                  <?= htmlspecialchars($item['area']) ?>
+            <!-- Card Body -->
+            <div class="card-body">
+              <!-- Location & Rating -->
+              <div class="card-top-row">
+                <span class="card-location">
+                  <i class="fas fa-location-dot"></i> <?= htmlspecialchars($item['area']) ?>
                 </span>
-                <span class="badge bg-warning text-dark extra-small flex-shrink-0">
-                  <i class="fas fa-star me-1"></i> <?= htmlspecialchars($item['rating']) ?>
+                <span class="card-rating">
+                  <i class="fas fa-star"></i> <?= htmlspecialchars($item['rating']) ?> <span class="rating-count">(<?= $item['reviews_count'] ?? 0 ?>)</span>
                 </span>
               </div>
 
-              <h6 class="fw-bold mb-2 text-truncate" title="<?= htmlspecialchars($item['title']) ?>">
-                <a href="property-details.php?id=<?= $item['id'] ?>" class="text-dark text-decoration-none">
-                  <?= htmlspecialchars($item['title']) ?>
-                </a>
-              </h6>
+              <!-- Title -->
+              <h3 class="card-title">
+                <a href="property-details.php?id=<?= $item['id'] ?>"><?= htmlspecialchars($item['title']) ?></a>
+              </h3>
 
-              <div class="d-flex flex-wrap gap-1 mb-2">
-                <?php foreach (array_slice($item['amenities'], 0, 2) as $am): ?>
-                  <span class="badge bg-soft-lavender text-royal-blue extra-small px-2 py-1">
-                    <i class="fas fa-check me-1 text-success"></i><?= htmlspecialchars($am) ?>
-                  </span>
+              <!-- Amenities -->
+              <div class="card-amenities">
+                <?php foreach (array_slice($item['amenities'] ?? [], 0, 2) as $am): ?>
+                  <span class="amenity-pill"><i class="fas fa-check"></i> <?= htmlspecialchars($am) ?></span>
                 <?php endforeach; ?>
-                <?php if (count($item['amenities']) > 2): ?>
-                  <span class="badge bg-soft-lavender text-royal-blue extra-small px-2 py-1">
-                    +<?= count($item['amenities']) - 2 ?> more
-                  </span>
+                <?php if (count($item['amenities'] ?? []) > 2): ?>
+                  <span class="amenity-pill more">+<?= count($item['amenities']) - 2 ?> more</span>
                 <?php endif; ?>
               </div>
 
-              <div class="extra-small text-secondary-custom mb-3 text-truncate">
-                <i class="fas fa-route me-1 text-bright-indigo"></i>
-                <?= htmlspecialchars($item['nearby'][0] ?? 'Prime location') ?>
+              <!-- Nearby -->
+              <div class="card-nearby">
+                <i class="fas fa-route"></i> <?= htmlspecialchars($item['nearby'][0] ?? 'Prime location') ?>
               </div>
 
-              <!-- Price & Actions Footer Box -->
-              <div class="mt-auto pt-2.5 border-top">
-                <div class="d-flex align-items-baseline justify-content-between mb-2">
-                  <div>
-                    <span class="extra-small text-secondary-custom d-block lh-1 mb-1">Monthly Rent</span>
-                    <div class="d-flex align-items-baseline gap-1">
-                      <strong class="text-royal-blue fs-5">₹<?= number_format($item['rent']) ?></strong>
-                      <span class="extra-small text-secondary-custom">/month</span>
-                    </div>
-                  </div>
-                  <span class="badge bg-light text-secondary border extra-small px-2 py-1">
-                    Deposit: ₹<?= number_format($item['deposit'] ?? ($item['rent'] * 2)) ?>
+              <!-- Footer: Price + Actions -->
+              <div class="card-footer-row">
+                <div class="card-price">
+                  <span class="price-label">Monthly Rent</span>
+                  <span class="price-amount">
+                    ₹<?= number_format($item['rent']) ?> <span class="price-period">/month</span>
                   </span>
+                  <span class="price-deposit">Deposit: ₹<?= number_format($item['deposit'] ?? ($item['rent'] * 2)) ?></span>
                 </div>
 
-                <div class="d-flex align-items-center gap-2">
-                  <a href="compare.php?add=<?= $item['id'] ?>" class="btn btn-sm btn-light border d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; border-radius: 10px;" title="Compare this property">
-                    <i class="fas fa-scale-balanced text-secondary-custom"></i>
+                <div class="card-actions">
+                  <a href="compare.php?add=<?= $item['id'] ?>" class="btn-compare" title="Compare Property">
+                    <i class="fas fa-scale-balanced"></i>
                   </a>
-                  <a href="property-details.php?id=<?= $item['id'] ?>" class="btn btn-sm btn-nh-primary flex-grow-1 py-2" style="border-radius: 10px; font-size: 0.82rem;">
-                    <span>View Details</span> <i class="fas fa-arrow-right ms-1"></i>
+                  <a href="property-details.php?id=<?= $item['id'] ?>" class="btn-view-details">
+                    View Details <i class="fas fa-arrow-right"></i>
                   </a>
                 </div>
               </div>

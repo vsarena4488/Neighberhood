@@ -3,11 +3,11 @@ require_once __DIR__ . '/includes/functions.php';
 
 // Handle Wishlist Removal
 if (isset($_GET['remove'])) {
-    $remId = intval($_GET['remove']);
-    $_SESSION['user_wishlist'] = array_values(array_diff($_SESSION['user_wishlist'], [$remId]));
+  $remId = intval($_GET['remove']);
+  $_SESSION['user_wishlist'] = array_values(array_diff($_SESSION['user_wishlist'], [$remId]));
 }
 if (isset($_GET['clear'])) {
-    $_SESSION['user_wishlist'] = [];
+  $_SESSION['user_wishlist'] = [];
 }
 
 $pageTitle = 'My Wishlist · NeighborNest';
@@ -19,12 +19,12 @@ $wishlistIds = $_SESSION['user_wishlist'] ?? [];
 $wishlistItems = [];
 
 foreach ($wishlistIds as $wid) {
-    foreach ($allProperties as $p) {
-        if ($p['id'] === $wid) {
-            $wishlistItems[] = $p;
-            break;
-        }
+  foreach ($allProperties as $p) {
+    if ($p['id'] === $wid) {
+      $wishlistItems[] = $p;
+      break;
     }
+  }
 }
 ?>
 
@@ -62,54 +62,80 @@ foreach ($wishlistIds as $wid) {
     <?php else: ?>
       <!-- Wishlist Grid -->
       <div class="row g-4">
-        <?php foreach ($wishlistItems as $item): 
+        <?php foreach ($wishlistItems as $item):
           $genderLabel = ($item['gender'] === 'male_only') ? 'Boys Only' : (($item['gender'] === 'female_only') ? 'Girls Only' : 'Unisex');
         ?>
           <div class="col-md-6 col-lg-4">
             <div class="property-card">
-              <div class="card-img-wrapper">
+              <!-- Image Wrapper -->
+              <div class="card-image-wrapper">
                 <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy" />
-                <div class="position-absolute top-0 start-0 m-2 d-flex flex-column gap-1">
-                  <?php if ($item['verified']): ?>
-                    <span class="badge bg-success small"><i class="fas fa-check-circle me-1"></i> Verified</span>
+
+                <!-- Badges - Top Left -->
+                <div class="card-badges">
+                  <?php if (!empty($item['verified'])): ?>
+                    <span class="badge-tag badge-verified">
+                      <i class="fas fa-check-circle"></i> Verified
+                    </span>
                   <?php endif; ?>
-                  <span class="badge bg-primary small"><?= htmlspecialchars($item['type']) ?></span>
+                  <span class="badge-tag badge-type"><?= htmlspecialchars($item['type']) ?></span>
+                  <span class="badge-tag badge-gender"><?= htmlspecialchars($genderLabel) ?></span>
                 </div>
-                <a href="wishlist.php?remove=<?= $item['id'] ?>" class="btn btn-sm bg-white text-danger position-absolute top-0 end-0 m-2 rounded-circle shadow-sm border-0" title="Remove from Wishlist">
+
+                <!-- Remove from Wishlist Button - Top Right -->
+                <a href="wishlist.php?remove=<?= $item['id'] ?>" class="btn-wishlist text-danger" title="Remove from Wishlist" aria-label="Remove from Wishlist">
                   <i class="fas fa-trash-can"></i>
                 </a>
               </div>
 
-              <div class="p-3 d-flex flex-column flex-grow-1">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                  <span class="extra-small text-secondary-custom fw-medium text-truncate">
-                    <i class="fas fa-location-dot text-danger me-1"></i> <?= htmlspecialchars($item['area']) ?>
+              <!-- Card Body -->
+              <div class="card-body">
+                <!-- Location & Rating -->
+                <div class="card-top-row">
+                  <span class="card-location">
+                    <i class="fas fa-location-dot"></i> <?= htmlspecialchars($item['area']) ?>
                   </span>
-                  <span class="badge bg-warning text-dark extra-small flex-shrink-0">
-                    <i class="fas fa-star me-1"></i> <?= htmlspecialchars($item['rating']) ?>
+                  <span class="card-rating">
+                    <i class="fas fa-star"></i> <?= htmlspecialchars($item['rating']) ?> <span class="rating-count">(<?= $item['reviews_count'] ?? 0 ?>)</span>
                   </span>
                 </div>
 
-                <h6 class="fw-bold mb-2 text-truncate" title="<?= htmlspecialchars($item['title']) ?>">
-                  <a href="property-details.php?id=<?= $item['id'] ?>" class="text-dark text-decoration-none"><?= htmlspecialchars($item['title']) ?></a>
-                </h6>
+                <!-- Title -->
+                <h3 class="card-title">
+                  <a href="property-details.php?id=<?= $item['id'] ?>"><?= htmlspecialchars($item['title']) ?></a>
+                </h3>
 
-                <div class="d-flex flex-wrap gap-1 mb-2">
-                  <?php foreach (array_slice($item['amenities'], 0, 2) as $am): ?>
-                    <span class="badge bg-soft-lavender text-royal-blue extra-small px-2 py-1"><?= htmlspecialchars($am) ?></span>
+                <!-- Amenities -->
+                <div class="card-amenities">
+                  <?php foreach (array_slice($item['amenities'] ?? [], 0, 2) as $am): ?>
+                    <span class="amenity-pill"><i class="fas fa-check"></i> <?= htmlspecialchars($am) ?></span>
                   <?php endforeach; ?>
+                  <?php if (count($item['amenities'] ?? []) > 2): ?>
+                    <span class="amenity-pill more">+<?= count($item['amenities']) - 2 ?> more</span>
+                  <?php endif; ?>
                 </div>
 
-                <div class="mt-auto pt-2.5 border-top d-flex align-items-center justify-content-between">
-                  <div>
-                    <span class="extra-small text-secondary-custom d-block">Monthly Rent</span>
-                    <strong class="text-royal-blue fs-5">₹<?= number_format($item['rent']) ?></strong>
-                    <span class="extra-small text-secondary-custom">/mo</span>
+                <!-- Nearby -->
+                <div class="card-nearby">
+                  <i class="fas fa-route"></i> <?= htmlspecialchars($item['nearby'][0] ?? 'Prime location') ?>
+                </div>
+
+                <!-- Footer: Price + Actions -->
+                <div class="card-footer-row">
+                  <div class="card-price">
+                    <span class="price-label">Monthly Rent</span>
+                    <span class="price-amount">
+                      ₹<?= number_format($item['rent']) ?> <span class="price-period">/month</span>
+                    </span>
+                    <span class="price-deposit">Deposit: ₹<?= number_format($item['deposit'] ?? ($item['rent'] * 2)) ?></span>
                   </div>
 
-                  <div class="d-flex align-items-center gap-1.5 ms-auto">
-                    <a href="booking-request.php?property_id=<?= $item['id'] ?>" class="btn btn-sm btn-nh-primary px-3">
-                      Book Now
+                  <div class="card-actions">
+                    <a href="compare.php?add=<?= $item['id'] ?>" class="btn-compare" title="Compare Property">
+                      <i class="fas fa-scale-balanced"></i>
+                    </a>
+                    <a href="property-details.php?id=<?= $item['id'] ?>" class="btn-view-details">
+                      View Details <i class="fas fa-arrow-right"></i>
                     </a>
                   </div>
                 </div>
@@ -121,4 +147,4 @@ foreach ($wishlistIds as $wid) {
     <?php endif; ?>
   </main>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/footer.php'; ?>
