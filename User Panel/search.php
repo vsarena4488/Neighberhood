@@ -46,23 +46,79 @@ if ($sortBy === 'price_asc') {
     <!-- Header Title & Stats -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
       <div>
-        <h3 class="fw-bold mb-1">Find Student & Executive Accommodations</h3>
-        <span class="text-secondary-custom small">Search and discover verified PGs, hostels, and flats near your campus or workplace</span>
+        <h3 class="fw-bold mb-1">Find Student Accommodations</h3>
+        <span class="text-secondary-custom small">Search and discover verified PGs, hostels, and flats near your campus</span>
       </div>
 
-      <!-- View Switcher & Compare Bar Shortcut -->
-      <div class="d-flex align-items-center gap-2">
+      <!-- View Switcher & Mobile Filter Button -->
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <button class="btn btn-sm btn-nh-outline d-lg-none px-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilterCollapse" aria-expanded="false">
+          <i class="fas fa-sliders me-1"></i> Filters
+        </button>
+
         <div class="btn-group btn-group-sm bg-white p-1 rounded-pill border shadow-sm" role="group">
-          <button type="button" class="btn btn-sm btn-outline-primary active rounded-pill px-3" id="viewBtnGrid" onclick="switchView('grid')"><i class="fas fa-th-large me-1"></i> Grid</button>
-          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="viewBtnList" onclick="switchView('list')"><i class="fas fa-list me-1"></i> List</button>
-          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="viewBtnMap" onclick="switchView('map')"><i class="fas fa-map-marked-alt me-1"></i> Map</button>
+          <button type="button" class="btn btn-sm btn-outline-primary active rounded-pill px-2.5 px-sm-3" id="viewBtnGrid" onclick="switchView('grid')"><i class="fas fa-th-large me-1"></i> Grid</button>
+          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 px-sm-3" id="viewBtnList" onclick="switchView('list')"><i class="fas fa-list me-1"></i> List</button>
+          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 px-sm-3" id="viewBtnMap" onclick="switchView('map')"><i class="fas fa-map-marked-alt me-1"></i> Map</button>
         </div>
       </div>
     </div>
 
+    <!-- MOBILE COLLAPSIBLE FILTER PANEL -->
+    <div class="collapse d-lg-none mb-4" id="mobileFilterCollapse">
+      <div class="card border-0 rounded-4 shadow-sm bg-white p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h6 class="fw-bold mb-0"><i class="fas fa-sliders text-bright-indigo me-1"></i> Search Filters</h6>
+          <a href="search.php" class="extra-small text-danger text-decoration-none fw-semibold">Reset</a>
+        </div>
+        <!-- Form identical to desktop -->
+        <form action="search.php" method="GET">
+          <div class="mb-3">
+            <label class="form-label extra-small fw-bold text-secondary mb-1">City Hub</label>
+            <select name="city" class="form-select form-select-sm rounded-3">
+              <option value="Bangalore" <?= ($selectedCity === 'Bangalore') ? 'selected' : '' ?>>Bangalore</option>
+              <option value="Mumbai" <?= ($selectedCity === 'Mumbai') ? 'selected' : '' ?>>Mumbai</option>
+              <option value="Delhi" <?= ($selectedCity === 'Delhi') ? 'selected' : '' ?>>Delhi / NCR</option>
+              <option value="Pune" <?= ($selectedCity === 'Pune') ? 'selected' : '' ?>>Pune</option>
+              <option value="Hyderabad" <?= ($selectedCity === 'Hyderabad') ? 'selected' : '' ?>>Hyderabad</option>
+              <option value="Chennai" <?= ($selectedCity === 'Chennai') ? 'selected' : '' ?>>Chennai</option>
+              <option value="all" <?= ($selectedCity === 'all') ? 'selected' : '' ?>>All Cities</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label extra-small fw-bold text-secondary mb-1">Accommodation Type</label>
+            <select name="type" class="form-select form-select-sm rounded-3">
+              <option value="all" <?= ($selectedType === 'all') ? 'selected' : '' ?>>All Types</option>
+              <option value="PG" <?= ($selectedType === 'PG') ? 'selected' : '' ?>>Paying Guest (PG)</option>
+              <option value="Hostel" <?= ($selectedType === 'Hostel') ? 'selected' : '' ?>>Student Hostel</option>
+              <option value="Room" <?= ($selectedType === 'Room') ? 'selected' : '' ?>>Private Room</option>
+              <option value="Apartment" <?= ($selectedType === 'Apartment') ? 'selected' : '' ?>>Flat / Apartment</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label extra-small fw-bold text-secondary mb-1">Gender Rule</label>
+            <select name="gender" class="form-select form-select-sm rounded-3">
+              <option value="all" <?= ($selectedGender === 'all') ? 'selected' : '' ?>>All Rules</option>
+              <option value="male_only" <?= ($selectedGender === 'male_only') ? 'selected' : '' ?>>Boys Only</option>
+              <option value="female_only" <?= ($selectedGender === 'female_only') ? 'selected' : '' ?>>Girls Only</option>
+              <option value="unisex" <?= ($selectedGender === 'unisex') ? 'selected' : '' ?>>Unisex / Co-Living</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label extra-small fw-bold text-secondary mb-0">Max Budget:</label>
+              <span class="fw-bold text-royal-blue small">₹<?= number_format($maxBudget) ?></span>
+            </div>
+            <input type="range" name="budget" min="5000" max="40000" step="1000" value="<?= $maxBudget ?>" class="form-range" />
+          </div>
+          <button type="submit" class="btn btn-nh-primary w-100 py-2">Apply Filters</button>
+        </form>
+      </div>
+    </div>
+
     <div class="row g-4">
-      <!-- LEFT FILTER PANEL -->
-      <div class="col-lg-3">
+      <!-- LEFT FILTER PANEL (Desktop Sticky) -->
+      <div class="col-lg-3 d-none d-lg-block">
         <div class="card border-0 rounded-4 shadow-sm bg-white p-4 sticky-top" style="top: 85px; z-index: 100;">
           <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
             <h6 class="fw-bold mb-0"><i class="fas fa-sliders text-bright-indigo me-1"></i> Filters</h6>
@@ -160,7 +216,7 @@ if ($sortBy === 'price_asc') {
             </span>
 
             <div class="d-flex align-items-center gap-2">
-              <span class="extra-small text-secondary-custom">Sort by:</span>
+              <span class="extra-small text-secondary-custom d-none d-sm-inline">Sort by:</span>
               <form action="search.php" method="GET" id="sortForm" class="d-inline-block">
                 <input type="hidden" name="city" value="<?= htmlspecialchars($selectedCity) ?>" />
                 <input type="hidden" name="type" value="<?= htmlspecialchars($selectedType) ?>" />
@@ -179,11 +235,11 @@ if ($sortBy === 'price_asc') {
 
         <!-- MAP CONTAINER (Hidden by default) -->
         <div id="searchMapContainer" class="card border-0 rounded-4 shadow-sm bg-white p-3 mb-4 d-none">
-          <div id="searchLeafletMap" style="height: 480px; width: 100%; border-radius: 12px;"></div>
+          <div id="searchLeafletMap" style="height: 420px; width: 100%; border-radius: 12px;"></div>
         </div>
 
         <!-- GRID VIEW CONTAINER -->
-        <div id="searchGridContainer" class="row g-4 mb-4">
+        <div id="searchGridContainer" class="row g-3 g-md-4 mb-4">
           <?php if (empty($filteredProperties)): ?>
             <div class="col-12 text-center py-5">
               <div class="card border-0 rounded-4 bg-soft-lavender p-5 max-w-md mx-auto">
@@ -198,7 +254,7 @@ if ($sortBy === 'price_asc') {
               $genderLabel = ($item['gender'] === 'male_only') ? 'Boys Only' : (($item['gender'] === 'female_only') ? 'Girls Only' : 'Unisex');
               $isWishlisted = in_array($item['id'], $_SESSION['user_wishlist'] ?? []);
             ?>
-              <div class="col-md-6 col-lg-4">
+              <div class="col-sm-6 col-lg-4">
                 <div class="property-card">
                   <div class="card-img-wrapper">
                     <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy" />

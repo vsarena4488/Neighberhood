@@ -1,4 +1,6 @@
 <?php
+// includes/functions.php - All helper functions and data
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -23,7 +25,9 @@ if (!isset($_SESSION['user'])) {
     ];
 }
 
-// Master Accommodations Dataset Covering 7 Hub Cities
+// ============================================================
+// MASTER PROPERTIES DATASET
+// ============================================================
 function getPropertiesData() {
     return [
         [
@@ -116,7 +120,7 @@ function getPropertiesData() {
             ],
             'lat' => 12.9121,
             'lng' => 77.6445,
-            'desc' => 'Safe and ultra-hygienic women’s PG in HSR Sector 1. Features 24/7 security warden, electronic access cards, spacious cupboards, and terrace garden.'
+            'desc' => 'Safe and ultra-hygienic women\'s PG in HSR Sector 1. Features 24/7 security warden, electronic access cards, spacious cupboards, and terrace garden.'
         ],
         [
             'id' => 103,
@@ -278,7 +282,9 @@ function getPropertiesData() {
     ];
 }
 
-// User Bookings Dataset
+// ============================================================
+// USER BOOKINGS DATASET
+// ============================================================
 if (!isset($_SESSION['user_bookings'])) {
     $_SESSION['user_bookings'] = [
         [
@@ -362,17 +368,23 @@ if (!isset($_SESSION['user_bookings'])) {
     ];
 }
 
-// User Wishlist Dataset
+// ============================================================
+// USER WISHLIST DATASET
+// ============================================================
 if (!isset($_SESSION['user_wishlist'])) {
     $_SESSION['user_wishlist'] = [101, 102, 103, 104, 201, 301];
 }
 
-// User Compare Dataset (Max 3)
+// ============================================================
+// USER COMPARE DATASET
+// ============================================================
 if (!isset($_SESSION['user_compare'])) {
     $_SESSION['user_compare'] = [101, 102];
 }
 
-// User Messages Threads Dataset
+// ============================================================
+// USER CHATS DATASET
+// ============================================================
 if (!isset($_SESSION['user_chats'])) {
     $_SESSION['user_chats'] = [
         [
@@ -429,7 +441,9 @@ if (!isset($_SESSION['user_chats'])) {
     ];
 }
 
-// User Notifications Dataset
+// ============================================================
+// USER NOTIFICATIONS DATASET
+// ============================================================
 if (!isset($_SESSION['user_notifications'])) {
     $_SESSION['user_notifications'] = [
         [
@@ -479,7 +493,9 @@ if (!isset($_SESSION['user_notifications'])) {
     ];
 }
 
-// User Reviews Given Dataset
+// ============================================================
+// USER REVIEWS DATASET
+// ============================================================
 if (!isset($_SESSION['user_reviews'])) {
     $_SESSION['user_reviews'] = [
         [
@@ -496,7 +512,10 @@ if (!isset($_SESSION['user_reviews'])) {
     ];
 }
 
-// Helper: Count Unread Items
+// ============================================================
+// HELPER FUNCTIONS
+// ============================================================
+
 function getUnreadMessagesCount() {
     $count = 0;
     if (isset($_SESSION['user_chats'])) {

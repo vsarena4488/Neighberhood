@@ -42,7 +42,7 @@ $genderLabel = ($property['gender'] === 'male_only') ? 'Boys Only' : (($property
       </div>
 
       <!-- Quick Action Buttons -->
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
         <button class="btn btn-sm btn-light border rounded-pill px-3 shadow-sm" onclick="toggleWishlist(<?= $property['id'] ?>, this)">
           <i class="<?= $isWishlisted ? 'fas fa-heart text-danger' : 'far fa-heart' ?> me-1"></i> <?= $isWishlisted ? 'Saved' : 'Wishlist' ?>
         </button>
@@ -55,22 +55,22 @@ $genderLabel = ($property['gender'] === 'male_only') ? 'Boys Only' : (($property
       </div>
     </div>
 
-    <!-- GALLERY & HERO MEDIA -->
+    <!-- GALLERY & HERO MEDIA (Fully Responsive) -->
     <div class="row g-3 mb-4">
       <div class="col-lg-8">
-        <div class="rounded-4 overflow-hidden shadow-sm position-relative" style="height: 380px;">
+        <div class="rounded-4 overflow-hidden shadow-sm position-relative" style="height: clamp(240px, 45vw, 380px);">
           <img id="mainGalleryImage" src="<?= htmlspecialchars($property['image']) ?>" alt="<?= htmlspecialchars($property['title']) ?>" class="w-100 h-100 object-fit-cover" />
-          <div class="position-absolute top-0 start-0 m-3 d-flex gap-2">
+          <div class="position-absolute top-0 start-0 m-2 m-sm-3 d-flex gap-1.5 flex-wrap">
             <?php if ($property['verified']): ?>
-              <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-certificate me-1"></i> Verified Property</span>
+              <span class="badge bg-success rounded-pill px-2.5 px-sm-3 py-1.5 py-sm-2"><i class="fas fa-certificate me-1"></i> Verified</span>
             <?php endif; ?>
-            <span class="badge bg-dark rounded-pill px-3 py-2"><?= htmlspecialchars($genderLabel) ?></span>
+            <span class="badge bg-dark rounded-pill px-2.5 px-sm-3 py-1.5 py-sm-2"><?= htmlspecialchars($genderLabel) ?></span>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 d-flex flex-column gap-3">
+      <div class="col-lg-4 d-flex flex-row flex-lg-column gap-2 gap-lg-3">
         <?php foreach (array_slice($property['gallery'], 1, 2) as $img): ?>
-          <div class="rounded-4 overflow-hidden shadow-sm flex-grow-1" style="height: 180px; cursor: pointer;" onclick="document.getElementById('mainGalleryImage').src = '<?= htmlspecialchars($img) ?>'">
+          <div class="rounded-4 overflow-hidden shadow-sm flex-grow-1" style="height: clamp(90px, 20vw, 180px); cursor: pointer;" onclick="document.getElementById('mainGalleryImage').src = '<?= htmlspecialchars($img) ?>'">
             <img src="<?= htmlspecialchars($img) ?>" alt="Gallery item" class="w-100 h-100 object-fit-cover" />
           </div>
         <?php endforeach; ?>
@@ -81,22 +81,22 @@ $genderLabel = ($property['gender'] === 'male_only') ? 'Boys Only' : (($property
       <!-- LEFT CONTENT COLUMN -->
       <div class="col-lg-8">
         <!-- Quick Highlights Badges -->
-        <div class="card border-0 rounded-4 shadow-sm bg-white p-4 mb-4">
-          <div class="row g-3 text-center">
+        <div class="card border-0 rounded-4 shadow-sm bg-white p-3 p-md-4 mb-4">
+          <div class="row g-2 g-md-3 text-center">
             <div class="col-4 border-end">
-              <span class="extra-small text-secondary-custom d-block">Monthly Starting Rent</span>
-              <h4 class="fw-bold text-royal-blue mb-0">₹<?= number_format($property['rent']) ?></h4>
-              <span class="fs-xs text-muted">Inclusive of Wi-Fi</span>
+              <span class="extra-small text-secondary-custom d-block">Starting Rent</span>
+              <h4 class="fw-bold text-royal-blue mb-0 fs-5 fs-md-4">₹<?= number_format($property['rent']) ?></h4>
+              <span class="fs-xs text-muted d-none d-sm-block">Inclusive of Wi-Fi</span>
             </div>
             <div class="col-4 border-end">
-              <span class="extra-small text-secondary-custom d-block">Security Deposit</span>
-              <h4 class="fw-bold text-dark mb-0">₹<?= number_format($property['deposit']) ?></h4>
-              <span class="fs-xs text-success">100% Refundable</span>
+              <span class="extra-small text-secondary-custom d-block">Deposit</span>
+              <h4 class="fw-bold text-dark mb-0 fs-5 fs-md-4">₹<?= number_format($property['deposit']) ?></h4>
+              <span class="fs-xs text-success d-none d-sm-block">100% Refundable</span>
             </div>
             <div class="col-4">
-              <span class="extra-small text-secondary-custom d-block">Current Availability</span>
-              <h4 class="fw-bold text-success mb-0"><?= htmlspecialchars($property['available_beds']) ?> Beds</h4>
-              <span class="fs-xs text-muted">Immediate Move-in</span>
+              <span class="extra-small text-secondary-custom d-block">Availability</span>
+              <h4 class="fw-bold text-success mb-0 fs-5 fs-md-4"><?= htmlspecialchars($property['available_beds']) ?> Beds</h4>
+              <span class="fs-xs text-muted d-none d-sm-block">Immediate Move-in</span>
             </div>
           </div>
         </div>
@@ -107,11 +107,11 @@ $genderLabel = ($property['gender'] === 'male_only') ? 'Boys Only' : (($property
           <p class="text-secondary-custom small leading-relaxed mb-0"><?= nl2br(htmlspecialchars($property['desc'])) ?></p>
         </div>
 
-        <!-- Room Options & Occupancy Table -->
+        <!-- Room Options & Occupancy Table (Responsive Scroll) -->
         <div class="card border-0 rounded-4 shadow-sm bg-white p-4 mb-4">
           <h5 class="fw-bold mb-3"><i class="fas fa-bed text-bright-indigo me-2"></i> Available Room Options & Pricing</h5>
           <div class="table-responsive">
-            <table class="table table-bordered align-middle small mb-0">
+            <table class="table table-bordered align-middle small mb-0" style="min-width: 520px;">
               <thead class="table-light">
                 <tr>
                   <th>Room Type</th>
@@ -153,7 +153,7 @@ $genderLabel = ($property['gender'] === 'male_only') ? 'Boys Only' : (($property
           <h5 class="fw-bold mb-3"><i class="fas fa-circle-check text-bright-indigo me-2"></i> Included Amenities & Facilities</h5>
           <div class="row g-2">
             <?php foreach ($property['amenities'] as $am): ?>
-              <div class="col-sm-6 col-md-4">
+              <div class="col-6 col-md-4">
                 <div class="p-2.5 bg-soft-lavender rounded-3 border border-primary-subtle d-flex align-items-center gap-2 extra-small text-royal-blue fw-semibold">
                   <i class="fas fa-check-circle text-success fs-6"></i>
                   <span><?= htmlspecialchars($am) ?></span>
@@ -195,7 +195,7 @@ $genderLabel = ($property['gender'] === 'male_only') ? 'Boys Only' : (($property
         <!-- Student Reviews -->
         <div class="card border-0 rounded-4 shadow-sm bg-white p-4 mb-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0"><i class="fas fa-star text-warning me-2"></i> Tenant & Student Reviews (<?= $property['reviews_count'] ?>)</h5>
+            <h5 class="fw-bold mb-0"><i class="fas fa-star text-warning me-2"></i> Tenant Reviews (<?= $property['reviews_count'] ?>)</h5>
             <span class="badge bg-warning text-dark px-3 py-2 fw-bold"><i class="fas fa-star me-1"></i> <?= $property['rating'] ?> / 5.0</span>
           </div>
 

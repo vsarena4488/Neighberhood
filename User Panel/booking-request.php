@@ -77,8 +77,8 @@ require_once __DIR__ . '/includes/sidebar.php';
 
     <?php if ($bookingCreated): ?>
       <!-- STEP 7: BOOKING CONFIRMATION SCREEN -->
-      <div class="card border-0 rounded-4 shadow-sm bg-white p-5 text-center my-3 max-w-xl mx-auto">
-        <div class="p-4 bg-success text-white rounded-circle d-inline-flex mx-auto mb-3 shadow" style="width: 80px; height: 80px; align-items: center; justify-content: center; font-size: 2.5rem;">
+      <div class="card border-0 rounded-4 shadow-sm bg-white p-4 p-md-5 text-center my-3 max-w-xl mx-auto">
+        <div class="p-3.5 bg-success text-white rounded-circle d-inline-flex mx-auto mb-3 shadow" style="width: 72px; height: 72px; align-items: center; justify-content: center; font-size: 2.2rem;">
           <i class="fas fa-circle-check"></i>
         </div>
         <h3 class="fw-bold mb-1 text-dark">Booking Request Submitted!</h3>
@@ -127,9 +127,9 @@ require_once __DIR__ . '/includes/sidebar.php';
       <div class="row g-4">
         <div class="col-lg-8">
           <form action="booking-request.php?property_id=<?= $property['id'] ?>" method="POST" id="bookingWizardForm">
-            <!-- Step Navigation Tabs / Indicator -->
-            <div class="card border-0 rounded-4 shadow-sm bg-white p-3 mb-4">
-              <div class="d-flex justify-content-between align-items-center extra-small font-weight-bold text-center">
+            <!-- Step Navigation Tabs / Indicator (Responsive Scrollable) -->
+            <div class="card border-0 rounded-4 shadow-sm bg-white p-2.5 p-md-3 mb-4 overflow-x-auto">
+              <div class="d-flex justify-content-between align-items-center extra-small font-weight-bold text-center" style="min-width: 480px;">
                 <div class="flex-grow-1 text-royal-blue"><i class="fas fa-circle-check text-success me-1"></i> 1. Property</div>
                 <div class="text-muted">➔</div>
                 <div class="flex-grow-1 text-royal-blue"><i class="fas fa-bed me-1"></i> 2. Room</div>
@@ -146,7 +146,7 @@ require_once __DIR__ . '/includes/sidebar.php';
             <div class="card border-0 rounded-4 shadow-sm bg-white p-4 mb-4">
               <h5 class="fw-bold mb-3"><i class="fas fa-building text-bright-indigo me-2"></i> Step 1: Selected Property</h5>
               <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 border">
-                <img src="<?= htmlspecialchars($property['image']) ?>" alt="<?= htmlspecialchars($property['title']) ?>" class="rounded-3" style="width: 80px; height: 80px; object-fit: cover;" />
+                <img src="<?= htmlspecialchars($property['image']) ?>" alt="<?= htmlspecialchars($property['title']) ?>" class="rounded-3" style="width: 70px; height: 70px; object-fit: cover;" />
                 <div>
                   <h6 class="fw-bold mb-1"><?= htmlspecialchars($property['title']) ?></h6>
                   <span class="extra-small text-secondary-custom d-block"><i class="fas fa-location-dot text-danger me-1"></i> <?= htmlspecialchars($property['area']) ?>, <?= htmlspecialchars($property['city']) ?></span>
@@ -160,7 +160,7 @@ require_once __DIR__ . '/includes/sidebar.php';
               <h5 class="fw-bold mb-3"><i class="fas fa-bed text-bright-indigo me-2"></i> Step 2: Choose Room & Bed Occupancy</h5>
               <div class="row g-3">
                 <?php foreach ($property['room_options'] as $idx => $room): ?>
-                  <div class="col-md-6">
+                  <div class="col-sm-6">
                     <label class="card p-3 rounded-3 border h-100 cursor-pointer <?= ($room['name'] === $selectedRoom) ? 'border-primary bg-soft-lavender' : '' ?>" style="cursor: pointer;">
                       <div class="d-flex align-items-start gap-2">
                         <input type="radio" name="room_name" value="<?= htmlspecialchars($room['name']) ?>" class="mt-1" <?= ($room['name'] === $selectedRoom) ? 'checked' : '' ?> <?= ($room['status'] !== 'Available') ? 'disabled' : '' ?> />
