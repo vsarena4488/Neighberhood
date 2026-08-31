@@ -1,6 +1,6 @@
 <?php
 // dashboard.php - User Dashboard
-$pageTitle = 'Dashboard · NeighborNest User Portal';
+$pageTitle = 'Dashboard Ã‚Â· NeighborNest User Portal';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/includes/sidebar.php';
@@ -364,7 +364,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
             <?= htmlspecialchars($course) ?>
           </span>
           <h2 class="display-6 fw-bold mb-2">
-            Welcome back, <?= htmlspecialchars($userName) ?>! 👋
+            Welcome back, <?= htmlspecialchars($userName) ?>!
           </h2>
           <p class="text-secondary-custom mb-4 small leading-relaxed">
             Find and manage your verified student PGs, hostels, and rental accommodations across Bangalore and top Indian cities with zero brokerage.
@@ -407,7 +407,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
             </div>
             <div>
               <h3><?= $wishlistCount ?></h3>
-              <span class="extra-small text-secondary-custom font-weight-medium">Saved Wishlist</span>
+              <span class="extra-small text-secondary-custom fw-medium">Saved Wishlist</span>
             </div>
           </div>
         </a>
@@ -422,7 +422,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
             </div>
             <div>
               <h3><?= $bookingsCount ?></h3>
-              <span class="extra-small text-secondary-custom font-weight-medium">Total Bookings</span>
+              <span class="extra-small text-secondary-custom fw-medium">Total Bookings</span>
             </div>
           </div>
         </a>
@@ -445,7 +445,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
                 echo $active;
                 ?>
               </h3>
-              <span class="extra-small text-secondary-custom font-weight-medium">Active Stays</span>
+              <span class="extra-small text-secondary-custom fw-medium">Active Stays</span>
             </div>
           </div>
         </a>
@@ -460,7 +460,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
             </div>
             <div>
               <h3><?= $unreadMessages ?></h3>
-              <span class="extra-small text-secondary-custom font-weight-medium">Unread Messages</span>
+              <span class="extra-small text-secondary-custom fw-medium">Unread Messages</span>
             </div>
           </div>
         </a>
@@ -470,12 +470,12 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
     <!-- ============================================================
          RECOMMENDED PROPERTIES SECTION
          ============================================================ -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 fade-up delay-3">
+    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2 mb-3 fade-up delay-3">
       <div>
-        <h5 class="fw-bold mb-0">🏠 Recommended for You</h5>
+        <h5 class="fw-bold mb-0">Recommended for You</h5>
         <span class="extra-small text-secondary-custom">Handpicked student accommodations near <?= htmlspecialchars($user['college'] ?? 'your college') ?></span>
       </div>
-      <a href="search.php" class="btn btn-sm btn-nh-outline px-3">View All Listings →</a>
+      <a href="search.php" class="btn btn-sm btn-nh-outline px-3">View All Listings -></a>
     </div>
 
     <div class="row g-4 mb-5 fade-up delay-4">
@@ -541,14 +541,14 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
                 <?= htmlspecialchars($item['nearby'][0] ?? 'Prime location') ?>
               </div>
 
-              <div class="mt-auto pt-2.5 border-top d-flex align-items-center justify-content-between">
+              <div class="mt-auto pt-2 border-top d-flex align-items-center justify-content-between">
                 <div>
                   <span class="extra-small text-secondary-custom d-block" style="line-height: 1;">Monthly Rent</span>
-                  <strong class="text-royal-blue fs-5">₹<?= number_format($item['rent']) ?></strong>
+                  <strong class="text-royal-blue fs-5">Rs.<?= number_format($item['rent']) ?></strong>
                   <span class="extra-small text-secondary-custom">/mo</span>
                 </div>
 
-                <div class="d-flex align-items-center gap-1.5 ms-auto">
+                <div class="d-flex align-items-center gap-2 ms-auto">
                   <a href="compare.php?add=<?= $item['id'] ?>" class="btn btn-sm btn-light border p-2" title="Compare this property">
                     <i class="fas fa-scale-balanced text-secondary-custom"></i>
                   </a>
@@ -571,9 +571,9 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
       <!-- RECENT BOOKINGS TABLE -->
       <div class="col-lg-8">
         <div class="card border-0 rounded-4 shadow-sm bg-white h-100">
-          <div class="p-3.5 px-4 border-bottom d-flex justify-content-between align-items-center">
+          <div class="p-3 px-4 border-bottom d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
             <div>
-              <h5 class="fw-bold mb-0">📋 My Recent Bookings</h5>
+              <h5 class="fw-bold mb-0">My Recent Bookings</h5>
               <span class="extra-small text-secondary-custom">Track your accommodation request status</span>
             </div>
             <a href="bookings.php" class="extra-small text-primary text-decoration-none fw-semibold">
@@ -641,9 +641,9 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
       <!-- RECENT MESSAGES SNIPPET -->
       <div class="col-lg-4">
         <div class="card border-0 rounded-4 shadow-sm bg-white h-100">
-          <div class="p-3.5 px-4 border-bottom d-flex justify-content-between align-items-center">
+          <div class="p-3 px-4 border-bottom d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
             <div>
-              <h5 class="fw-bold mb-0">💬 Recent Messages</h5>
+              <h5 class="fw-bold mb-0">Recent Messages</h5>
               <span class="extra-small text-secondary-custom">Direct chat with verified landlords</span>
             </div>
             <a href="messages.php" class="extra-small text-primary text-decoration-none fw-semibold">
@@ -659,7 +659,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
               foreach ($recentChats as $chat):
             ?>
                 <a href="messages.php?chat=<?= $chat['id'] ?>"
-                  class="p-2.5 rounded-3 border bg-light text-decoration-none text-dark d-flex align-items-start gap-2.5 transition-all">
+                  class="p-2 rounded-3 border bg-light text-decoration-none text-dark d-flex align-items-start gap-2 transition-all">
                   <img src="<?= htmlspecialchars($chat['owner_avatar']) ?>"
                     alt="<?= htmlspecialchars($chat['owner_name']) ?>"
                     class="rounded-circle"
