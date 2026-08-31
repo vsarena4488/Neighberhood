@@ -851,12 +851,26 @@ $user = $_SESSION['user'] ?? [];
       display: flex;
       align-items: center;
       gap: 4px;
-      max-width: 65%;
     }
 
     .card-location i {
       color: #EF4444;
       font-size: 11px;
+    }
+
+    .card-deposit-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid #BFDBFE;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
     }
 
     .card-rating {

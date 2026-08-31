@@ -466,11 +466,16 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
 
             <!-- Card Body -->
             <div class="card-body">
-              <!-- Location & Rating -->
+              <!-- Location, Deposit & Rating -->
               <div class="card-top-row">
-                <span class="card-location">
-                  <i class="fas fa-location-dot"></i> <?= htmlspecialchars($item['area']) ?>
-                </span>
+                <div class="d-flex align-items-center gap-1.5 flex-wrap" style="max-width: 70%;">
+                  <span class="card-location">
+                    <i class="fas fa-location-dot"></i> <?= htmlspecialchars($item['area']) ?>
+                  </span>
+                  <span class="card-deposit-badge">
+                    <i class="fas fa-shield-halved"></i> Dep: ₹<?= number_format($item['deposit'] ?? ($item['rent'] * 2)) ?>
+                  </span>
+                </div>
                 <span class="card-rating">
                   <i class="fas fa-star"></i> <?= htmlspecialchars($item['rating']) ?> <span class="rating-count">(<?= $item['reviews_count'] ?? 0 ?>)</span>
                 </span>
@@ -503,7 +508,6 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
                   <span class="price-amount">
                     ₹<?= number_format($item['rent']) ?> <span class="price-period">/month</span>
                   </span>
-                  <span class="price-deposit">Deposit: ₹<?= number_format($item['deposit'] ?? ($item['rent'] * 2)) ?></span>
                 </div>
 
                 <div class="card-actions">
