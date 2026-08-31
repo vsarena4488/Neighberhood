@@ -871,12 +871,13 @@
           <li class="nav-item"><a class="nav-link" href="#verified-section">Trust & Safety</a></li>
           <li class="nav-item"><a class="nav-link" href="#testimonials">Reviews</a></li>
           <li class="nav-item"><a class="nav-link" href="#faq-section">FAQ</a></li>
+          <li class="nav-item ms-lg-2 mt-3 mt-lg-0">
+            <a href="login.php" class="btn btn-nh-outline btn-sm">Log In</a>
+          </li>
+          <li class="nav-item mt-2 mt-lg-0">
+            <a href="register.php" class="btn btn-nh-primary btn-sm">List Property Free</a>
+          </li>
         </ul>
-
-        <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
-          <a href="login.php" class="btn btn-nh-outline btn-sm">Log In</a>
-          <a href="register.php" class="btn btn-nh-primary btn-sm">List Property Free</a>
-        </div>
       </div>
     </div>
   </nav>
