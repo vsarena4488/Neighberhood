@@ -2,8 +2,30 @@
 require_once __DIR__ . '/includes/functions.php';
 
 $message = '';
+$messageType = 'success';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (isset($_POST['action']) && $_POST['action'] === 'change_password') {
+    $currentPass = trim($_POST['current_password'] ?? '');
+    $newPass = trim($_POST['new_password'] ?? '');
+    $confirmPass = trim($_POST['confirm_password'] ?? '');
+
+    if (empty($currentPass) || empty($newPass) || empty($confirmPass)) {
+      $message = 'Please fill out all required password fields.';
+      $messageType = 'danger';
+    } elseif ($newPass !== $confirmPass) {
+      $message = 'New password and confirmation password do not match.';
+      $messageType = 'danger';
+    } elseif (strlen($newPass) < 6) {
+      $message = 'New password must be at least 6 characters long.';
+      $messageType = 'danger';
+    } else {
+      $message = 'Your account password has been updated successfully!';
+      $messageType = 'success';
+    }
+  } else {
     $message = 'Your account settings & notification preferences have been saved!';
+    $messageType = 'success';
+  }
 }
 
 $pageTitle = 'Settings · NeighborNest';
@@ -21,8 +43,8 @@ require_once __DIR__ . '/includes/sidebar.php';
     </div>
 
     <?php if (!empty($message)): ?>
-      <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4 small" role="alert">
-        <i class="fas fa-circle-check me-2"></i> <?= htmlspecialchars($message) ?>
+      <div class="alert alert-<?= $messageType ?> alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4 small" role="alert">
+        <i class="fas <?= ($messageType === 'success') ? 'fa-circle-check' : 'fa-circle-exclamation' ?> me-2"></i> <?= htmlspecialchars($message) ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     <?php endif; ?>
@@ -31,7 +53,7 @@ require_once __DIR__ . '/includes/sidebar.php';
       <!-- 1. NOTIFICATION PREFERENCES -->
       <div class="card border-0 rounded-4 shadow-sm bg-white p-4 mb-4">
         <h5 class="fw-bold mb-3"><i class="fas fa-bell text-bright-indigo me-2"></i> Notification & Alert Preferences</h5>
-        
+
         <div class="d-flex flex-column gap-3">
           <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
             <div>
@@ -78,7 +100,7 @@ require_once __DIR__ . '/includes/sidebar.php';
       <!-- 2. PRIVACY & SECURITY -->
       <div class="card border-0 rounded-4 shadow-sm bg-white p-4 mb-4">
         <h5 class="fw-bold mb-3"><i class="fas fa-lock text-bright-indigo me-2"></i> Privacy & Password Security</h5>
-        
+
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label small fw-bold text-secondary mb-1">Profile Visibility to Landlords</label>
@@ -95,41 +117,9 @@ require_once __DIR__ . '/includes/sidebar.php';
             </select>
           </div>
           <div class="col-12 mt-3">
-            <button type="button" class="btn btn-sm btn-light border" onclick="alert('Password change dialog simulated.')">
+            <button type="button" class="btn btn-sm btn-light border" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
               <i class="fas fa-key me-1 text-primary"></i> Change Account Password
             </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. PLATFORM PREFERENCES -->
-      <div class="card border-0 rounded-4 shadow-sm bg-white p-4 mb-4">
-        <h5 class="fw-bold mb-3"><i class="fas fa-sliders text-bright-indigo me-2"></i> Regional & Localization Preferences</h5>
-        
-        <div class="row g-3">
-          <div class="col-md-4">
-            <label class="form-label small fw-bold text-secondary mb-1">Display Language</label>
-            <select class="form-select rounded-3">
-              <option value="en" selected>English (India)</option>
-              <option value="hi">हिंदी (Hindi)</option>
-              <option value="kn">ಕನ್ನಡ (Kannada)</option>
-              <option value="te">తెలుగు (Telugu)</option>
-              <option value="ta">தமிழ் (Tamil)</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label small fw-bold text-secondary mb-1">Currency Format</label>
-            <select class="form-select rounded-3">
-              <option value="inr" selected>₹ INR (Indian Rupee)</option>
-              <option value="usd">$ USD (US Dollar)</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label small fw-bold text-secondary mb-1">Distance Metric</label>
-            <select class="form-select rounded-3">
-              <option value="km" selected>Kilometers (km)</option>
-              <option value="miles">Miles (mi)</option>
-            </select>
           </div>
         </div>
       </div>
@@ -150,6 +140,72 @@ require_once __DIR__ . '/includes/sidebar.php';
         </button>
       </div>
     </form>
+
+    <!-- CHANGE PASSWORD MODAL DIALOG -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header border-bottom px-4 py-3">
+            <h5 class="modal-title fw-bold fs-6" id="changePasswordModalLabel">
+              <i class="fas fa-key text-bright-indigo me-2"></i> Change Account Password
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="settings.php" method="POST">
+            <input type="hidden" name="action" value="change_password" />
+            <div class="modal-body p-4">
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary mb-1">Current Password *</label>
+                <div class="input-group">
+                  <input type="password" name="current_password" id="currentPassword" class="form-control rounded-start-3" placeholder="Enter current password" required />
+                  <button type="button" class="btn btn-outline-secondary rounded-end-3" onclick="togglePassVisibility('currentPassword', this)" title="Show/Hide Password"><i class="fas fa-eye"></i></button>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary mb-1">New Password *</label>
+                <div class="input-group">
+                  <input type="password" name="new_password" id="newPassword" class="form-control rounded-start-3" placeholder="Enter new password (min. 6 chars)" minlength="6" required />
+                  <button type="button" class="btn btn-outline-secondary rounded-end-3" onclick="togglePassVisibility('newPassword', this)" title="Show/Hide Password"><i class="fas fa-eye"></i></button>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary mb-1">Confirm New Password *</label>
+                <div class="input-group">
+                  <input type="password" name="confirm_password" id="confirmPassword" class="form-control rounded-start-3" placeholder="Re-enter new password" minlength="6" required />
+                  <button type="button" class="btn btn-outline-secondary rounded-end-3" onclick="togglePassVisibility('confirmPassword', this)" title="Show/Hide Password"><i class="fas fa-eye"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer border-top px-4 py-3 bg-light rounded-bottom-4">
+              <button type="button" class="btn btn-light border px-3" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-nh-primary px-4">
+                <i class="fas fa-floppy-disk me-1"></i> Update Password
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </main>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script>
+    function togglePassVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn ? btn.querySelector('i') : null;
+      if (input && icon) {
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
+      }
+    }
+  </script>
+
+  <?php require_once __DIR__ . '/includes/footer.php'; ?>

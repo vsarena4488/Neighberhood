@@ -3,12 +3,12 @@ require_once __DIR__ . '/includes/functions.php';
 
 // Handle Mark All Read / Clear
 if (isset($_GET['mark_read'])) {
-    foreach ($_SESSION['user_notifications'] as &$n) {
-        $n['unread'] = false;
-    }
+  foreach ($_SESSION['user_notifications'] as &$n) {
+    $n['unread'] = false;
+  }
 }
 if (isset($_GET['clear_all'])) {
-    $_SESSION['user_notifications'] = [];
+  $_SESSION['user_notifications'] = [];
 }
 
 $pageTitle = 'Notifications · NeighborNest';
@@ -76,4 +76,4 @@ $notifications = $_SESSION['user_notifications'] ?? [];
     </div>
   </main>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/footer.php'; ?>
