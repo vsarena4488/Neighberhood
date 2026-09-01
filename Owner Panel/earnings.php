@@ -15,7 +15,7 @@ require_once __DIR__ . '/includes/sidebar.php';
   <?php require_once __DIR__ . '/includes/top-navbar.php'; ?>
 
   <main class="page-content">
-    
+
     <!-- Page Header & Withdraw Action -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
       <div>
@@ -33,61 +33,12 @@ require_once __DIR__ . '/includes/sidebar.php';
       </div>
     </div>
 
-    <!-- 4 FINANCIAL STAT CARDS -->
-    <div class="row g-3 mb-4">
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon-wrapper bg-success-subtle text-success">
-            <i class="fas fa-sack-dollar"></i>
-          </div>
-          <div>
-            <h3 class="fw-bold mb-0 text-dark">₹<?= number_format($earnings['total_lifetime'] ?? 425000) ?></h3>
-            <span class="extra-small text-secondary-custom">Lifetime Earnings</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon-wrapper bg-soft-lavender text-royal-blue">
-            <i class="fas fa-calendar-check"></i>
-          </div>
-          <div>
-            <h3 class="fw-bold mb-0 text-dark">₹<?= number_format($earnings['this_month'] ?? 48500) ?></h3>
-            <span class="extra-small text-secondary-custom">This Month Revenue</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon-wrapper bg-warning-subtle text-warning-emphasis">
-            <i class="fas fa-hourglass-half"></i>
-          </div>
-          <div>
-            <h3 class="fw-bold mb-0 text-dark">₹<?= number_format($earnings['pending_escrow'] ?? 24500) ?></h3>
-            <span class="extra-small text-secondary-custom">Pending Escrow</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon-wrapper bg-info-subtle text-info">
-            <i class="fas fa-wallet"></i>
-          </div>
-          <div>
-            <h3 class="fw-bold mb-0 text-dark">₹<?= number_format($earnings['withdrawable'] ?? 65000) ?></h3>
-            <span class="extra-small text-secondary-custom">Withdrawable Balance</span>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- TRANSACTIONS HISTORY TABLE CARD -->
     <div class="card border-0 rounded-4 shadow-sm bg-white p-4">
       <h5 class="fw-bold mb-3"><i class="fas fa-receipt text-bright-indigo me-2"></i> Recent Transaction Logs</h5>
-      
+
       <div class="table-responsive">
         <table class="table table-hover align-middle extra-small mb-0">
           <thead class="table-light">
@@ -156,4 +107,4 @@ require_once __DIR__ . '/includes/sidebar.php';
     </div>
   </main>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/footer.php'; ?>

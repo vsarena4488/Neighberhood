@@ -488,13 +488,15 @@ $user = $_SESSION['user'] ?? [];
       background: var(--nh-white);
       border: 1px solid var(--nh-border);
       border-radius: var(--nh-radius-lg);
-      padding: 1.25rem 1.35rem;
+      padding: 1rem 1.15rem;
       box-shadow: var(--nh-shadow-subtle);
       transition: var(--nh-transition);
       height: 100%;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
+      overflow: hidden;
+      min-width: 0;
     }
 
     .stat-card:hover {
@@ -504,14 +506,24 @@ $user = $_SESSION['user'] ?? [];
     }
 
     .stat-icon-wrapper {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: var(--nh-radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       flex-shrink: 0;
+    }
+
+    .stat-value {
+      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .btn-nh-primary {

@@ -5,10 +5,10 @@ require_once __DIR__ . '/includes/functions.php';
 
 // Handle property deletion / status toggle
 if (isset($_GET['delete'])) {
-    $delId = intval($_GET['delete']);
-    $_SESSION['owner_properties'] = array_values(array_filter($_SESSION['owner_properties'], fn($p) => $p['id'] !== $delId));
-    header('Location: properties.php?deleted=1');
-    exit;
+  $delId = intval($_GET['delete']);
+  $_SESSION['owner_properties'] = array_values(array_filter($_SESSION['owner_properties'], fn($p) => $p['id'] !== $delId));
+  header('Location: properties.php?deleted=1');
+  exit;
 }
 
 $pageTitle = 'My Listed Properties · NeighborNest';
@@ -18,9 +18,9 @@ require_once __DIR__ . '/includes/sidebar.php';
 $filterStatus = $_GET['status'] ?? 'all';
 $properties = $_SESSION['owner_properties'] ?? [];
 
-$filteredProperties = array_filter($properties, function($p) use ($filterStatus) {
-    if ($filterStatus === 'all') return true;
-    return (strcasecmp($p['status'], $filterStatus) === 0);
+$filteredProperties = array_filter($properties, function ($p) use ($filterStatus) {
+  if ($filterStatus === 'all') return true;
+  return (strcasecmp($p['status'], $filterStatus) === 0);
 });
 ?>
 
@@ -28,7 +28,7 @@ $filteredProperties = array_filter($properties, function($p) use ($filterStatus)
   <?php require_once __DIR__ . '/includes/top-navbar.php'; ?>
 
   <main class="page-content">
-    
+
     <!-- Page Header & Action CTA -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
       <div>
@@ -36,23 +36,25 @@ $filteredProperties = array_filter($properties, function($p) use ($filterStatus)
         <span class="text-secondary-custom small">Manage your accommodations, occupancy rates, pricing, and verification status</span>
       </div>
 
-      <a href="add-property.php" class="btn btn-nh-primary px-3.5 py-2 shadow-sm">
-        <i class="fas fa-plus me-1"></i> Add New Accommodation Listing
+      <a href="add-property.php" class="btn btn-nh-primary px-4 py-2 shadow-sm">
+        <i class="fas fa-plus me-1"></i> Add New Property Listing
       </a>
     </div>
 
+
+
     <!-- Status Tabs Navigation Bar -->
-    <div class="d-flex flex-wrap gap-2 mb-4 p-1.5 bg-white rounded-pill border shadow-sm" style="width: fit-content;">
-      <a href="properties.php?status=all" class="btn btn-sm <?= ($filterStatus === 'all') ? 'btn-primary' : 'btn-light' ?> rounded-pill px-3 fw-semibold">
+    <div class="d-flex flex-wrap gap-2 mb-4 p-2 bg-white rounded-pill border shadow-sm w-100 overflow-x-auto">
+      <a href="properties.php?status=all" class="btn btn-sm <?= ($filterStatus === 'all') ? 'btn-primary' : 'btn-light' ?> rounded-pill px-3 py-1.5 fw-semibold text-nowrap">
         All Listed (<?= count($properties) ?>)
       </a>
-      <a href="properties.php?status=Active" class="btn btn-sm <?= ($filterStatus === 'Active') ? 'btn-success text-white' : 'btn-light' ?> rounded-pill px-3 fw-semibold">
+      <a href="properties.php?status=Active" class="btn btn-sm <?= ($filterStatus === 'Active') ? 'btn-success text-white' : 'btn-light' ?> rounded-pill px-3 py-1.5 fw-semibold text-nowrap">
         Active (<?= count(array_filter($properties, fn($p) => $p['status'] === 'Active')) ?>)
       </a>
-      <a href="properties.php?status=Pending Verification" class="btn btn-sm <?= ($filterStatus === 'Pending Verification') ? 'btn-warning text-dark' : 'btn-light' ?> rounded-pill px-3 fw-semibold">
+      <a href="properties.php?status=Pending Verification" class="btn btn-sm <?= ($filterStatus === 'Pending Verification') ? 'btn-warning text-dark' : 'btn-light' ?> rounded-pill px-3 py-1.5 fw-semibold text-nowrap">
         Pending Verification (<?= count(array_filter($properties, fn($p) => $p['status'] === 'Pending Verification')) ?>)
       </a>
-      <a href="properties.php?status=Draft" class="btn btn-sm <?= ($filterStatus === 'Draft') ? 'btn-secondary' : 'btn-light' ?> rounded-pill px-3 fw-semibold">
+      <a href="properties.php?status=Draft" class="btn btn-sm <?= ($filterStatus === 'Draft') ? 'btn-secondary' : 'btn-light' ?> rounded-pill px-3 py-1.5 fw-semibold text-nowrap">
         Drafts (<?= count(array_filter($properties, fn($p) => $p['status'] === 'Draft')) ?>)
       </a>
     </div>
@@ -74,66 +76,96 @@ $filteredProperties = array_filter($properties, function($p) use ($filterStatus)
         </div>
       <?php else: ?>
         <?php foreach ($filteredProperties as $item):
-          $badgeClass = 'status-' . strtolower(str_replace(' ', '-', $item['status']));
+          $statusLower = strtolower($item['status']);
+          $statusClass = ($statusLower === 'active') ? 'active' : (($statusLower === 'draft') ? 'inactive' : 'pending');
+          $occupiedCount = max(0, $item['total_rooms'] - $item['available_beds']);
         ?>
           <div class="col-md-6 col-lg-4">
-            <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden h-100 d-flex flex-column">
-              <!-- Property Image Header -->
-              <div class="position-relative" style="height: 190px; background: #E2E8F0;">
-                <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="w-100 h-100" style="object-fit: cover;" />
-                
-                <!-- Status Badges Top Left -->
-                <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
-                  <span class="badge-status <?= $badgeClass ?> shadow-sm">
-                    <?= htmlspecialchars($item['status']) ?>
-                  </span>
+            <div class="property-card">
+
+              <!-- Image Wrapper -->
+              <div class="card-image-wrapper">
+                <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy" />
+
+                <!-- Badges -->
+                <div class="card-badges">
                   <?php if (!empty($item['verified'])): ?>
-                    <span class="badge bg-success text-white extra-small px-2 py-1 rounded-pill">
-                      <i class="fas fa-check-circle me-1"></i> Verified Property
+                    <span class="badge-tag badge-verified">
+                      <i class="fas fa-check-circle"></i> Verified
                     </span>
                   <?php endif; ?>
-                </div>
-
-                <!-- Rating Tag Top Right -->
-                <div class="position-absolute top-0 end-0 m-3">
-                  <span class="badge bg-white text-dark shadow-sm px-2.5 py-1.5 fw-bold extra-small rounded-pill">
-                    <i class="fas fa-star text-warning me-1"></i> <?= $item['rating'] ?> (<?= $item['reviews_count'] ?>)
+                  <span class="badge-tag badge-type"><?= htmlspecialchars($item['type']) ?></span>
+                  <span class="badge-tag badge-status <?= $statusClass ?>">
+                    <i class="fas fa-circle me-1" style="font-size: 8px;"></i> <?= htmlspecialchars($item['status']) ?>
                   </span>
                 </div>
               </div>
 
-              <!-- Property Body Info -->
-              <div class="card-body p-4 d-flex flex-column flex-grow-1">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                  <span class="extra-small text-secondary-custom fw-semibold"><i class="fas fa-location-dot text-danger me-1"></i> <?= htmlspecialchars($item['area']) ?></span>
-                  <span class="badge bg-soft-lavender text-royal-blue extra-small"><?= htmlspecialchars($item['type']) ?></span>
+              <!-- Card Body -->
+              <div class="card-body">
+
+                <!-- Location & Rating -->
+                <div class="card-top-row">
+                  <span class="card-location">
+                    <i class="fas fa-location-dot"></i> <?= htmlspecialchars($item['area']) ?>
+                  </span>
+                  <span class="card-rating">
+                    <i class="fas fa-star"></i> <?= $item['rating'] ?> <span class="rating-count">(<?= $item['reviews_count'] ?>)</span>
+                  </span>
                 </div>
 
-                <h5 class="fw-bold text-dark mb-2 text-truncate">
-                  <?= htmlspecialchars($item['title']) ?>
-                </h5>
+                <!-- Title -->
+                <h3 class="card-title" title="<?= htmlspecialchars($item['title']) ?>">
+                  <a href="javascript:void(0)" onclick="alert('Viewing property #<?= $item['id'] ?> details')"><?= htmlspecialchars($item['title']) ?></a>
+                </h3>
 
-                <div class="d-flex flex-wrap gap-2 extra-small mb-3">
-                  <span class="badge bg-light text-dark border"><i class="fas fa-bed text-primary me-1"></i> Available Beds: <strong><?= $item['available_beds'] ?>/<?= $item['total_rooms'] ?></strong></span>
-                  <span class="badge bg-light text-dark border"><i class="fas fa-eye text-info me-1"></i> Views: <strong><?= number_format($item['views']) ?></strong></span>
+                <!-- Metrics: Rooms, Occupancy, Availability -->
+                <div class="card-metrics">
+                  <span class="metric-item">
+                    <i class="fas fa-bed"></i>
+                    <strong><?= $item['total_rooms'] ?></strong> Rooms
+                  </span>
+                  <span class="metric-item">
+                    <i class="fas fa-users"></i>
+                    <strong><?= $occupiedCount ?></strong> Occupied
+                  </span>
+                  <span class="metric-item">
+                    <i class="fas fa-door-open"></i>
+                    <strong><?= $item['available_beds'] ?></strong> Available
+                  </span>
                 </div>
 
-                <!-- Price Footer & Actions -->
-                <div class="pt-3 border-top mt-auto d-flex align-items-center justify-content-between gap-2">
-                  <div>
-                    <span class="extra-small text-muted d-block">Monthly Rent</span>
-                    <strong class="text-royal-blue fs-5">₹<?= number_format($item['rent']) ?></strong><span class="extra-small text-muted">/mo</span>
+                <!-- Rent & Highlighted Deposit (87% Occupancy Removed as requested) -->
+                <div class="card-pricing">
+                  <div class="price-block">
+                    <span class="price-label">Monthly Rent</span>
+                    <span class="price-amount">
+                      ₹<?= number_format($item['rent']) ?> <span class="price-period">/month</span>
+                    </span>
                   </div>
 
-                  <div class="d-flex gap-1.5">
-                    <button class="btn btn-sm btn-light border px-2.5" title="Edit Listing Details" onclick="alert('Editing listing #<?= $item['id'] ?> simulated.')">
-                      <i class="fas fa-pen text-secondary"></i>
-                    </button>
-                    <a href="properties.php?delete=<?= $item['id'] ?>" class="btn btn-sm btn-outline-danger px-2.5" title="Delete Property" onclick="return confirm('Delete this listing permanently?');">
-                      <i class="fas fa-trash-can"></i>
-                    </a>
+                  <!-- Highlighted Deposit Tag -->
+                  <div class="price-deposit-highlight" title="Security Deposit Amount">
+                    <i class="fas fa-shield-halved text-primary"></i> Deposit: ₹<?= number_format($item['deposit']) ?>
                   </div>
                 </div>
+
+                <!-- Action Buttons (Owner Specific) -->
+                <div class="card-actions">
+                  <a href="javascript:void(0)" class="btn-action btn-view" onclick="alert('Viewing listing #<?= $item['id'] ?>')">
+                    <i class="fas fa-eye"></i> View
+                  </a>
+                  <a href="javascript:void(0)" class="btn-action btn-edit" onclick="alert('Editing listing #<?= $item['id'] ?>')">
+                    <i class="fas fa-pen"></i> Edit
+                  </a>
+                  <a href="javascript:void(0)" class="btn-action btn-manage" onclick="alert('Managing rooms for listing #<?= $item['id'] ?>')">
+                    <i class="fas fa-door-open"></i> Rooms
+                  </a>
+                  <a href="properties.php?delete=<?= $item['id'] ?>" class="btn-action btn-delete" title="Delete Property Listing" onclick="return confirm('Delete this property permanently?');">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </div>
+
               </div>
             </div>
           </div>
@@ -142,4 +174,4 @@ $filteredProperties = array_filter($properties, function($p) use ($filterStatus)
     </div>
   </main>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/footer.php'; ?>

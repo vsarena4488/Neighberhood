@@ -5,11 +5,11 @@ $unreadNotifications = function_exists('getUnreadOwnerNotificationsCount') ? get
 ?>
 <header class="app-topbar">
   <!-- Mobile Drawer Toggle Button -->
-  <div class="d-flex align-items-center gap-2">
+  <div class="topbar-left d-flex align-items-center gap-2 gap-lg-3">
     <button class="btn btn-sm btn-light border d-lg-none p-2" id="sidebarToggleBtn" aria-label="Open Navigation">
       <i class="fas fa-bars fs-6"></i>
     </button>
-    
+
     <!-- Topbar Search Bar -->
     <div class="topbar-search-box">
       <i class="fas fa-magnifying-glass"></i>
@@ -18,7 +18,7 @@ $unreadNotifications = function_exists('getUnreadOwnerNotificationsCount') ? get
   </div>
 
   <!-- Topbar Action Links & Profile -->
-  <div class="d-flex align-items-center gap-2.5">
+  <div class="topbar-actions d-flex align-items-center gap-2 gap-md-3">
     <!-- Quick Add Property Action CTA -->
     <a href="add-property.php" class="btn btn-sm btn-nh-primary px-3 shadow-sm d-none d-sm-inline-flex">
       <i class="fas fa-plus me-1"></i> Add New Property
@@ -41,7 +41,7 @@ $unreadNotifications = function_exists('getUnreadOwnerNotificationsCount') ? get
     </a>
 
     <!-- Profile Link dropdown button -->
-    <a href="profile.php" class="d-flex align-items-center gap-2 text-decoration-none ms-1">
+    <a href="profile.php" class="topbar-profile d-flex align-items-center gap-2 text-decoration-none">
       <img src="<?= htmlspecialchars($owner['avatar']) ?>" alt="<?= htmlspecialchars($owner['name']) ?>" class="topbar-user-avatar" />
       <div class="d-none d-xl-block text-start lh-1">
         <strong class="d-block extra-small text-dark fw-bold"><?= htmlspecialchars($owner['name']) ?></strong>
