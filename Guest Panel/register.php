@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $phone = trim($_POST['phone'] ?? '');
   $password = $_POST['password'] ?? '';
   $confirm_password = $_POST['confirm_password'] ?? '';
-  $user_type = $_POST['user_type'] ?? 'student';
+  $user_type = $_POST['user_type'] ?? 'user';
   $terms = isset($_POST['terms']);
 
   if (empty($fullname) || empty($email) || empty($password) || empty($confirm_password)) {
@@ -28,9 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['user_email'] = $email;
     $_SESSION['user_name'] = $fullname;
     $_SESSION['user_type'] = $user_type;
-    $_SESSION['user_role'] = ($user_type === 'landlord') ? 'owner' : 'user';
+    $_SESSION['user_role'] = ($user_type === 'owner' || $user_type === 'landlord') ? 'owner' : 'user';
 
-    $message = 'Registration successful! Welcome to NeighborHood. You can now log in to your account.';
+    $redirectPage = ($_SESSION['user_role'] === 'owner') ? '../Owner Panel/dashboard.php' : '../User Panel/dashboard.php';
+    $message = 'Registration successful! Account created as ' . (($_SESSION['user_role'] === 'owner') ? 'Property Owner' : 'User / Tenant') . '. You can now log in.';
     $message_type = 'success';
   }
 }
@@ -230,6 +231,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <form action="register.php" method="POST" oninput="checkPasswordMatch()">
             <div class="row g-3">
+              <!-- Account Role Selector (User vs Owner) -->
+              <div class="col-12 mb-2">
+                <label class="form-label small fw-bold text-secondary mb-2 d-block">Account Type / Role *</label>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="p-3 border rounded-4 d-flex align-items-center gap-2.5 cursor-pointer w-100 role-option-card bg-light active" id="roleUserCard" style="cursor: pointer;">
+                      <input type="radio" name="user_type" value="user" checked class="form-check-input mt-0" onchange="toggleRoleSelection(this.value)" />
+                      <div>
+                        <strong class="d-block small text-dark"><i class="fas fa-user-graduate text-primary me-1"></i> User / Tenant</strong>
+                        <span class="fs-xs text-muted d-block">Book PGs, Hostels & Rooms</span>
+                      </div>
+                    </label>
+                  </div>
+                  <div class="col-6">
+                    <label class="p-3 border rounded-4 d-flex align-items-center gap-2.5 cursor-pointer w-100 role-option-card bg-light" id="roleOwnerCard" style="cursor: pointer;">
+                      <input type="radio" name="user_type" value="owner" class="form-check-input mt-0" onchange="toggleRoleSelection(this.value)" />
+                      <div>
+                        <strong class="d-block small text-dark"><i class="fas fa-building-user text-success me-1"></i> Property Owner</strong>
+                        <span class="fs-xs text-muted d-block">List PGs, Hostels & Receive Bookings</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
               <!-- Full Name -->
               <div class="col-md-6">
                 <label class="form-label small fw-bold text-secondary mb-1">Full Name *</label>
@@ -239,14 +265,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
               </div>
 
-              <!-- User Persona Type -->
+              <!-- Specific Sub-Category -->
               <div class="col-md-6">
-                <label class="form-label small fw-bold text-secondary mb-1">I am registering as *</label>
-                <select name="user_type" class="form-select" required>
-                  <option value="student" selected>College Student (PG / Hostel)</option>
+                <label class="form-label small fw-bold text-secondary mb-1">Category Detail *</label>
+                <select name="user_category" id="userCategorySelect" class="form-select">
+                  <option value="student" selected>College Student (PG / Hostel Renter)</option>
                   <option value="employee">Working Professional / Employee</option>
                   <option value="family">Family Renter (Flats / Houses)</option>
-                  <option value="landlord">Property Owner / Landlord</option>
                 </select>
               </div>
 
@@ -342,6 +367,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } else {
         status.innerText = '✗ Passwords do not match';
         status.className = 'extra-small mt-1 text-danger fw-semibold';
+      }
+    }
+
+    function toggleRoleSelection(role) {
+      const uCard = document.getElementById('roleUserCard');
+      const oCard = document.getElementById('roleOwnerCard');
+      const catSelect = document.getElementById('userCategorySelect');
+
+      if (role === 'owner' || role === 'landlord') {
+        oCard.classList.add('border-success', 'bg-success-subtle');
+        oCard.classList.remove('bg-light');
+        uCard.classList.remove('border-primary', 'bg-soft-lavender');
+        uCard.classList.add('bg-light');
+
+        if (catSelect) {
+          catSelect.innerHTML = `
+            <option value="owner" selected>PG / Hostel Landlord</option>
+            <option value="flat_owner">Apartment / Flat Owner</option>
+            <option value="agent">Property Agent / Manager</option>
+          `;
+        }
+      } else {
+        uCard.classList.add('border-primary', 'bg-soft-lavender');
+        uCard.classList.remove('bg-light');
+        oCard.classList.remove('border-success', 'bg-success-subtle');
+        oCard.classList.add('bg-light');
+
+        if (catSelect) {
+          catSelect.innerHTML = `
+            <option value="student" selected>College Student (PG / Hostel Renter)</option>
+            <option value="employee">Working Professional / Employee</option>
+            <option value="family">Family Renter (Flats / Houses)</option>
+          `;
+        }
       }
     }
   </script>

@@ -19,14 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['user_role'] = $role;
 
     if ($role === 'admin') {
-      $message = 'Admin authentication verified! Redirecting to Admin Dashboard...';
-      $message_type = 'success';
-    } elseif ($role === 'owner') {
-      $message = 'Property Landlord login verified! Redirecting to Owner Portal...';
-      $message_type = 'success';
+      header('Location: ../Admin Panel/index.php');
+      exit;
+    } elseif ($role === 'owner' || $role === 'landlord') {
+      header('Location: ../Owner Panel/dashboard.php');
+      exit;
     } else {
-      $message = 'Welcome back! Tenant login verified! Redirecting to Dashboard...';
-      $message_type = 'success';
+      header('Location: ../User Panel/dashboard.php');
+      exit;
     }
   }
 }
