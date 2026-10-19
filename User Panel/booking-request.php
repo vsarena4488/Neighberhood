@@ -59,15 +59,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newId, $userId, $property['id'], $selectedRoomName, $sqlDate, $duration, $property['rent'], $property['deposit'], 'Paid (' . $paymentMethod . ')', ($property['rent'] + $property['deposit'] - 500)
         ]);
 
+        $ownerId = (int)($property['owner_id'] ?? 3);
         $txnId = 'TXN-' . rand(10000, 99999);
         dbExecute("INSERT INTO payments (id, booking_id, user_id, owner_id, amount, payment_type, method, status)
-                   VALUES (?, ?, ?, 3, 500, 'Token Deposit', ?, 'Completed')", [
-            $txnId, $newId, $userId, $paymentMethod
+                   VALUES (?, ?, ?, ?, 500, 'Token Deposit', ?, 'Completed')", [
+            $txnId, $newId, $userId, $ownerId, $paymentMethod
         ]);
 
         dbExecute("INSERT INTO notifications (user_id, title, `desc`, icon, color, link) VALUES (?, ?, ?, 'fa-calendar-check', 'success', 'booking-details.php?id=$newId')", [
             $userId, "Booking Application #$newId Submitted", "Your request for {$property['title']} was sent to host."
         ]);
+
+        dbExecute("INSERT INTO notifications (user_id, title, `desc`, icon, color, link) VALUES (?, ?, ?, 'fa-calendar-plus', 'primary', 'booking-details.php?id=$newId')", [
+            $ownerId, "New Booking Request #$newId", "New booking application received for {$property['title']}."
+        ]);
+
+        logActivity('Booking Created', "Booking #$newId created for property {$property['id']}", $userId);
     } catch (Exception $e) {
         // Fallback gracefully
     }

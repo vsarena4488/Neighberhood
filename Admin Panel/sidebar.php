@@ -126,8 +126,6 @@ $analyticsPages = ['analytics.php', 'reports.php', 'activity_logs.php'];
     </a>
   </nav>
 </aside>
-  </nav>
-</aside>
 
 <!-- Sidebar Overlay (mobile) -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>

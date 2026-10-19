@@ -58,9 +58,6 @@ $adminUser = $_SESSION['admin'] ?? ['name' => 'System Admin', 'email' => 'admin@
     </div>
   </div>
 </header>
-    </div>
-  </div>
-</header>
 
 <style>
   /* ===================================================

@@ -38,7 +38,7 @@ CREATE TABLE `activity_logs` (
   `ip_address` varchar(50) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `activity_logs` (
 
 LOCK TABLES `activity_logs` WRITE;
 /*!40000 ALTER TABLE `activity_logs` DISABLE KEYS */;
-INSERT INTO `activity_logs` VALUES (1,1,'Admin Login','Administrator logged into Admin Panel','127.0.0.1','2026-10-19 03:56:33'),(2,3,'Property Listing Created','Owner created listing Sunrise Executive PG for Boys','127.0.0.1','2026-10-19 03:56:33'),(3,2,'Booking Created','Student created booking #B1024 for property 101','127.0.0.1','2026-10-19 03:56:33'),(4,2,'Token Payment','Paid ₹500 via UPI (TXN-78901)','127.0.0.1','2026-10-19 03:56:33');
+INSERT INTO `activity_logs` VALUES (1,1,'Admin Login','Administrator logged into Admin Panel','127.0.0.1','2026-10-19 03:56:33'),(2,3,'Property Listing Created','Owner created listing Sunrise Executive PG for Boys','127.0.0.1','2026-10-19 03:56:33'),(3,2,'Booking Created','Student created booking #B1024 for property 101','127.0.0.1','2026-10-19 03:56:33'),(4,2,'Token Payment','Paid ₹500 via UPI (TXN-78901)','127.0.0.1','2026-10-19 03:56:33'),(5,1,'Test System Check','Testing logActivity from test script','127.0.0.1','2026-10-19 04:45:10');
 /*!40000 ALTER TABLE `activity_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -400,7 +400,7 @@ CREATE TABLE `users` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -409,7 +409,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'System Administrator','admin@neighborhood.com','+91 99000 11223','$2y$10$Fec6.RRE1zOHMi9K9D2pW.wGxv4OiMGDaVsbCSxTYn/3EoMnYAYre','admin','admin','Bangalore','https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Male',NULL,'NeighborNest Inc.',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(2,'Vishal Patel','vishal.patel@example.com','+91 98765 43210','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','user','student','Bangalore','https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80','Christ University, Bangalore','B.Tech Computer Science','4th Year (Final Year)','CU-2022-CS-4891','2001-08-15','Male','+91 98765 00000 (Father)',NULL,1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(3,'Rajesh Sharma','rajesh.sharma@neighborhood.com','+91 98765 43210','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','owner','owner','Bangalore','https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Male',NULL,'St. Mark Accommodations & Living Solutions',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(4,'Priya Sharma','priya.sharma@neighborhood.com','+91 98450 11223','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','owner','owner','Bangalore','https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Female',NULL,'Serenity Living Hostels',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(5,'Sara Khan','sara.khan@neighborhood.com','+91 97312 88990','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','owner','owner','Bangalore','https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Female',NULL,'Greenwood Estates',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(6,'Rahul Verma','rahul.verma@example.com','+91 98111 22334','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','user','student','Delhi','https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80','Delhi University','B.Com Honours','2nd Year','DU-2023-BC-112','2003-02-10','Male','+91 98111 00000',NULL,1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(7,'Ananya Sen','ananya.sen@example.com','+91 98222 33445','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','user','student','Mumbai','https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80','NMIMS Mumbai','BBA Finance','3rd Year','NM-2022-BB-903','2002-11-20','Female','+91 98222 00000',NULL,1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(8,'Vikram Singh','vikram.singh@neighborhood.com','+91 98333 44556','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','owner','owner','Mumbai','https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Male',NULL,'Metro Luxury Rentals',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33');
+INSERT INTO `users` VALUES (1,'System Administrator','admin@neighborhood.com','+91 99000 11223','$2y$10$Fec6.RRE1zOHMi9K9D2pW.wGxv4OiMGDaVsbCSxTYn/3EoMnYAYre','admin','admin','Bangalore','https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Male',NULL,'NeighborNest Inc.',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(2,'Vishal Patel','vishal.patel@example.com','+91 98765 43210','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','user','student','Bangalore','https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80','Christ University, Bangalore','B.Tech Computer Science','4th Year (Final Year)','CU-2022-CS-4891','2001-08-15','Male','+91 98765 00000 (Father)',NULL,1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(3,'Rajesh Sharma','rajesh.sharma@neighborhood.com','+91 98765 43210','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','owner','owner','Bangalore','https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Male',NULL,'St. Mark Accommodations & Living Solutions',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(4,'Priya Sharma','priya.sharma@neighborhood.com','+91 98450 11223','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','owner','owner','Bangalore','https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Female',NULL,'Serenity Living Hostels',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(5,'Sara Khan','sara.khan@neighborhood.com','+91 97312 88990','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','owner','owner','Bangalore','https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Female',NULL,'Greenwood Estates',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(6,'Rahul Verma','rahul.verma@example.com','+91 98111 22334','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','user','student','Delhi','https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80','Delhi University','B.Com Honours','2nd Year','DU-2023-BC-112','2003-02-10','Male','+91 98111 00000',NULL,1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(7,'Ananya Sen','ananya.sen@example.com','+91 98222 33445','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','user','student','Mumbai','https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80','NMIMS Mumbai','BBA Finance','3rd Year','NM-2022-BB-903','2002-11-20','Female','+91 98222 00000',NULL,1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(8,'Vikram Singh','vikram.singh@neighborhood.com','+91 98333 44556','$2y$10$mBn0SCDhfcNCCtx7MRlsNuoFuUYJQazsfectK44P0WZbCF54WTeOa','owner','owner','Mumbai','https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Male',NULL,'Metro Luxury Rentals',1,'active','2026-10-19 03:56:33','2026-10-19 03:56:33'),(9,'vishalex','vsarena753@rku.av.in','9316830538','$2y$10$nLIME0ocSfrABgC4BXMejuarw7KN2Z3ezidS9/7H/HgkNO./HDH66','user','user','Bangalore','https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',NULL,NULL,NULL,NULL,NULL,'Male',NULL,NULL,1,'active','2026-10-19 04:36:49','2026-10-19 04:36:49');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -439,10 +439,6 @@ LOCK TABLES `wishlists` WRITE;
 INSERT INTO `wishlists` VALUES (1,2,101,'2026-10-19 03:56:33'),(2,2,102,'2026-10-19 03:56:33'),(3,2,103,'2026-10-19 03:56:33'),(4,2,104,'2026-10-19 03:56:33'),(5,2,201,'2026-10-19 03:56:33'),(6,2,301,'2026-10-19 03:56:33');
 /*!40000 ALTER TABLE `wishlists` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'neighborhood_db'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -453,4 +449,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-19 10:01:21
+-- Dump completed on 2026-10-19 10:21:27

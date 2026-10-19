@@ -15,10 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = 'Please enter both email/username and password.';
     $message_type = 'danger';
   } else {
-    // Check in database
-    $user = dbFetchOne("SELECT * FROM users WHERE email = ? LIMIT 1", [$email]);
+    // Check in database by email, phone, or student_id
+    $user = dbFetchOne("SELECT * FROM users WHERE LOWER(email) = LOWER(?) OR phone = ? OR student_id = ? LIMIT 1", [$email, $email, $email]);
 
-    if ($user && (password_verify($password, $user['password']) || $password === 'password123' || $password === 'admin123' || $password === $user['password'])) {
+    if (!empty($user) && (password_verify($password, $user['password']) || $password === 'password123' || $password === 'admin123' || $password === $user['password'])) {
       $_SESSION['user_id'] = $user['id'];
       $_SESSION['user_email'] = $user['email'];
       $_SESSION['user_name'] = $user['name'];
@@ -31,10 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: ../Admin Panel/index.php');
         exit;
       } elseif ($user['role'] === 'owner') {
+        $user['verified'] = !empty($user['is_verified']);
         $_SESSION['owner'] = $user;
         header('Location: ../Owner Panel/dashboard.php');
         exit;
       } else {
+        $user['verified'] = !empty($user['is_verified']);
         $_SESSION['user'] = $user;
         header('Location: ../User Panel/dashboard.php');
         exit;

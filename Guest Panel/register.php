@@ -45,6 +45,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $_SESSION['user_name'] = $fullname;
       $_SESSION['user_role'] = $role;
 
+      $userSessionData = [
+        'id' => $newUserId,
+        'name' => $fullname,
+        'email' => $email,
+        'phone' => $phone,
+        'role' => $role,
+        'user_type' => $user_type,
+        'verified' => true,
+        'is_verified' => 1
+      ];
+
+      if ($role === 'owner') {
+        $_SESSION['owner'] = $userSessionData;
+      } else {
+        $_SESSION['user'] = $userSessionData;
+      }
+
       logActivity('User Registered', "New account created as {$role}", $newUserId);
 
       $redirectPage = ($role === 'owner') ? '../Owner Panel/dashboard.php' : '../User Panel/dashboard.php';

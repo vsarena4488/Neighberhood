@@ -56,70 +56,86 @@ class Database {
     }
 }
 
-// Global helper functions
-function getDB() {
-    return Database::getConnection();
+// Global helper functions wrapped in function_exists guards
+if (!function_exists('getDB')) {
+    function getDB() {
+        return Database::getConnection();
+    }
 }
 
-function dbFetchOne($sql, $params = []) {
-    $stmt = getDB()->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetch();
+if (!function_exists('dbFetchOne')) {
+    function dbFetchOne($sql, $params = []) {
+        $stmt = getDB()->prepare($sql);
+        $stmt->execute($params);
+        $res = $stmt->fetch();
+        return $res ?: [];
+    }
 }
 
-function dbFetchAll($sql, $params = []) {
-    $stmt = getDB()->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchAll();
+if (!function_exists('dbFetchAll')) {
+    function dbFetchAll($sql, $params = []) {
+        $stmt = getDB()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
 }
 
-function dbExecute($sql, $params = []) {
-    $stmt = getDB()->prepare($sql);
-    return $stmt->execute($params);
+if (!function_exists('dbExecute')) {
+    function dbExecute($sql, $params = []) {
+        $stmt = getDB()->prepare($sql);
+        return $stmt->execute($params);
+    }
 }
 
-function dbLastId() {
-    return getDB()->lastInsertId();
+if (!function_exists('dbLastId')) {
+    function dbLastId() {
+        return getDB()->lastInsertId();
+    }
 }
 
-function logActivity($action, $details = null, $userId = null) {
-    try {
-        if (!$userId && isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id'];
+if (!function_exists('logActivity')) {
+    function logActivity($action, $details = null, $userId = null) {
+        try {
+            if (!$userId && isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id'];
+            }
+            $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+            dbExecute("INSERT INTO activity_logs (user_id, action, details, ip_address) VALUES (?, ?, ?, ?)", [
+                $userId, $action, $details, $ip
+            ]);
+        } catch (Exception $e) {
+            // Fail silently for activity logging
         }
-        $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
-        dbExecute("INSERT INTO activity_logs (user_id, action, details, ip_address) VALUES (?, ?, ?, ?)", [
-            $userId, $action, $details, $ip
-        ]);
-    } catch (Exception $e) {
-        // Fail silently for activity logging
     }
 }
 
 // Auth and Access Control Helper
-function checkAdminAccess() {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    // If logged in as admin
-    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
-        return true;
-    }
-    // If mock admin session is active for demo
-    if (isset($_SESSION['user_email']) && $_SESSION['user_email'] === 'admin@neighborhood.com') {
-        $_SESSION['user_role'] = 'admin';
-        return true;
-    }
-    // For convenience in testing, set default admin if not logged in
-    if (!isset($_SESSION['admin'])) {
-        $admin = dbFetchOne("SELECT * FROM users WHERE role = 'admin' LIMIT 1");
-        if ($admin) {
-            $_SESSION['user_id'] = $admin['id'];
-            $_SESSION['user_email'] = $admin['email'];
-            $_SESSION['user_role'] = 'admin';
-            $_SESSION['user_name'] = $admin['name'];
-            $_SESSION['admin'] = $admin;
+if (!function_exists('checkAdminAccess')) {
+    function checkAdminAccess() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
+        // If logged in as admin
+        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+            return true;
+        }
+        // If mock admin session is active for demo
+        if (isset($_SESSION['user_email']) && $_SESSION['user_email'] === 'admin@neighborhood.com') {
+            $_SESSION['user_role'] = 'admin';
+            return true;
+        }
+        // For convenience in testing, set default admin if not logged in
+        if (!isset($_SESSION['admin'])) {
+            $admin = dbFetchOne("SELECT * FROM users WHERE role = 'admin' LIMIT 1");
+            if ($admin) {
+                $_SESSION['user_id'] = $admin['id'];
+                $_SESSION['user_email'] = $admin['email'];
+                $_SESSION['user_role'] = 'admin';
+                $_SESSION['user_name'] = $admin['name'];
+                $_SESSION['admin'] = $admin;
+            }
+        }
+        return true;
     }
-    return true;
 }
+
