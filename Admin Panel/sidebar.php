@@ -11,6 +11,9 @@ $currentPage = basename($currentPath);
 $userManagementPages = ['User_management.php', 'Students.php', 'Owners.php', 'Admins.php', 'Blocked_Users.php', 'verification_requests.php'];
 $propertyManagementPages = ['All_property.php', 'pending_approval.php', 'approved_properties.php', 'rejected_properties.php', 'reported_properties.php', 'property_categories.php'];
 $bookingManagementPages = ['all_bookings.php', 'pending.php', 'approved.php', 'completed.php', 'cancelled.php', 'booking_history.php'];
+$financialPages = ['payments.php', 'transactions.php', 'disputes.php'];
+$communityPages = ['reviews.php', 'complaints.php'];
+$analyticsPages = ['analytics.php', 'reports.php', 'activity_logs.php'];
 ?>
 <aside class="sidebar" id="sidebar">
 
@@ -68,47 +71,47 @@ $bookingManagementPages = ['all_bookings.php', 'pending.php', 'approved.php', 'c
 
     <!-- Financial -->
     <div class="nav-section">Financial</div>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Financial/payments.php" class="nav-item <?php echo in_array($currentPage, $financialPages) ? 'active' : ''; ?>">
       <i class="fas fa-wallet"></i>
       <span>Payment Management</span>
-      <span class="badge-nav">$187k</span>
+      <span class="badge-nav">₹187k</span>
     </a>
     <div class="nav-sub">
-      <a href="#" class="nav-item"><i class="fas fa-credit-card"></i><span>Transactions</span></a>
-      <a href="#" class="nav-item"><i class="fas fa-exclamation-triangle"></i><span>Disputes</span><span class="badge-nav danger">3</span></a>
+      <a href="<?php echo $adminRoot; ?>/Financial/transactions.php" class="nav-item <?php echo $currentPage == 'transactions.php' ? 'active' : ''; ?>"><i class="fas fa-credit-card"></i><span>Transactions</span></a>
+      <a href="<?php echo $adminRoot; ?>/Financial/disputes.php" class="nav-item <?php echo $currentPage == 'disputes.php' ? 'active' : ''; ?>"><i class="fas fa-exclamation-triangle"></i><span>Disputes</span><span class="badge-nav danger">1</span></a>
     </div>
 
     <!-- Reviews & Complaints -->
     <div class="nav-section">Community</div>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Community/reviews.php" class="nav-item <?php echo $currentPage == 'reviews.php' ? 'active' : ''; ?>">
       <i class="fas fa-star"></i>
       <span>Reviews Management</span>
-      <span class="badge-nav">4.6★</span>
+      <span class="badge-nav">4.8★</span>
     </a>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Community/complaints.php" class="nav-item <?php echo $currentPage == 'complaints.php' ? 'active' : ''; ?>">
       <i class="fas fa-exclamation-circle"></i>
       <span>Complaints</span>
-      <span class="badge-nav danger">7</span>
+      <span class="badge-nav danger">2</span>
     </a>
 
     <!-- Analytics & Reports -->
     <div class="nav-section">Analytics</div>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Analytics/analytics.php" class="nav-item <?php echo $currentPage == 'analytics.php' ? 'active' : ''; ?>">
       <i class="fas fa-chart-line"></i>
       <span>Analytics</span>
     </a>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Analytics/reports.php" class="nav-item <?php echo $currentPage == 'reports.php' ? 'active' : ''; ?>">
       <i class="fas fa-file-alt"></i>
       <span>Reports</span>
     </a>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Analytics/activity_logs.php" class="nav-item <?php echo $currentPage == 'activity_logs.php' ? 'active' : ''; ?>">
       <i class="fas fa-history"></i>
       <span>Activity Logs</span>
     </a>
 
     <!-- Settings -->
     <div class="nav-section">System</div>
-    <a href="#" class="nav-item">
+    <a href="<?php echo $adminRoot; ?>/Settings/settings.php" class="nav-item <?php echo $currentPage == 'settings.php' ? 'active' : ''; ?>">
       <i class="fas fa-cog"></i>
       <span>Settings</span>
     </a>
@@ -117,10 +120,12 @@ $bookingManagementPages = ['all_bookings.php', 'pending.php', 'approved.php', 'c
     <hr class="nav-divider" />
 
     <!-- Logout -->
-    <a href="#" class="nav-item logout">
+    <a href="<?php echo $adminRoot; ?>/logout.php" class="nav-item logout">
       <i class="fas fa-sign-out-alt"></i>
       <span>Logout</span>
     </a>
+  </nav>
+</aside>
   </nav>
 </aside>
 

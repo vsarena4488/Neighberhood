@@ -1,7 +1,33 @@
 <?php
-// users/owner_verification.php - Owner Verification Requests
-$breadcrumb = 'User Management > Owner Verification';
-$pageTitle = 'Owner Verification Requests';
+// users/owner_verification.php - Owner & Student Verification Requests
+require_once __DIR__ . '/../database/db.php';
+checkAdminAccess();
+
+$breadcrumb = 'User Management > Verification Requests';
+$pageTitle = 'Verification Requests';
+
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $targetUserId = (int)($_POST['target_user_id'] ?? 0);
+    $action = $_POST['action'] ?? '';
+    
+    if ($targetUserId > 0) {
+        if ($action === 'verify') {
+            dbExecute("UPDATE users SET is_verified = 1 WHERE id = ?", [$targetUserId]);
+            logActivity('User Verified', "Admin approved identity verification for user #$targetUserId");
+            $message = "User #$targetUserId verified successfully!";
+        } elseif ($action === 'reject') {
+            dbExecute("UPDATE users SET is_verified = 0, status = 'pending' WHERE id = ?", [$targetUserId]);
+            logActivity('User Rejected', "Admin rejected verification for user #$targetUserId");
+            $message = "User #$targetUserId verification rejected.";
+        }
+    }
+}
+
+$requests = dbFetchAll("SELECT u.*, (SELECT COUNT(*) FROM properties WHERE owner_id = u.id) as prop_count
+                        FROM users u
+                        WHERE u.role IN ('owner', 'user')
+                        ORDER BY u.is_verified ASC, u.created_at DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -595,142 +621,51 @@ $pageTitle = 'Owner Verification Requests';
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Priya Sharma</span><br />
-                                    <span class="text-muted-custom small">priya@example.com</span>
-                                </td>
-                                <td>Green Nest Hostels</td>
-                                <td><span class="property-count-badge">3 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon" title="PAN - Uploaded"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon" title="Property Deed - Uploaded"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon" title="Business License - Uploaded"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
-                                <td>Jun 15, 2024</td>
-                                <td><span class="status-badge pending">Pending</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn primary me-1">Review</button>
-                                    <button class="btn-sm-nn success me-1">Verify</button>
-                                    <button class="btn-sm-nn danger">Reject</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Rajesh Verma</span><br />
-                                    <span class="text-muted-custom small">rajesh@example.com</span>
-                                </td>
-                                <td>Verma Realty</td>
-                                <td><span class="property-count-badge">8 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon" title="PAN - Uploaded"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon missing" title="Property Deed - Missing"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon" title="Business License - Uploaded"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
-                                <td>Jun 14, 2024</td>
-                                <td><span class="status-badge reviewing">Reviewing</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn primary me-1">Review</button>
-                                    <button class="btn-sm-nn success me-1">Verify</button>
-                                    <button class="btn-sm-nn danger">Reject</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Amit Singh</span><br />
-                                    <span class="text-muted-custom small">amit@example.com</span>
-                                </td>
-                                <td>Singh PG Homes</td>
-                                <td><span class="property-count-badge">6 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon missing" title="PAN - Missing"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon" title="Property Deed - Uploaded"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon missing" title="Business License - Missing"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
-                                <td>Jun 13, 2024</td>
-                                <td><span class="status-badge pending">Pending</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn primary me-1">Review</button>
-                                    <button class="btn-sm-nn success me-1">Verify</button>
-                                    <button class="btn-sm-nn danger">Reject</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Sara Khan</span><br />
-                                    <span class="text-muted-custom small">sara@example.com</span>
-                                </td>
-                                <td>Khan Apartments</td>
-                                <td><span class="property-count-badge">2 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon" title="PAN - Uploaded"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon" title="Property Deed - Uploaded"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon" title="Business License - Uploaded"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
-                                <td>Jun 12, 2024</td>
-                                <td><span class="status-badge verified">Verified</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn outline me-1">View</button>
-                                    <span class="text-success small"><i class="fas fa-check-circle"></i> Verified</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Vikram Reddy</span><br />
-                                    <span class="text-muted-custom small">vikram@example.com</span>
-                                </td>
-                                <td>Reddy Estates</td>
-                                <td><span class="property-count-badge">4 Properties</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon" title="PAN - Uploaded"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon missing" title="Property Deed - Missing"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon missing" title="Business License - Missing"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
-                                <td>Jun 11, 2024</td>
-                                <td><span class="status-badge rejected">Rejected</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn outline me-1">View</button>
-                                    <span class="text-danger small">Insufficient docs</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="fw-medium">Meera Patel</span><br />
-                                    <span class="text-muted-custom small">meera@example.com</span>
-                                </td>
-                                <td>Patel Hostels</td>
-                                <td><span class="property-count-badge">1 Property</span></td>
-                                <td>
-                                    <div class="document-preview">
-                                        <span class="doc-icon" title="Aadhaar - Uploaded"><i class="fas fa-id-card"></i></span>
-                                        <span class="doc-icon missing" title="PAN - Missing"><i class="fas fa-file-alt"></i></span>
-                                        <span class="doc-icon missing" title="Property Deed - Missing"><i class="fas fa-home"></i></span>
-                                        <span class="doc-icon missing" title="Business License - Missing"><i class="fas fa-briefcase"></i></span>
-                                    </div>
-                                </td>
-                                <td>Jun 10, 2024</td>
-                                <td><span class="status-badge document-missing">Docs Missing</span></td>
-                                <td class="text-end">
-                                    <button class="btn-sm-nn primary me-1">Review</button>
-                                    <button class="btn-sm-nn outline me-1">Remind</button>
-                                    <button class="btn-sm-nn danger">Reject</button>
-                                </td>
-                            </tr>
+                            <?php if (empty($requests)): ?>
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-muted">No verification requests found.</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($requests as $u): ?>
+                                    <tr>
+                                        <td>
+                                            <span class="fw-medium"><?= htmlspecialchars($u['name']) ?></span><br />
+                                            <span class="text-muted-custom small"><?= htmlspecialchars($u['email']) ?> (<?= htmlspecialchars($u['phone'] ?? '') ?>)</span>
+                                        </td>
+                                        <td>
+                                            <?= htmlspecialchars($u['company_name'] ?: ($u['college'] ?: ($u['role'] === 'owner' ? 'Individual Host' : 'Student'))) ?>
+                                            <span class="badge bg-light text-secondary border ms-1"><?= ucfirst($u['role']) ?></span>
+                                        </td>
+                                        <td><span class="property-count-badge"><?= $u['prop_count'] ?> Properties</span></td>
+                                        <td>
+                                            <div class="document-preview">
+                                                <span class="doc-icon" title="Government ID"><i class="fas fa-id-card"></i></span>
+                                                <span class="doc-icon" title="Academic / Business Proof"><i class="fas fa-file-alt"></i></span>
+                                                <span class="doc-icon <?= $u['is_verified'] ? '' : 'missing' ?>" title="Verification Status"><i class="fas fa-check-circle"></i></span>
+                                            </div>
+                                        </td>
+                                        <td><?= date('M d, Y', strtotime($u['created_at'])) ?></td>
+                                        <td>
+                                            <?php if ($u['is_verified']): ?>
+                                                <span class="status-badge verified">Verified</span>
+                                            <?php else: ?>
+                                                <span class="status-badge pending">Pending</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-end">
+                                            <?php if (!$u['is_verified']): ?>
+                                                <form method="POST" class="d-inline">
+                                                    <input type="hidden" name="target_user_id" value="<?= $u['id'] ?>">
+                                                    <button type="submit" name="action" value="verify" class="btn-sm-nn success me-1 border-0">Verify</button>
+                                                    <button type="submit" name="action" value="reject" class="btn-sm-nn danger border-0">Reject</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <span class="text-success small fw-semibold"><i class="fas fa-shield-check"></i> Approved</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

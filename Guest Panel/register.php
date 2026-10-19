@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/database/db.php';
 
 $message = '';
 $message_type = '';
@@ -24,15 +25,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = 'You must agree to the Terms of Service and Privacy Policy.';
     $message_type = 'warning';
   } else {
-    // Demo registration handling
-    $_SESSION['user_email'] = $email;
-    $_SESSION['user_name'] = $fullname;
-    $_SESSION['user_type'] = $user_type;
-    $_SESSION['user_role'] = ($user_type === 'owner' || $user_type === 'landlord') ? 'owner' : 'user';
+    // Check if email already exists
+    $existing = dbFetchOne("SELECT id FROM users WHERE email = ? LIMIT 1", [$email]);
+    if ($existing) {
+      $message = 'An account with this email already exists. Please log in.';
+      $message_type = 'danger';
+    } else {
+      $role = ($user_type === 'owner' || $user_type === 'landlord') ? 'owner' : 'user';
+      $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+      
+      dbExecute(
+        "INSERT INTO users (name, email, phone, password, role, user_type, is_verified, status) VALUES (?, ?, ?, ?, ?, ?, 1, 'active')",
+        [$fullname, $email, $phone, $hashedPassword, $role, $user_type]
+      );
+      $newUserId = dbLastId();
 
-    $redirectPage = ($_SESSION['user_role'] === 'owner') ? '../Owner Panel/dashboard.php' : '../User Panel/dashboard.php';
-    $message = 'Registration successful! Account created as ' . (($_SESSION['user_role'] === 'owner') ? 'Property Owner' : 'User / Tenant') . '. You can now log in.';
-    $message_type = 'success';
+      $_SESSION['user_id'] = $newUserId;
+      $_SESSION['user_email'] = $email;
+      $_SESSION['user_name'] = $fullname;
+      $_SESSION['user_role'] = $role;
+
+      logActivity('User Registered', "New account created as {$role}", $newUserId);
+
+      $redirectPage = ($role === 'owner') ? '../Owner Panel/dashboard.php' : '../User Panel/dashboard.php';
+      header("Location: $redirectPage");
+      exit;
+    }
   }
 }
 ?>

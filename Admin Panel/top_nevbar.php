@@ -1,5 +1,15 @@
 <?php
 // top_navbar.php - Admin Panel Top Navigation Bar
+if (!isset($adminRoot)) {
+  $currentPath = $_SERVER['PHP_SELF'];
+  $adminDirName = '/Admin Panel';
+  $adminRoot = $currentPath;
+  $pos = strpos($currentPath, $adminDirName);
+  if ($pos !== false) {
+    $adminRoot = substr($currentPath, 0, $pos + strlen($adminDirName));
+  }
+}
+$adminUser = $_SESSION['admin'] ?? ['name' => 'System Admin', 'email' => 'admin@neighborhood.com'];
 ?>
 <header class="top-navbar">
   <div class="navbar-left">
@@ -9,47 +19,45 @@
   </div>
 
   <div class="navbar-right">
-    <button class="icon-btn" aria-label="Notifications">
+    <a href="<?php echo $adminRoot; ?>/All users/verification_requests.php" class="icon-btn" aria-label="Notifications" title="Verification Requests">
       <i class="fas fa-bell"></i>
       <span class="badge-dot"></span>
-      <span class="badge-count">8</span>
-    </button>
+      <span class="badge-count">3</span>
+    </a>
 
     <div class="dropdown">
       <a href="#" class="profile-toggle dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="https://i.pravatar.cc/80?img=11" alt="Admin" />
-        <span class="name">Admin</span>
+        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80" alt="Admin" />
+        <span class="name"><?php echo htmlspecialchars($adminUser['name'] ?? 'Admin'); ?></span>
       </a>
 
       <ul class="dropdown-menu profile-dropdown-menu" aria-labelledby="profileDropdown">
         <li class="dropdown-header">
-          <div class="fw-bold">Admin User</div>
-          <div class="small text-muted-custom">admin@neighbornest.com</div>
+          <div class="fw-bold"><?php echo htmlspecialchars($adminUser['name'] ?? 'Admin User'); ?></div>
+          <div class="small text-muted-custom"><?php echo htmlspecialchars($adminUser['email'] ?? 'admin@neighborhood.com'); ?></div>
           <div class="mt-1"><span class="badge bg-primary" style="font-size:0.6rem;">Super Admin</span></div>
         </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
-          <a class="dropdown-item" href="#">
-            <i class="fas fa-user-shield"></i> My Profile
+          <a class="dropdown-item" href="<?php echo $adminRoot; ?>/All users/Admins.php">
+            <i class="fas fa-user-shield"></i> Admins
           </a>
         </li>
         <li>
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item" href="<?php echo $adminRoot; ?>/Settings/settings.php">
             <i class="fas fa-cog"></i> Settings
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">
-            <i class="fas fa-question-circle"></i> Help Center
           </a>
         </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
-          <a class="dropdown-item logout-item" href="#">
+          <a class="dropdown-item logout-item" href="<?php echo $adminRoot; ?>/logout.php">
             <i class="fas fa-sign-out-alt"></i> Logout
           </a>
         </li>
       </ul>
+    </div>
+  </div>
+</header>
     </div>
   </div>
 </header>

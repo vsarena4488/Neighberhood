@@ -29,6 +29,66 @@ if (!isset($_SESSION['user'])) {
 // MASTER PROPERTIES DATASET
 // ============================================================
 function getPropertiesData() {
+    try {
+        require_once __DIR__ . '/../database/db.php';
+        $dbProps = dbFetchAll("SELECT p.*, u.name as owner_name, u.phone as owner_phone, u.email as owner_email, u.avatar as owner_avatar, u.is_verified as owner_verified
+                               FROM properties p
+                               JOIN users u ON p.owner_id = u.id
+                               WHERE p.status = 'approved'");
+        if (!empty($dbProps)) {
+            $list = [];
+            foreach ($dbProps as $p) {
+                $rooms = dbFetchAll("SELECT * FROM property_rooms WHERE property_id = ?", [$p['id']]);
+                $list[] = [
+                    'id' => (int)$p['id'],
+                    'owner_id' => (int)$p['owner_id'],
+                    'title' => $p['title'],
+                    'type' => $p['type'],
+                    'city' => $p['city'],
+                    'area' => $p['area'],
+                    'rent' => (float)$p['rent'],
+                    'deposit' => (float)$p['deposit'],
+                    'gender' => $p['gender'],
+                    'rating' => (float)$p['rating'],
+                    'reviews_count' => (int)$p['reviews_count'],
+                    'available_beds' => (int)$p['available_beds'],
+                    'total_rooms' => (int)$p['total_rooms'],
+                    'verified' => (bool)$p['verified'],
+                    'image' => $p['image'],
+                    'gallery' => json_decode($p['gallery'] ?? '[]', true) ?: [$p['image']],
+                    'amenities' => json_decode($p['amenities'] ?? '[]', true) ?: ['Wi-Fi', 'Daily Housekeeping', 'Geyser'],
+                    'nearby' => json_decode($p['nearby'] ?? '[]', true) ?: ['0.5 km to Metro station', '1.0 km to College'],
+                    'owner' => [
+                        'name' => $p['owner_name'],
+                        'phone' => $p['owner_phone'],
+                        'email' => $p['owner_email'],
+                        'avatar' => $p['owner_avatar'] ?: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
+                        'verified' => (bool)$p['owner_verified'],
+                        'rating' => 4.8,
+                        'properties_listed' => 4,
+                        'member_since' => '2023'
+                    ],
+                    'room_options' => !empty($rooms) ? array_map(function($r) {
+                        return [
+                            'name' => $r['name'],
+                            'occupancy' => $r['occupancy'],
+                            'rent' => (float)$r['rent'],
+                            'deposit' => (float)$r['deposit'],
+                            'status' => $r['status']
+                        ];
+                    }, $rooms) : [
+                        ['name' => 'Standard Single Room', 'occupancy' => 'Single', 'rent' => (float)$p['rent'], 'deposit' => (float)$p['deposit'], 'status' => 'Available']
+                    ],
+                    'rules' => json_decode($p['rules'] ?? '[]', true) ?: ['Gate curfew: 10:30 PM', 'No smoking'],
+                    'lat' => (float)$p['lat'],
+                    'lng' => (float)$p['lng'],
+                    'desc' => $p['description']
+                ];
+            }
+            return $list;
+        }
+    } catch (Exception $e) {}
+
     return [
         [
             'id' => 101,

@@ -418,7 +418,7 @@ $pageTitle = 'User Management';
             <!-- Stats Cards -->
             <div class="row g-3 g-md-4 mb-4">
                 <div class="col-6 col-md-3 fade-up delay-1">
-                    <a href="students.php" class="text-decoration-none">
+                    <a href="Students.php" class="text-decoration-none">
                         <div class="stat-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
@@ -434,7 +434,7 @@ $pageTitle = 'User Management';
                     </a>
                 </div>
                 <div class="col-6 col-md-3 fade-up delay-2">
-                    <a href="property_owners.php" class="text-decoration-none">
+                    <a href="Owners.php" class="text-decoration-none">
                         <div class="stat-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
@@ -450,7 +450,7 @@ $pageTitle = 'User Management';
                     </a>
                 </div>
                 <div class="col-6 col-md-3 fade-up delay-3">
-                    <a href="admins.php" class="text-decoration-none">
+                    <a href="Admins.php" class="text-decoration-none">
                         <div class="stat-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>

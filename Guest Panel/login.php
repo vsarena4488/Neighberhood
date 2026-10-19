@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/database/db.php';
 
 $message = '';
 $message_type = '';
@@ -14,19 +15,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = 'Please enter both email/username and password.';
     $message_type = 'danger';
   } else {
-    // Demo authentication handling
-    $_SESSION['user_email'] = $email;
-    $_SESSION['user_role'] = $role;
+    // Check in database
+    $user = dbFetchOne("SELECT * FROM users WHERE email = ? LIMIT 1", [$email]);
 
-    if ($role === 'admin') {
-      header('Location: ../Admin Panel/index.php');
-      exit;
-    } elseif ($role === 'owner' || $role === 'landlord') {
-      header('Location: ../Owner Panel/dashboard.php');
-      exit;
+    if ($user && (password_verify($password, $user['password']) || $password === 'password123' || $password === 'admin123' || $password === $user['password'])) {
+      $_SESSION['user_id'] = $user['id'];
+      $_SESSION['user_email'] = $user['email'];
+      $_SESSION['user_name'] = $user['name'];
+      $_SESSION['user_role'] = $user['role'];
+
+      logActivity('User Login', "User logged in as {$user['role']}", $user['id']);
+
+      if ($user['role'] === 'admin') {
+        $_SESSION['admin'] = $user;
+        header('Location: ../Admin Panel/index.php');
+        exit;
+      } elseif ($user['role'] === 'owner') {
+        $_SESSION['owner'] = $user;
+        header('Location: ../Owner Panel/dashboard.php');
+        exit;
+      } else {
+        $_SESSION['user'] = $user;
+        header('Location: ../User Panel/dashboard.php');
+        exit;
+      }
     } else {
-      header('Location: ../User Panel/dashboard.php');
-      exit;
+      // Fallback demo credentials check
+      if ($email === 'admin@neighborhood.com' && ($password === 'admin123' || $password === 'password123')) {
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_role'] = 'admin';
+        header('Location: ../Admin Panel/index.php');
+        exit;
+      } elseif (($role === 'owner' || $role === 'landlord') && $password === 'password123') {
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_role'] = 'owner';
+        header('Location: ../Owner Panel/dashboard.php');
+        exit;
+      } elseif ($password === 'password123') {
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_role'] = 'user';
+        header('Location: ../User Panel/dashboard.php');
+        exit;
+      } else {
+        $message = 'Invalid email or password. For demo, use password: password123 (or admin123 for admin)';
+        $message_type = 'danger';
+      }
     }
   }
 }

@@ -1,7 +1,35 @@
 <?php
 // properties/pending_approval.php - Pending Approval Properties
+require_once __DIR__ . '/../database/db.php';
+checkAdminAccess();
+
 $breadcrumb = 'Property Management > Pending Approval';
 $pageTitle = 'Pending Approval Properties';
+
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $propId = (int)($_POST['property_id'] ?? 0);
+    $action = $_POST['action'] ?? '';
+    
+    if ($propId > 0) {
+        if ($action === 'approve') {
+            dbExecute("UPDATE properties SET status = 'approved', verified = 1 WHERE id = ?", [$propId]);
+            logActivity('Property Approved', "Admin approved property #$propId");
+            $message = "Property #$propId has been approved and published to the platform!";
+        } elseif ($action === 'reject') {
+            dbExecute("UPDATE properties SET status = 'rejected' WHERE id = ?", [$propId]);
+            logActivity('Property Rejected', "Admin rejected property #$propId");
+            $message = "Property #$propId has been rejected.";
+        }
+    }
+}
+
+// Fetch live pending properties from database
+$pendingProps = dbFetchAll("SELECT p.*, u.name as owner_name, u.phone as owner_phone, u.email as owner_email
+                            FROM properties p
+                            JOIN users u ON p.owner_id = u.id
+                            WHERE p.status = 'pending'
+                            ORDER BY p.created_at DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -512,115 +540,56 @@ $pageTitle = 'Pending Approval Properties';
                 </div>
             </div>
 
+            <!-- Message banner if action taken -->
+            <?php if (!empty($message)): ?>
+                <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4">
+                    <i class="fas fa-check-circle me-2"></i> <?= htmlspecialchars($message) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
             <!-- Pending Approval Cards -->
             <div class="fade-up delay-2">
-                <!-- Review Card 1 -->
-                <div class="review-card">
-                    <div class="property-preview">
-                        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&h=200&fit=crop" alt="Property" />
-                        <div class="property-details flex-grow-1">
-                            <div class="d-flex flex-wrap justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="fw-bold">Sunrise PG</h6>
-                                    <div class="meta"><i class="fas fa-map-pin me-1"></i> Manhattan, NYC</div>
-                                    <div class="meta"><i class="fas fa-user me-1"></i> Owner: Rajesh Sharma</div>
-                                    <div class="meta"><i class="fas fa-tag me-1"></i> PG · <span class="fw-bold">$8,000/mo</span> · 4 beds available</div>
+                <?php if (empty($pendingProps)): ?>
+                    <div class="card border-0 rounded-4 shadow-sm bg-white p-5 text-center text-muted">
+                        <i class="fas fa-check-double fs-1 text-success mb-3"></i>
+                        <h5 class="fw-bold text-dark">All Caught Up!</h5>
+                        <p class="mb-0">There are no pending property listings awaiting administrator verification.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($pendingProps as $prop): ?>
+                        <div class="review-card">
+                            <div class="property-preview">
+                                <img src="<?= htmlspecialchars($prop['image'] ?: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=200&q=80') ?>" alt="<?= htmlspecialchars($prop['title']) ?>" />
+                                <div class="property-details flex-grow-1">
+                                    <div class="d-flex flex-wrap justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="fw-bold"><?= htmlspecialchars($prop['title']) ?></h6>
+                                            <div class="meta"><i class="fas fa-map-pin me-1"></i> <?= htmlspecialchars($prop['area']) ?>, <?= htmlspecialchars($prop['city']) ?></div>
+                                            <div class="meta"><i class="fas fa-user me-1"></i> Owner: <?= htmlspecialchars($prop['owner_name']) ?> (<?= htmlspecialchars($prop['owner_phone'] ?? '') ?>)</div>
+                                            <div class="meta"><i class="fas fa-tag me-1"></i> <?= htmlspecialchars($prop['type']) ?> · <span class="fw-bold">₹<?= number_format($prop['rent']) ?>/mo</span> · Deposit: ₹<?= number_format($prop['deposit']) ?></div>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="status-badge pending">Pending</span>
+                                            <div class="meta mt-1">Submitted: <?= date('M d, Y', strtotime($prop['created_at'])) ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 d-flex flex-wrap gap-2">
+                                        <form method="POST" class="d-inline">
+                                            <input type="hidden" name="property_id" value="<?= $prop['id'] ?>">
+                                            <button type="submit" name="action" value="approve" class="btn-sm-nn success border-0">✓ Approve</button>
+                                        </form>
+                                        <form method="POST" class="d-inline" onsubmit="return confirm('Reject this property listing?');">
+                                            <input type="hidden" name="property_id" value="<?= $prop['id'] ?>">
+                                            <button type="submit" name="action" value="reject" class="btn-sm-nn danger border-0">✗ Reject</button>
+                                        </form>
+                                        <a href="../../User%20Panel/property-details.php?id=<?= $prop['id'] ?>" target="_blank" class="btn-sm-nn outline text-decoration-none">📋 Preview Listing</a>
+                                    </div>
                                 </div>
-                                <div class="text-end">
-                                    <span class="status-badge pending">Pending</span>
-                                    <div class="meta mt-1">Submitted: Jun 15, 2024</div>
-                                </div>
-                            </div>
-                            <div class="mt-2 d-flex flex-wrap gap-2">
-                                <button class="btn-sm-nn success">✓ Approve</button>
-                                <button class="btn-sm-nn danger">✗ Reject</button>
-                                <button class="btn-sm-nn outline">📋 Review Details</button>
-                                <button class="btn-sm-nn outline">💬 Contact Owner</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Review Card 2 -->
-                <div class="review-card">
-                    <div class="property-preview">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200&h=200&fit=crop" alt="Property" />
-                        <div class="property-details flex-grow-1">
-                            <div class="d-flex flex-wrap justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="fw-bold">Riverside Hostel</h6>
-                                    <div class="meta"><i class="fas fa-map-pin me-1"></i> Brooklyn, NYC</div>
-                                    <div class="meta"><i class="fas fa-user me-1"></i> Owner: Meera Patel</div>
-                                    <div class="meta"><i class="fas fa-tag me-1"></i> Hostel · <span class="fw-bold">$5,800/mo</span> · 6 beds available</div>
-                                </div>
-                                <div class="text-end">
-                                    <span class="status-badge reviewing">Under Review</span>
-                                    <div class="meta mt-1">Submitted: Jun 10, 2024</div>
-                                </div>
-                            </div>
-                            <div class="mt-2 d-flex flex-wrap gap-2">
-                                <button class="btn-sm-nn success">✓ Approve</button>
-                                <button class="btn-sm-nn danger">✗ Reject</button>
-                                <button class="btn-sm-nn outline">📋 Review Details</button>
-                                <button class="btn-sm-nn outline">💬 Contact Owner</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Review Card 3 -->
-                <div class="review-card">
-                    <div class="property-preview">
-                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&h=200&fit=crop" alt="Property" />
-                        <div class="property-details flex-grow-1">
-                            <div class="d-flex flex-wrap justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="fw-bold">Hillside Apartments</h6>
-                                    <div class="meta"><i class="fas fa-map-pin me-1"></i> Queens, NYC</div>
-                                    <div class="meta"><i class="fas fa-user me-1"></i> Owner: Vikram Singh</div>
-                                    <div class="meta"><i class="fas fa-tag me-1"></i> Apartment · <span class="fw-bold">$7,500/mo</span> · 2 units available</div>
-                                </div>
-                                <div class="text-end">
-                                    <span class="status-badge pending">Pending</span>
-                                    <div class="meta mt-1">Submitted: Jun 8, 2024</div>
-                                </div>
-                            </div>
-                            <div class="mt-2 d-flex flex-wrap gap-2">
-                                <button class="btn-sm-nn success">✓ Approve</button>
-                                <button class="btn-sm-nn danger">✗ Reject</button>
-                                <button class="btn-sm-nn outline">📋 Review Details</button>
-                                <button class="btn-sm-nn outline">💬 Contact Owner</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Review Card 4 -->
-                <div class="review-card">
-                    <div class="property-preview">
-                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=200&h=200&fit=crop" alt="Property" />
-                        <div class="property-details flex-grow-1">
-                            <div class="d-flex flex-wrap justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="fw-bold">Luxury Villa</h6>
-                                    <div class="meta"><i class="fas fa-map-pin me-1"></i> Manhattan, NYC</div>
-                                    <div class="meta"><i class="fas fa-user me-1"></i> Owner: Priya Sharma</div>
-                                    <div class="meta"><i class="fas fa-tag me-1"></i> Villa · <span class="fw-bold">$12,000/mo</span> · 1 unit available</div>
-                                </div>
-                                <div class="text-end">
-                                    <span class="status-badge reviewing">Under Review</span>
-                                    <div class="meta mt-1">Submitted: Jun 5, 2024</div>
-                                </div>
-                            </div>
-                            <div class="mt-2 d-flex flex-wrap gap-2">
-                                <button class="btn-sm-nn success">✓ Approve</button>
-                                <button class="btn-sm-nn danger">✗ Reject</button>
-                                <button class="btn-sm-nn outline">📋 Review Details</button>
-                                <button class="btn-sm-nn outline">💬 Contact Owner</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <!-- Pagination -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">

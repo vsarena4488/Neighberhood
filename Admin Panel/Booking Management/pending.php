@@ -1,7 +1,34 @@
 <?php
 // bookings/pending.php - Pending Bookings
+require_once __DIR__ . '/../database/db.php';
+checkAdminAccess();
+
 $breadcrumb = 'Booking Management > Pending';
 $pageTitle = 'Pending Bookings';
+
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $bookingId = trim($_POST['booking_id'] ?? '');
+    $action = $_POST['action'] ?? '';
+    if (!empty($bookingId)) {
+        if ($action === 'approve') {
+            dbExecute("UPDATE bookings SET status = 'Approved' WHERE id = ?", [$bookingId]);
+            logActivity('Booking Approved', "Admin approved booking #$bookingId");
+            $message = "Booking #$bookingId has been approved.";
+        } elseif ($action === 'reject') {
+            dbExecute("UPDATE bookings SET status = 'Rejected' WHERE id = ?", [$bookingId]);
+            logActivity('Booking Rejected', "Admin rejected booking #$bookingId");
+            $message = "Booking #$bookingId has been rejected.";
+        }
+    }
+}
+
+$pendingBookings = dbFetchAll("SELECT b.*, u.name as user_name, u.email as user_email, u.phone as user_phone, p.title as property_title, p.city as property_city, p.area as property_area
+                              FROM bookings b
+                              JOIN users u ON b.user_id = u.id
+                              JOIN properties p ON b.property_id = p.id
+                              WHERE b.status = 'Pending'
+                              ORDER BY b.created_at DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -445,73 +472,52 @@ $pageTitle = 'Pending Bookings';
                 </div>
             </div>
 
+            <!-- Alert Banner -->
+            <?php if (!empty($message)): ?>
+                <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4">
+                    <i class="fas fa-check-circle me-2"></i> <?= htmlspecialchars($message) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
             <!-- Pending Bookings Cards -->
             <div class="fade-up delay-2">
-                <!-- Booking Card 1 -->
-                <div class="booking-card">
-                    <div class="d-flex flex-wrap justify-content-between align-items-start">
-                        <div>
-                            <h6 class="fw-bold mb-1">#B1024 - Ravi Kumar</h6>
-                            <div class="text-muted-custom small"><i class="fas fa-home me-1"></i> Sunrise PG, Manhattan</div>
-                            <div class="text-muted-custom small"><i class="fas fa-calendar-alt me-1"></i> Check-in: Jun 15, 2024 | Check-out: Jun 30, 2024</div>
-                            <div class="text-muted-custom small"><i class="fas fa-users me-1"></i> 2 Beds | <i class="fas fa-wallet me-1"></i> $8,000</div>
-                        </div>
-                        <div class="text-end">
-                            <span class="status-badge pending">Pending</span>
-                            <div class="text-muted-custom small mt-1">Submitted: Jun 14, 2024</div>
-                        </div>
+                <?php if (empty($pendingBookings)): ?>
+                    <div class="card border-0 rounded-4 shadow-sm bg-white p-5 text-center text-muted">
+                        <i class="fas fa-calendar-check fs-1 text-success mb-3"></i>
+                        <h5 class="fw-bold text-dark">No Pending Bookings</h5>
+                        <p class="mb-0">All student stay applications are currently processed or reviewed.</p>
                     </div>
-                    <div class="mt-2 d-flex flex-wrap gap-2">
-                        <button class="btn-sm-nn success">✓ Approve</button>
-                        <button class="btn-sm-nn danger">✗ Reject</button>
-                        <button class="btn-sm-nn outline">📋 View Details</button>
-                        <button class="btn-sm-nn outline">💬 Contact Student</button>
-                    </div>
-                </div>
-
-                <!-- Booking Card 2 -->
-                <div class="booking-card">
-                    <div class="d-flex flex-wrap justify-content-between align-items-start">
-                        <div>
-                            <h6 class="fw-bold mb-1">#B1021 - Sara Khan</h6>
-                            <div class="text-muted-custom small"><i class="fas fa-home me-1"></i> Sky PG, Manhattan</div>
-                            <div class="text-muted-custom small"><i class="fas fa-calendar-alt me-1"></i> Check-in: Jun 22, 2024 | Check-out: Jul 22, 2024</div>
-                            <div class="text-muted-custom small"><i class="fas fa-users me-1"></i> 1 Bed | <i class="fas fa-wallet me-1"></i> $9,000</div>
+                <?php else: ?>
+                    <?php foreach ($pendingBookings as $b): ?>
+                        <div class="booking-card mb-3">
+                            <div class="d-flex flex-wrap justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="fw-bold mb-1">#<?= htmlspecialchars($b['id']) ?> - <?= htmlspecialchars($b['user_name']) ?></h6>
+                                    <div class="text-muted-custom small"><i class="fas fa-home me-1"></i> <?= htmlspecialchars($b['property_title']) ?> (<?= htmlspecialchars($b['property_area']) ?>, <?= htmlspecialchars($b['property_city']) ?>)</div>
+                                    <div class="text-muted-custom small"><i class="fas fa-calendar-alt me-1"></i> Move-in: <?= date('M d, Y', strtotime($b['move_in_date'])) ?> | Duration: <?= htmlspecialchars($b['duration']) ?></div>
+                                    <div class="text-muted-custom small"><i class="fas fa-bed me-1"></i> <?= htmlspecialchars($b['room_type']) ?> | <i class="fas fa-wallet me-1"></i> Rent: ₹<?= number_format($b['rent']) ?>/mo | Token Fee: ₹<?= number_format($b['token_fee']) ?> (<?= htmlspecialchars($b['token_status']) ?>)</div>
+                                </div>
+                                <div class="text-end">
+                                    <span class="status-badge pending">Pending</span>
+                                    <div class="text-muted-custom small mt-1">Submitted: <?= date('M d, Y', strtotime($b['created_at'])) ?></div>
+                                </div>
+                            </div>
+                            <div class="mt-2 d-flex flex-wrap gap-2">
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="booking_id" value="<?= htmlspecialchars($b['id']) ?>">
+                                    <button type="submit" name="action" value="approve" class="btn-sm-nn success border-0">✓ Approve</button>
+                                </form>
+                                <form method="POST" class="d-inline" onsubmit="return confirm('Reject this booking application?');">
+                                    <input type="hidden" name="booking_id" value="<?= htmlspecialchars($b['id']) ?>">
+                                    <button type="submit" name="action" value="reject" class="btn-sm-nn danger border-0">✗ Reject</button>
+                                </form>
+                                <a href="all_bookings.php" class="btn-sm-nn outline text-decoration-none">📋 View All</a>
+                            </div>
                         </div>
-                        <div class="text-end">
-                            <span class="status-badge pending">Pending</span>
-                            <div class="text-muted-custom small mt-1">Submitted: Jun 13, 2024</div>
-                        </div>
-                    </div>
-                    <div class="mt-2 d-flex flex-wrap gap-2">
-                        <button class="btn-sm-nn success">✓ Approve</button>
-                        <button class="btn-sm-nn danger">✗ Reject</button>
-                        <button class="btn-sm-nn outline">📋 View Details</button>
-                        <button class="btn-sm-nn outline">💬 Contact Student</button>
-                    </div>
-                </div>
-
-                <!-- Booking Card 3 -->
-                <div class="booking-card">
-                    <div class="d-flex flex-wrap justify-content-between align-items-start">
-                        <div>
-                            <h6 class="fw-bold mb-1">#B1018 - Amit Verma</h6>
-                            <div class="text-muted-custom small"><i class="fas fa-home me-1"></i> Riverside Hostel, Brooklyn</div>
-                            <div class="text-muted-custom small"><i class="fas fa-calendar-alt me-1"></i> Check-in: Jun 28, 2024 | Check-out: Jul 28, 2024</div>
-                            <div class="text-muted-custom small"><i class="fas fa-users me-1"></i> 3 Beds | <i class="fas fa-wallet me-1"></i> $5,800</div>
-                        </div>
-                        <div class="text-end">
-                            <span class="status-badge pending">Pending</span>
-                            <div class="text-muted-custom small mt-1">Submitted: Jun 12, 2024</div>
-                        </div>
-                    </div>
-                    <div class="mt-2 d-flex flex-wrap gap-2">
-                        <button class="btn-sm-nn success">✓ Approve</button>
-                        <button class="btn-sm-nn danger">✗ Reject</button>
-                        <button class="btn-sm-nn outline">📋 View Details</button>
-                        <button class="btn-sm-nn outline">💬 Contact Student</button>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
 
                 <!-- Pagination -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">

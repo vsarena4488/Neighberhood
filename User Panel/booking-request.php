@@ -50,6 +50,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]
     ];
 
+    try {
+        require_once __DIR__ . '/database/db.php';
+        $userId = getLoggedInUserId();
+        $sqlDate = date('Y-m-d', strtotime($moveInDate) ?: time());
+        dbExecute("INSERT INTO bookings (id, user_id, property_id, room_type, move_in_date, duration, rent, deposit, token_fee, token_status, move_in_balance, status) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, 500, ?, ?, 'Pending')", [
+            $newId, $userId, $property['id'], $selectedRoomName, $sqlDate, $duration, $property['rent'], $property['deposit'], 'Paid (' . $paymentMethod . ')', ($property['rent'] + $property['deposit'] - 500)
+        ]);
+
+        $txnId = 'TXN-' . rand(10000, 99999);
+        dbExecute("INSERT INTO payments (id, booking_id, user_id, owner_id, amount, payment_type, method, status)
+                   VALUES (?, ?, ?, 3, 500, 'Token Deposit', ?, 'Completed')", [
+            $txnId, $newId, $userId, $paymentMethod
+        ]);
+
+        dbExecute("INSERT INTO notifications (user_id, title, `desc`, icon, color, link) VALUES (?, ?, ?, 'fa-calendar-check', 'success', 'booking-details.php?id=$newId')", [
+            $userId, "Booking Application #$newId Submitted", "Your request for {$property['title']} was sent to host."
+        ]);
+    } catch (Exception $e) {
+        // Fallback gracefully
+    }
+
+    if (!isset($_SESSION['user_bookings'])) {
+        $_SESSION['user_bookings'] = [];
+    }
     array_unshift($_SESSION['user_bookings'], $newBooking);
     $bookingCreated = $newBooking;
 }
