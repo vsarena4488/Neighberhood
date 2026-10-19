@@ -1,5 +1,5 @@
 <?php
-// Owner Panel bookings.php - Bookings Management & Occupancy Calendar
+// Owner Panel bookings.php - Bookings Management
 $pageTitle = 'Bookings & Stay Requests · NeighborNest Owner Console';
 require_once __DIR__ . '/includes/functions.php';
 
@@ -55,56 +55,6 @@ $filteredBookings = array_filter($bookings, function($b) use ($filterStatus) {
       </div>
     </div>
 
-    <!-- OCCUPANCY CALENDAR QUICK VIEW WIDGET -->
-    <div class="card border-0 rounded-4 shadow-sm bg-white p-4 mb-4">
-      <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
-        <h5 class="fw-bold mb-0"><i class="fas fa-calendar-days text-bright-indigo me-2"></i> Weekly Occupancy Calendar</h5>
-        <div class="d-flex align-items-center gap-2 extra-small">
-          <span class="d-inline-flex align-items-center gap-1"><i class="fas fa-circle text-success fs-xs"></i> 80%+ Booked</span>
-          <span class="d-inline-flex align-items-center gap-1"><i class="fas fa-circle text-warning fs-xs"></i> Partial Beds</span>
-          <span class="d-inline-flex align-items-center gap-1"><i class="fas fa-circle text-danger fs-xs"></i> Fully Booked</span>
-        </div>
-      </div>
-
-      <div class="table-responsive">
-        <table class="table table-bordered text-center extra-small align-middle mb-0">
-          <thead class="table-light">
-            <tr>
-              <th style="width: 140px;" class="text-start">Listed Property</th>
-              <th>Mon (Sep 1)</th>
-              <th>Tue (Sep 2)</th>
-              <th>Wed (Sep 3)</th>
-              <th>Thu (Sep 4)</th>
-              <th>Fri (Sep 5)</th>
-              <th>Sat (Sep 6)</th>
-              <th>Sun (Sep 7)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-start fw-bold">St. Mark's Executive PG</td>
-              <td><span class="badge bg-success-subtle text-success border border-success-subtle w-100 py-1.5">2 Available</span></td>
-              <td><span class="badge bg-success-subtle text-success border border-success-subtle w-100 py-1.5">2 Available</span></td>
-              <td><span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle w-100 py-1.5">1 Available</span></td>
-              <td><span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle w-100 py-1.5">1 Available</span></td>
-              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle w-100 py-1.5">0 Beds</span></td>
-              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle w-100 py-1.5">0 Beds</span></td>
-              <td><span class="badge bg-success-subtle text-success border border-success-subtle w-100 py-1.5">2 Available</span></td>
-            </tr>
-            <tr>
-              <td class="text-start fw-bold">Koramangala Studio Flat</td>
-              <td><span class="badge bg-success-subtle text-success border border-success-subtle w-100 py-1.5">1 Available</span></td>
-              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle w-100 py-1.5">0 Flat</span></td>
-              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle w-100 py-1.5">0 Flat</span></td>
-              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle w-100 py-1.5">0 Flat</span></td>
-              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle w-100 py-1.5">0 Flat</span></td>
-              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle w-100 py-1.5">0 Flat</span></td>
-              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle w-100 py-1.5">0 Flat</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
     <!-- Status Filter Pill Bar -->
     <div class="d-flex flex-wrap gap-2 mb-4 p-1.5 bg-white rounded-pill border shadow-sm" style="width: fit-content;">
