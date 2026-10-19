@@ -107,7 +107,7 @@ if (!function_exists('getLoggedInOwnerId')) {
         if (isset($_SESSION['owner']['id'])) {
             return (int)$_SESSION['owner']['id'];
         }
-        if (isset($_SESSION['user_id']) && ($_SESSION['user_role'] ?? '') === 'owner') {
+        if (isset($_SESSION['user_id'])) {
             return (int)$_SESSION['user_id'];
         }
         // Default fallback to demo owner Rajesh Sharma (id 3)

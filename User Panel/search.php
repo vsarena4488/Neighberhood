@@ -3,9 +3,9 @@
 $pageTitle = 'Find Accommodation · NeighborNest';
 require_once __DIR__ . '/includes/functions.php';
 
-// Initialize wishlist in session if not set
-if (!isset($_SESSION['user_wishlist'])) {
-  $_SESSION['user_wishlist'] = [];
+// Ensure wishlist is loaded from database for current user
+if (function_exists('loadUserWishlistFromDb')) {
+  loadUserWishlistFromDb();
 }
 
 require_once __DIR__ . '/includes/header.php';
@@ -63,50 +63,42 @@ if ($sortBy === 'price_asc') {
 }
 ?>
 
+<style>
+  .form-range::-webkit-slider-thumb {
+    background: var(--nh-bright-indigo);
+  }
+  .form-range::-moz-range-thumb {
+    background: var(--nh-bright-indigo);
+  }
+  .cursor-pointer {
+    cursor: pointer;
+  }
+</style>
+
 <div class="main-wrapper">
   <?php require_once __DIR__ . '/includes/top-navbar.php'; ?>
 
   <main class="page-content">
-    <!-- Header Title & Stats -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-      <div>
-        <h3 class="fw-bold mb-1">Find Student Accommodations</h3>
-        <span class="text-secondary-custom small">Search and discover verified PGs, hostels, and flats near your campus with zero brokerage</span>
-      </div>
-
-      <!-- View Switcher & Mobile Filter Button -->
-      <div class="d-flex align-items-center gap-2 flex-wrap">
-        <button class="btn btn-sm btn-nh-outline d-lg-none px-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilterCollapse" aria-expanded="false">
-          <i class="fas fa-sliders me-1"></i> Filters
-        </button>
-
-        <div class="btn-group btn-group-sm bg-white p-1 rounded-pill border shadow-sm" role="group">
-          <button type="button" class="btn btn-sm btn-outline-primary active rounded-pill px-3" id="viewBtnGrid" onclick="switchView('grid')">
-            <i class="fas fa-th-large me-1"></i> Grid
-          </button>
-          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="viewBtnList" onclick="switchView('list')">
-            <i class="fas fa-list me-1"></i> List
-          </button>
-          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="viewBtnMap" onclick="switchView('map')">
-            <i class="fas fa-map-marked-alt me-1"></i> Map
-          </button>
-        </div>
-      </div>
+    <!-- Header Title -->
+    <div class="mb-4">
+      <h3 class="fw-bold mb-1">Find Student Accommodations</h3>
+      <span class="text-secondary-custom small">Search and discover verified PGs, hostels, and flats near your campus with zero brokerage</span>
     </div>
 
-    <!-- MOBILE COLLAPSIBLE FILTER PANEL -->
-    <div class="collapse d-lg-none mb-4" id="mobileFilterCollapse">
-      <div class="card border-0 rounded-4 shadow-sm bg-white p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
-          <h6 class="fw-bold mb-0"><i class="fas fa-sliders text-bright-indigo me-1"></i> Search Filters</h6>
-          <a href="search.php" class="extra-small text-danger text-decoration-none fw-semibold">Reset All</a>
-        </div>
-        <form action="search.php" method="GET">
-          <?php if (!empty($searchQuery)): ?>
-            <input type="hidden" name="q" value="<?= htmlspecialchars($searchQuery) ?>" />
-          <?php endif; ?>
-          <div class="mb-3">
-            <label class="form-label extra-small fw-bold text-secondary mb-1">City Hub</label>
+    <!-- UNIFIED HORIZONTAL FILTERS & ATTACHED RESULTS BAR -->
+    <div class="card border-0 rounded-4 shadow-sm bg-white p-3 p-lg-4 mb-4">
+      <form action="search.php" method="GET" id="searchFilterForm">
+        <?php if (!empty($searchQuery)): ?>
+          <input type="hidden" name="q" value="<?= htmlspecialchars($searchQuery) ?>" />
+        <?php endif; ?>
+
+        <!-- Primary Filter Controls: City, Type, Gender & Verification -->
+        <div class="row g-3 align-items-end mb-3">
+          <!-- City Selection -->
+          <div class="col-6 col-md-3">
+            <label class="form-label extra-small fw-bold text-secondary mb-1">
+              <i class="fas fa-location-dot text-danger me-1"></i> City Hub
+            </label>
             <select name="city" class="form-select form-select-sm rounded-3">
               <option value="Bangalore" <?= ($selectedCity === 'Bangalore') ? 'selected' : '' ?>>Bangalore</option>
               <option value="Mumbai" <?= ($selectedCity === 'Mumbai') ? 'selected' : '' ?>>Mumbai</option>
@@ -117,8 +109,12 @@ if ($sortBy === 'price_asc') {
               <option value="all" <?= ($selectedCity === 'all') ? 'selected' : '' ?>>All Cities</option>
             </select>
           </div>
-          <div class="mb-3">
-            <label class="form-label extra-small fw-bold text-secondary mb-1">Accommodation Type</label>
+
+          <!-- Property Type -->
+          <div class="col-6 col-md-3">
+            <label class="form-label extra-small fw-bold text-secondary mb-1">
+              <i class="fas fa-building text-primary me-1"></i> Property Type
+            </label>
             <select name="type" class="form-select form-select-sm rounded-3">
               <option value="all" <?= ($selectedType === 'all') ? 'selected' : '' ?>>All Types</option>
               <option value="PG" <?= ($selectedType === 'PG') ? 'selected' : '' ?>>Paying Guest (PG)</option>
@@ -127,162 +123,128 @@ if ($sortBy === 'price_asc') {
               <option value="Apartment" <?= ($selectedType === 'Apartment') ? 'selected' : '' ?>>Flat / Apartment</option>
             </select>
           </div>
-          <div class="mb-3">
-            <label class="form-label extra-small fw-bold text-secondary mb-1">Gender Rule</label>
+
+          <!-- Gender Filter -->
+          <div class="col-6 col-md-3">
+            <label class="form-label extra-small fw-bold text-secondary mb-1">
+              <i class="fas fa-user-group text-info me-1"></i> Gender Rule
+            </label>
             <select name="gender" class="form-select form-select-sm rounded-3">
               <option value="all" <?= ($selectedGender === 'all') ? 'selected' : '' ?>>All Rules</option>
-              <option value="male_only" <?= ($selectedGender === 'male_only') ? 'selected' : '' ?>>Boys Only</option>
-              <option value="female_only" <?= ($selectedGender === 'female_only') ? 'selected' : '' ?>>Girls Only</option>
+              <option value="male_only" <?= ($selectedGender === 'male_only') ? 'selected' : '' ?>>Boys / Men Only</option>
+              <option value="female_only" <?= ($selectedGender === 'female_only') ? 'selected' : '' ?>>Girls / Women Only</option>
               <option value="unisex" <?= ($selectedGender === 'unisex') ? 'selected' : '' ?>>Unisex / Co-Living</option>
             </select>
           </div>
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="form-label extra-small fw-bold text-secondary mb-0">Max Budget:</label>
-              <span class="fw-bold text-royal-blue small">₹<?= number_format($maxBudget) ?></span>
-            </div>
-            <input type="range" name="budget" min="5000" max="40000" step="1000" value="<?= $maxBudget ?>" class="form-range" />
-          </div>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" name="verified" value="1" id="mobileVerifiedSwitch" <?= $verifiedOnly ? 'checked' : '' ?>>
-            <label class="form-check-label small fw-bold text-success" for="mobileVerifiedSwitch">
-              <i class="fas fa-shield-halved me-1"></i> Verified Only
+
+          <!-- Verified Switch -->
+          <div class="col-6 col-md-3">
+            <label class="form-label extra-small fw-bold text-secondary mb-1">
+              <i class="fas fa-shield-halved text-success me-1"></i> Verification
             </label>
+            <div class="border rounded-3 p-1 px-3 d-flex align-items-center justify-content-between <?= $verifiedOnly ? 'border-success bg-success-subtle' : 'bg-light' ?>" style="min-height: 31px;">
+              <label class="form-check-label extra-small fw-semibold text-success mb-0 cursor-pointer text-nowrap" for="verifiedSwitch">
+                <i class="fas fa-circle-check me-1"></i> Verified Only
+              </label>
+              <div class="form-check form-switch mb-0 d-flex align-items-center ps-0">
+                <input class="form-check-input mt-0 ms-0 cursor-pointer" type="checkbox" name="verified" value="1" id="verifiedSwitch" <?= $verifiedOnly ? 'checked' : '' ?>>
+              </div>
+            </div>
           </div>
-          <button type="submit" class="btn btn-nh-primary w-100 py-2">Apply Filters</button>
-        </form>
-      </div>
+        </div>
+
+        <!-- Secondary Controls: Budget Slider & Action Buttons -->
+        <div class="row g-3 align-items-end pt-1">
+          <!-- Budget Slider -->
+          <div class="col-12 col-md-7 col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label extra-small fw-bold text-secondary mb-0">
+                <i class="fas fa-indian-rupee-sign text-success me-1"></i> Max Budget:
+              </label>
+              <span class="fw-bold text-royal-blue small" id="budgetLabel">₹<?= number_format($maxBudget) ?></span>
+            </div>
+            <input type="range" name="budget" min="5000" max="40000" step="1000" value="<?= $maxBudget ?>" class="form-range" oninput="document.getElementById('budgetLabel').innerText = '₹' + parseInt(this.value).toLocaleString();" />
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="col-12 col-md-5 col-lg-4 text-md-end">
+            <div class="d-flex align-items-center justify-content-start justify-content-md-end gap-2">
+              <button type="submit" class="btn btn-nh-primary btn-sm px-4 fw-semibold text-nowrap">
+                <i class="fas fa-filter me-1"></i> Apply Filters
+              </button>
+              <a href="search.php" class="btn btn-light btn-sm border text-secondary px-3 text-nowrap" title="Reset Filters">
+                <i class="fas fa-rotate-left me-1"></i> Reset
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ATTACHED RESULTS BAR & VIEW CONTROLS -->
+        <div class="pt-3 mt-3 border-top d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="badge bg-soft-lavender text-royal-blue px-3 py-2 rounded-pill fw-semibold border border-lavender fs-6">
+              <i class="fas fa-house-chimney me-1.5 text-bright-indigo"></i>
+              Showing <strong class="text-royal-blue px-1"><?= count($filteredProperties) ?></strong> accommodations available
+            </span>
+            <?php if (!empty($searchQuery)): ?>
+              <span class="extra-small text-muted">
+                Keyword: "<strong><?= htmlspecialchars($searchQuery) ?></strong>"
+              </span>
+            <?php endif; ?>
+          </div>
+
+          <div class="d-flex align-items-center gap-3 w-100 w-md-auto justify-content-between justify-content-md-end">
+            <!-- Sort dropdown -->
+            <div class="d-flex align-items-center gap-2">
+              <span class="extra-small text-secondary-custom fw-semibold d-none d-sm-inline">Sort by:</span>
+              <select name="sort" class="form-select form-select-sm rounded-pill px-3 shadow-none border" onchange="this.form.submit()">
+                <option value="featured" <?= ($sortBy === 'featured') ? 'selected' : '' ?>>Featured First</option>
+                <option value="price_asc" <?= ($sortBy === 'price_asc') ? 'selected' : '' ?>>Lowest Rent First</option>
+                <option value="price_desc" <?= ($sortBy === 'price_desc') ? 'selected' : '' ?>>Highest Rent First</option>
+                <option value="rating_desc" <?= ($sortBy === 'rating_desc') ? 'selected' : '' ?>>Highest Rated First</option>
+              </select>
+            </div>
+
+            <!-- View Switcher -->
+            <div class="btn-group btn-group-sm bg-light p-1 rounded-pill border" role="group">
+              <button type="button" class="btn btn-sm btn-outline-primary active rounded-pill px-3" id="viewBtnGrid" onclick="switchView('grid')">
+                <i class="fas fa-th-large me-1"></i> Grid
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="viewBtnList" onclick="switchView('list')">
+                <i class="fas fa-list me-1"></i> List
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="viewBtnMap" onclick="switchView('map')">
+                <i class="fas fa-map-marked-alt me-1"></i> Map
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
 
-    <div class="row g-4">
-      <!-- LEFT FILTER PANEL (Desktop Sticky) -->
-      <div class="col-lg-3 d-none d-lg-block">
-        <div class="card border-0 rounded-4 shadow-sm bg-white p-4 sticky-top" style="top: 85px; z-index: 100;">
-          <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
-            <h6 class="fw-bold mb-0"><i class="fas fa-sliders text-bright-indigo me-1"></i> Filters</h6>
-            <a href="search.php" class="extra-small text-danger text-decoration-none fw-semibold">Reset All</a>
-          </div>
+    <!-- MAP CONTAINER (Hidden by default) -->
+    <div id="searchMapContainer" class="card border-0 rounded-4 shadow-sm bg-white p-3 mb-4 d-none">
+      <div id="searchLeafletMap" style="height: 420px; width: 100%; border-radius: 12px;"></div>
+    </div>
 
-          <form action="search.php" method="GET">
-            <?php if (!empty($searchQuery)): ?>
-              <input type="hidden" name="q" value="<?= htmlspecialchars($searchQuery) ?>" />
-            <?php endif; ?>
-
-            <!-- City Selection -->
-            <div class="mb-3">
-              <label class="form-label extra-small fw-bold text-secondary mb-1">City Hub</label>
-              <select name="city" class="form-select form-select-sm rounded-3">
-                <option value="Bangalore" <?= ($selectedCity === 'Bangalore') ? 'selected' : '' ?>>Bangalore</option>
-                <option value="Mumbai" <?= ($selectedCity === 'Mumbai') ? 'selected' : '' ?>>Mumbai</option>
-                <option value="Delhi" <?= ($selectedCity === 'Delhi') ? 'selected' : '' ?>>Delhi / NCR</option>
-                <option value="Pune" <?= ($selectedCity === 'Pune') ? 'selected' : '' ?>>Pune</option>
-                <option value="Hyderabad" <?= ($selectedCity === 'Hyderabad') ? 'selected' : '' ?>>Hyderabad</option>
-                <option value="Chennai" <?= ($selectedCity === 'Chennai') ? 'selected' : '' ?>>Chennai</option>
-                <option value="all" <?= ($selectedCity === 'all') ? 'selected' : '' ?>>All Cities</option>
-              </select>
-            </div>
-
-            <!-- Property Type -->
-            <div class="mb-3">
-              <label class="form-label extra-small fw-bold text-secondary mb-1">Accommodation Type</label>
-              <select name="type" class="form-select form-select-sm rounded-3">
-                <option value="all" <?= ($selectedType === 'all') ? 'selected' : '' ?>>All Types</option>
-                <option value="PG" <?= ($selectedType === 'PG') ? 'selected' : '' ?>>Paying Guest (PG)</option>
-                <option value="Hostel" <?= ($selectedType === 'Hostel') ? 'selected' : '' ?>>Student Hostel</option>
-                <option value="Room" <?= ($selectedType === 'Room') ? 'selected' : '' ?>>Private Room</option>
-                <option value="Apartment" <?= ($selectedType === 'Apartment') ? 'selected' : '' ?>>Flat / Apartment</option>
-              </select>
-            </div>
-
-            <!-- Gender Filter -->
-            <div class="mb-3">
-              <label class="form-label extra-small fw-bold text-secondary mb-1">Gender Rule</label>
-              <select name="gender" class="form-select form-select-sm rounded-3">
-                <option value="all" <?= ($selectedGender === 'all') ? 'selected' : '' ?>>All Rules</option>
-                <option value="male_only" <?= ($selectedGender === 'male_only') ? 'selected' : '' ?>>Boys / Men Only</option>
-                <option value="female_only" <?= ($selectedGender === 'female_only') ? 'selected' : '' ?>>Girls / Women Only</option>
-                <option value="unisex" <?= ($selectedGender === 'unisex') ? 'selected' : '' ?>>Unisex / Co-Living</option>
-              </select>
-            </div>
-
-            <!-- Budget Slider -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <label class="form-label extra-small fw-bold text-secondary mb-0">Max Budget:</label>
-                <span class="fw-bold text-royal-blue small" id="budgetLabel">₹<?= number_format($maxBudget) ?></span>
-              </div>
-              <input type="range" name="budget" min="5000" max="40000" step="1000" value="<?= $maxBudget ?>" class="form-range" oninput="document.getElementById('budgetLabel').innerText = '₹' + parseInt(this.value).toLocaleString();" />
-            </div>
-
-            <!-- Verified Only Toggle -->
-            <div class="form-check form-switch mb-4">
-              <input class="form-check-input" type="checkbox" name="verified" value="1" id="verifiedSwitch" <?= $verifiedOnly ? 'checked' : '' ?>>
-              <label class="form-check-label small fw-bold text-success" for="verifiedSwitch">
-                <i class="fas fa-shield-halved me-1"></i> Verified Only
-              </label>
-            </div>
-
-            <button type="submit" class="btn btn-nh-primary w-100 py-2">Apply Filters</button>
-          </form>
-        </div>
-      </div>
-
-      <!-- RIGHT RESULTS AREA -->
-      <div class="col-lg-9">
-        <!-- Results Bar & Sorting -->
-        <div class="card border-0 rounded-4 shadow-sm bg-white p-3 mb-4">
-          <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
-            <span class="small fw-semibold text-dark">
-              Showing <strong class="text-royal-blue"><?= count($filteredProperties) ?></strong> accommodations available
-            </span>
-
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-              <span class="extra-small text-secondary-custom d-none d-sm-inline flex-shrink-0">Sort by:</span>
-              <form action="search.php" method="GET" id="sortForm" class="d-inline-block">
-                <?php if (!empty($searchQuery)): ?>
-                  <input type="hidden" name="q" value="<?= htmlspecialchars($searchQuery) ?>" />
-                <?php endif; ?>
-                <input type="hidden" name="city" value="<?= htmlspecialchars($selectedCity) ?>" />
-                <input type="hidden" name="type" value="<?= htmlspecialchars($selectedType) ?>" />
-                <input type="hidden" name="gender" value="<?= htmlspecialchars($selectedGender) ?>" />
-                <input type="hidden" name="budget" value="<?= htmlspecialchars($maxBudget) ?>" />
-                <?php if ($verifiedOnly): ?>
-                  <input type="hidden" name="verified" value="1" />
-                <?php endif; ?>
-                <select name="sort" class="form-select form-select-sm rounded-pill px-3" onchange="this.form.submit()">
-                  <option value="featured" <?= ($sortBy === 'featured') ? 'selected' : '' ?>>Featured First</option>
-                  <option value="price_asc" <?= ($sortBy === 'price_asc') ? 'selected' : '' ?>>Lowest Rent First</option>
-                  <option value="price_desc" <?= ($sortBy === 'price_desc') ? 'selected' : '' ?>>Highest Rent First</option>
-                  <option value="rating_desc" <?= ($sortBy === 'rating_desc') ? 'selected' : '' ?>>Highest Rated First</option>
-                </select>
-              </form>
-            </div>
+    <!-- GRID VIEW CONTAINER (Strictly 3 Columns on Desktop) -->
+    <div id="searchGridContainer" class="row g-3 g-md-4 mb-4">
+      <?php if (empty($filteredProperties)): ?>
+        <div class="col-12 text-center py-5">
+          <div class="card border-0 rounded-4 bg-soft-lavender p-5" style="max-width: 540px; margin: 0 auto;">
+            <i class="fas fa-magnifying-glass-location text-bright-indigo display-4 mb-3"></i>
+            <h5 class="fw-bold mb-1">No Matching Places Found</h5>
+            <p class="text-secondary-custom small mb-4">Try widening your budget range, resetting gender preferences, or searching for all types.</p>
+            <a href="search.php" class="btn btn-nh-primary btn-sm px-4" style="margin: 0 auto;">Reset Filters</a>
           </div>
         </div>
-
-        <!-- MAP CONTAINER (Hidden by default) -->
-        <div id="searchMapContainer" class="card border-0 rounded-4 shadow-sm bg-white p-3 mb-4 d-none">
-          <div id="searchLeafletMap" style="height: 420px; width: 100%; border-radius: 12px;"></div>
-        </div>
-
-        <!-- GRID VIEW CONTAINER -->
-        <div id="searchGridContainer" class="row g-3 g-md-4 mb-4">
-          <?php if (empty($filteredProperties)): ?>
-            <div class="col-12 text-center py-5">
-              <div class="card border-0 rounded-4 bg-soft-lavender p-5" style="max-width: 540px; margin: 0 auto;">
-                <i class="fas fa-magnifying-glass-location text-bright-indigo display-4 mb-3"></i>
-                <h5 class="fw-bold mb-1">No Matching Places Found</h5>
-                <p class="text-secondary-custom small mb-4">Try widening your budget range, resetting gender preferences, or searching for all types.</p>
-                <a href="search.php" class="btn btn-nh-primary btn-sm px-4" style="margin: 0 auto;">Reset Filters</a>
-              </div>
-            </div>
-          <?php else: ?>
-            <?php foreach ($filteredProperties as $item):
-              $genderLabel = ($item['gender'] === 'male_only') ? 'Boys Only' : (($item['gender'] === 'female_only') ? 'Girls Only' : 'Unisex');
-              $isWishlisted = in_array($item['id'], $_SESSION['user_wishlist'] ?? []);
-            ?>
-              <div class="col-md-6 col-xl-4">
-                <div class="property-card">
+      <?php else: ?>
+        <?php foreach ($filteredProperties as $item):
+          $genderLabel = ($item['gender'] === 'male_only') ? 'Boys Only' : (($item['gender'] === 'female_only') ? 'Girls Only' : 'Unisex');
+          $isWishlisted = in_array($item['id'], $_SESSION['user_wishlist'] ?? []);
+        ?>
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="property-card">
                   <!-- Image Wrapper -->
                   <div class="card-image-wrapper">
                     <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy" />
@@ -421,8 +383,6 @@ if ($sortBy === 'price_asc') {
             <li class="page-item"><a class="page-link rounded-end-pill px-3" href="#">Next</a></li>
           </ul>
         </nav>
-      </div>
-    </div>
   </main>
 
   <script>

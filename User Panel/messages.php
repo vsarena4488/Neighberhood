@@ -2,22 +2,27 @@
 require_once __DIR__ . '/includes/functions.php';
 
 $chats = &$_SESSION['user_chats'];
-$activeChatId = $_GET['chat'] ?? $chats[0]['id'];
+if (!is_array($chats)) {
+  $chats = [];
+}
+$activeChatId = $_GET['chat'] ?? ($chats[0]['id'] ?? null);
 $mobileView = isset($_GET['chat']) ? 'chat' : 'list';
 
 // Find active conversation
 $activeChat = null;
-foreach ($chats as &$c) {
-  if ($c['id'] === $activeChatId) {
-    $activeChat = &$c;
-    $c['unread'] = 0; // mark as read
-    break;
+if (!empty($chats)) {
+  foreach ($chats as &$c) {
+    if ($c['id'] === $activeChatId) {
+      $activeChat = &$c;
+      $c['unread'] = 0; // mark as read
+      break;
+    }
   }
+  if (!$activeChat) $activeChat = &$chats[0];
 }
-if (!$activeChat) $activeChat = &$chats[0];
 
 // Handle new chat message submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message_text'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message_text']) && $activeChat) {
   $newMsgText = trim($_POST['message_text']);
   $activeChat['messages'][] = [
     'sender' => 'user',
@@ -168,6 +173,20 @@ require_once __DIR__ . '/includes/sidebar.php';
       </div>
     </div>
 
+    <?php if (empty($chats)): ?>
+      <div class="card border-0 rounded-4 shadow-sm bg-white p-5 text-center my-4">
+        <div class="p-4 bg-soft-lavender rounded-circle d-inline-flex mx-auto mb-3 text-royal-blue" style="width: 76px; height: 76px; align-items: center; justify-content: center; font-size: 2rem;">
+          <i class="fas fa-comments"></i>
+        </div>
+        <h4 class="fw-bold mb-1">No Messages Yet</h4>
+        <p class="text-secondary-custom small mb-4 max-w-md mx-auto">
+          When you enquire about accommodations or contact property hosts, your conversations will appear here.
+        </p>
+        <a href="search.php" class="btn btn-nh-primary px-4 py-2 mx-auto">
+          <i class="fas fa-magnifying-glass me-1"></i> Explore Accommodations
+        </a>
+      </div>
+    <?php else: ?>
     <!-- 2-COLUMN CHAT CARD CONTAINER -->
     <div class="chat-card-container">
       <div class="row g-0 h-100">
@@ -287,6 +306,7 @@ require_once __DIR__ . '/includes/sidebar.php';
 
       </div>
     </div>
+    <?php endif; ?>
   </main>
 
   <script>

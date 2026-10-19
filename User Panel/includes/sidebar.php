@@ -41,9 +41,7 @@ $notificationsCount = function_exists('getUnreadNotificationsCount') ? getUnread
         <a href="wishlist.php" class="sidebar-nav-item <?= ($currentPage === 'wishlist') ? 'active' : '' ?>">
             <i class="fas fa-heart"></i>
             <span>Wishlist</span>
-            <?php if ($wishlistCount > 0): ?>
-                <span class="sidebar-badge sidebar-badge-primary"><?= $wishlistCount ?></span>
-            <?php endif; ?>
+            <span id="sidebarWishlistBadge" class="sidebar-badge sidebar-badge-primary sidebar-badge-wishlist" style="<?= ($wishlistCount > 0) ? '' : 'display:none;' ?>"><?= $wishlistCount ?></span>
         </a>
 
         <!-- My Bookings -->

@@ -5,6 +5,16 @@ require_once __DIR__ . '/database/db.php';
 $message = '';
 $message_type = '';
 
+if (isset($_GET['registered'])) {
+  $message = 'Account registered successfully! Please log in to your account.';
+  $message_type = 'success';
+} elseif (isset($_GET['logged_out'])) {
+  $message = 'You have been successfully logged out.';
+  $message_type = 'success';
+}
+
+$selected_role = $_POST['role'] ?? ($_GET['role'] ?? 'user');
+
 // Handle Login Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = trim($_POST['email'] ?? '');
@@ -33,11 +43,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } elseif ($user['role'] === 'owner') {
         $user['verified'] = !empty($user['is_verified']);
         $_SESSION['owner'] = $user;
+
+        // Is this the pre-seeded demo owner account?
+        $isTestOwner = ($user['email'] === 'rajesh.sharma@neighborhood.com' || (int)$user['id'] === 3);
+
+        if ($isTestOwner) {
+          // Reset session keys so Rajesh Sharma test datasets are freshly initialized
+          unset($_SESSION['owner_properties'], $_SESSION['owner_bookings'], $_SESSION['owner_earnings'], $_SESSION['owner_reviews'], $_SESSION['owner_chats'], $_SESSION['owner_notifications']);
+        } else {
+          // New/custom owner: give completely empty account (no mock or test data)
+          $dbProps = dbFetchAll("SELECT * FROM properties WHERE owner_id = ?", [$user['id']]);
+          $_SESSION['owner_properties'] = $dbProps ?: [];
+          $dbBookings = dbFetchAll("SELECT b.*, p.title as property_title, u.name as tenant_name, u.email as tenant_email, u.phone as tenant_phone 
+                                   FROM bookings b 
+                                   JOIN properties p ON b.property_id = p.id 
+                                   JOIN users u ON b.user_id = u.id 
+                                   WHERE p.owner_id = ?", [$user['id']]);
+          $_SESSION['owner_bookings'] = $dbBookings ?: [];
+          $_SESSION['owner_earnings'] = [
+            'this_month' => 0,
+            'all_time' => 0,
+            'token_collected' => 0,
+            'pending_payout' => 0,
+            'history' => []
+          ];
+          $_SESSION['owner_reviews'] = [];
+          $_SESSION['owner_chats'] = [];
+          $_SESSION['owner_notifications'] = [];
+        }
+
         header('Location: ../Owner Panel/dashboard.php');
         exit;
       } else {
         $user['verified'] = !empty($user['is_verified']);
         $_SESSION['user'] = $user;
+
+        // Is this the pre-seeded demo user account?
+        $isTestUser = ($user['email'] === 'vishal.patel@example.com' || (int)$user['id'] === 2);
+
+        if ($isTestUser) {
+          // Reset session keys so Vishal Patel test datasets are freshly initialized
+          unset($_SESSION['user_bookings'], $_SESSION['user_chats'], $_SESSION['user_notifications'], $_SESSION['user_reviews'], $_SESSION['user_compare']);
+          $dbWishes = dbFetchAll("SELECT property_id FROM wishlists WHERE user_id = ?", [$user['id']]);
+          $_SESSION['user_wishlist'] = array_map(function($w) { return (int)$w['property_id']; }, $dbWishes ?: []);
+        } else {
+          // New/custom user: give completely empty account (no mock or test data)
+          $dbBookings = dbFetchAll("SELECT b.*, p.title as property_title, p.type as property_type, p.area as location, u.name as owner_name, u.phone as owner_phone 
+                                   FROM bookings b 
+                                   JOIN properties p ON b.property_id = p.id 
+                                   JOIN users u ON p.owner_id = u.id 
+                                   WHERE b.user_id = ?", [$user['id']]);
+          $_SESSION['user_bookings'] = $dbBookings ?: [];
+          $dbWishes = dbFetchAll("SELECT property_id FROM wishlists WHERE user_id = ?", [$user['id']]);
+          $_SESSION['user_wishlist'] = array_map(function($w) { return (int)$w['property_id']; }, $dbWishes ?: []);
+          $_SESSION['user_compare'] = [];
+          $_SESSION['user_chats'] = [];
+          $_SESSION['user_notifications'] = [];
+          $_SESSION['user_reviews'] = [];
+        }
+
         header('Location: ../User Panel/dashboard.php');
         exit;
       }
@@ -264,23 +328,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       border: 1.5px solid var(--nh-border);
       background: #F8FAFC;
     }
-
-    .quick-demo-btn {
-      font-size: 0.75rem;
-      padding: 0.28rem 0.75rem;
-      border-radius: var(--nh-radius-pill);
-      border: 1px solid var(--nh-lavender-border);
-      background: var(--nh-soft-lavender);
-      color: var(--nh-royal-blue);
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--nh-transition);
-      white-space: nowrap;
-    }
-    .quick-demo-btn:hover {
-      background: var(--nh-bright-indigo);
-      color: #fff;
-    }
   </style>
 </head>
 
@@ -334,20 +381,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mb-3">
               <label class="form-label small fw-bold text-secondary mb-2">Select Your Role</label>
               <div class="role-selector-grid">
-                <label class="role-option-box active" id="role-box-user">
-                  <input type="radio" name="role" value="user" checked class="d-none" onchange="highlightRole(this)">
+                <label class="role-option-box <?= $selected_role === 'user' ? 'active' : '' ?>" id="role-box-user">
+                  <input type="radio" name="role" value="user" <?= $selected_role === 'user' ? 'checked' : '' ?> class="d-none" onchange="highlightRole(this)">
                   <i class="fas fa-user-graduate"></i>
                   <span class="role-title">Tenant</span>
                   <span class="role-subtitle">Student / Renter</span>
                 </label>
-                <label class="role-option-box" id="role-box-owner">
-                  <input type="radio" name="role" value="owner" class="d-none" onchange="highlightRole(this)">
+                <label class="role-option-box <?= $selected_role === 'owner' ? 'active' : '' ?>" id="role-box-owner">
+                  <input type="radio" name="role" value="owner" <?= $selected_role === 'owner' ? 'checked' : '' ?> class="d-none" onchange="highlightRole(this)">
                   <i class="fas fa-building-user"></i>
                   <span class="role-title">Landlord</span>
                   <span class="role-subtitle">Property Owner</span>
                 </label>
-                <label class="role-option-box" id="role-box-admin">
-                  <input type="radio" name="role" value="admin" class="d-none" onchange="highlightRole(this)">
+                <label class="role-option-box <?= $selected_role === 'admin' ? 'active' : '' ?>" id="role-box-admin">
+                  <input type="radio" name="role" value="admin" <?= $selected_role === 'admin' ? 'checked' : '' ?> class="d-none" onchange="highlightRole(this)">
                   <i class="fas fa-user-shield"></i>
                   <span class="role-title">Admin</span>
                   <span class="role-subtitle">Management</span>
@@ -360,31 +407,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label class="form-label small fw-bold text-secondary mb-1">Email Address or Phone</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-envelope text-muted"></i></span>
-                <input type="email" id="login-email" name="email" class="form-control" placeholder="name@example.com" value="guest.tenant@example.com" required />
+                <input type="email" id="login-email" name="email" class="form-control" placeholder="name@example.com" required />
               </div>
             </div>
 
             <!-- Password Field with Toggle -->
-            <div class="mb-3">
+            <div class="mb-4">
               <div class="d-flex justify-content-between align-items-center mb-1">
                 <label class="form-label small fw-bold text-secondary mb-0">Password</label>
-                <a href="javascript:void(0)" onclick="alert('Demo reset instructions sent to your email.')" class="extra-small text-primary text-decoration-none fw-medium">Forgot password?</a>
+                <a href="javascript:void(0)" onclick="alert('Password reset instructions sent to your email.')" class="extra-small text-primary text-decoration-none fw-medium">Forgot password?</a>
               </div>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-lock text-muted"></i></span>
-                <input type="password" id="login-password" name="password" class="form-control" placeholder="••••••••" value="demo12345" required />
+                <input type="password" id="login-password" name="password" class="form-control" placeholder="••••••••" required />
                 <button class="btn btn-outline-secondary border-1 border-start-0" type="button" onclick="togglePasswordVisibility('login-password', this)">
                   <i class="far fa-eye text-muted"></i>
                 </button>
               </div>
-            </div>
-
-            <!-- Quick Demo Credentials Selector -->
-            <div class="d-flex flex-wrap align-items-center gap-2 mb-4 pt-1">
-              <span class="extra-small text-secondary fw-semibold">Quick Demo:</span>
-              <button type="button" class="quick-demo-btn" onclick="fillDemo('user')">Tenant Demo</button>
-              <button type="button" class="quick-demo-btn" onclick="fillDemo('owner')">Landlord Demo</button>
-              <button type="button" class="quick-demo-btn" onclick="fillDemo('admin')">Admin Demo</button>
             </div>
 
             <!-- Submit Button -->
@@ -415,28 +454,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         input.type = 'password';
         icon.classList.remove('fa-eye-slash');
         icon.classList.add('fa-eye');
-      }
-    }
-
-    function fillDemo(role) {
-      const emailInput = document.getElementById('login-email');
-      const passInput = document.getElementById('login-password');
-      const roleRadio = document.querySelector(`input[name="role"][value="${role}"]`);
-
-      if (role === 'admin') {
-        emailInput.value = 'admin@neighborhood.com';
-        passInput.value = 'admin12345';
-      } else if (role === 'owner') {
-        emailInput.value = 'landlord@neighborhood.com';
-        passInput.value = 'owner12345';
-      } else {
-        emailInput.value = 'tenant@neighborhood.com';
-        passInput.value = 'tenant12345';
-      }
-
-      if (roleRadio) {
-        roleRadio.checked = true;
-        highlightRole(roleRadio);
       }
     }
   </script>

@@ -32,40 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $message_type = 'danger';
     } else {
       $role = ($user_type === 'owner' || $user_type === 'landlord') ? 'owner' : 'user';
-      $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+      $userPassword = $password;
       
       dbExecute(
         "INSERT INTO users (name, email, phone, password, role, user_type, is_verified, status) VALUES (?, ?, ?, ?, ?, ?, 1, 'active')",
-        [$fullname, $email, $phone, $hashedPassword, $role, $user_type]
+        [$fullname, $email, $phone, $userPassword, $role, $user_type]
       );
       $newUserId = dbLastId();
 
-      $_SESSION['user_id'] = $newUserId;
-      $_SESSION['user_email'] = $email;
-      $_SESSION['user_name'] = $fullname;
-      $_SESSION['user_role'] = $role;
-
-      $userSessionData = [
-        'id' => $newUserId,
-        'name' => $fullname,
-        'email' => $email,
-        'phone' => $phone,
-        'role' => $role,
-        'user_type' => $user_type,
-        'verified' => true,
-        'is_verified' => 1
-      ];
-
-      if ($role === 'owner') {
-        $_SESSION['owner'] = $userSessionData;
-      } else {
-        $_SESSION['user'] = $userSessionData;
-      }
-
       logActivity('User Registered', "New account created as {$role}", $newUserId);
 
-      $redirectPage = ($role === 'owner') ? '../Owner Panel/dashboard.php' : '../User Panel/dashboard.php';
-      header("Location: $redirectPage");
+      // Redirect to login page upon registration
+      header("Location: login.php?registered=1&role=" . urlencode($role));
       exit;
     }
   }

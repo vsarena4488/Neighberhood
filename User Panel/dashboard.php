@@ -7,7 +7,7 @@ require_once __DIR__ . '/includes/sidebar.php';
 
 // Get user data
 $user = $_SESSION['user'] ?? [];
-$userName = explode(' ', $user['name'] ?? 'Vishal')[0];
+$userName = explode(' ', $user['name'] ?? 'User')[0];
 $course = $user['course'] ?? 'Student';
 $unreadMessages = function_exists('getUnreadMessagesCount') ? getUnreadMessagesCount() : 0;
 $wishlistCount = count($_SESSION['user_wishlist'] ?? []);
@@ -361,7 +361,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
               <i class="fas fa-heart"></i>
             </div>
             <div>
-              <h3><?= $wishlistCount ?></h3>
+              <h3 class="wishlist-counter"><?= $wishlistCount ?></h3>
               <span class="extra-small text-secondary-custom fw-medium">Saved Wishlist</span>
             </div>
           </div>
@@ -538,7 +538,7 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
               <h5 class="fw-bold mb-0">My Recent Bookings</h5>
               <span class="extra-small text-secondary-custom">Track your accommodation request status</span>
             </div>
-            <a href="bookings.php" class="extra-small text-primary text-decoration-none fw-semibold">
+            <a href="bookings.php" class="extra-small text-primary text-decoration-none fw-semibold text-nowrap flex-shrink-0">
               View All Bookings <i class="fas fa-arrow-right ms-1"></i>
             </a>
           </div>
@@ -603,14 +603,14 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
       <!-- RECENT MESSAGES SNIPPET -->
       <div class="col-lg-4">
         <div class="card border-0 rounded-4 shadow-sm bg-white h-100">
-          <div class="p-3 px-4 border-bottom d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
-            <div>
+          <div class="p-3 px-4 border-bottom">
+            <div class="d-flex align-items-center justify-content-between gap-2">
               <h5 class="fw-bold mb-0">Recent Messages</h5>
-              <span class="extra-small text-secondary-custom">Direct chat with verified landlords</span>
+              <a href="messages.php" class="extra-small text-primary text-decoration-none fw-semibold text-nowrap flex-shrink-0">
+                Open Chat <i class="fas fa-arrow-right ms-1"></i>
+              </a>
             </div>
-            <a href="messages.php" class="extra-small text-primary text-decoration-none fw-semibold">
-              Open Chat <i class="fas fa-arrow-right ms-1"></i>
-            </a>
+            <span class="extra-small text-secondary-custom d-block mt-1">Direct chat with verified landlords</span>
           </div>
 
           <div class="p-3 d-flex flex-column gap-2">

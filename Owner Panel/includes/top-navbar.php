@@ -42,9 +42,9 @@ $unreadNotifications = function_exists('getUnreadOwnerNotificationsCount') ? get
 
     <!-- Profile Link dropdown button -->
     <a href="profile.php" class="topbar-profile d-flex align-items-center gap-2 text-decoration-none">
-      <img src="<?= htmlspecialchars($owner['avatar']) ?>" alt="<?= htmlspecialchars($owner['name']) ?>" class="topbar-user-avatar" />
+      <img src="<?= htmlspecialchars(!empty($owner['avatar']) ? $owner['avatar'] : 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80') ?>" alt="<?= htmlspecialchars($owner['name'] ?? 'Owner') ?>" class="topbar-user-avatar" />
       <div class="d-none d-xl-block text-start lh-1">
-        <strong class="d-block extra-small text-dark fw-bold"><?= htmlspecialchars($owner['name']) ?></strong>
+        <strong class="d-block extra-small text-dark fw-bold"><?= htmlspecialchars($owner['name'] ?? 'Owner') ?></strong>
         <span class="fs-xs text-success fw-semibold"><i class="fas fa-shield-check"></i> Verified Host</span>
       </div>
     </a>

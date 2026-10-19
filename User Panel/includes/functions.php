@@ -7,7 +7,19 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Ensure default mock user session exists
 if (!isset($_SESSION['user'])) {
+    if (isset($_SESSION['user_id'])) {
+        require_once __DIR__ . '/../database/db.php';
+        $userRow = dbFetchOne("SELECT * FROM users WHERE id = ?", [$_SESSION['user_id']]);
+        if ($userRow) {
+            $userRow['verified'] = !empty($userRow['is_verified']);
+            $_SESSION['user'] = $userRow;
+        }
+    }
+}
+
+if (!isset($_SESSION['user'])) {
     $_SESSION['user'] = [
+        'id' => 2,
         'name' => 'Vishal Patel',
         'email' => 'vishal.patel@example.com',
         'phone' => '+91 98765 43210',
@@ -342,6 +354,39 @@ function getPropertiesData() {
     ];
 }
 
+if (!function_exists('isTestUser')) {
+    function isTestUser() {
+        $email = $_SESSION['user']['email'] ?? ($_SESSION['user_email'] ?? '');
+        $id = (int)($_SESSION['user']['id'] ?? ($_SESSION['user_id'] ?? 0));
+        return ($email === 'vishal.patel@example.com' || $id === 2);
+    }
+}
+
+// For new/custom users: give completely empty account (no mock or test data)
+if (!isTestUser()) {
+    require_once __DIR__ . '/../database/db.php';
+    $userId = function_exists('getLoggedInUserId') ? getLoggedInUserId() : ($_SESSION['user']['id'] ?? ($_SESSION['user_id'] ?? 0));
+    if (!isset($_SESSION['user_bookings'])) {
+        $_SESSION['user_bookings'] = ($userId > 0) ? (dbFetchAll("SELECT b.*, p.title as property_title, p.type as property_type, p.area as location, u.name as owner_name, u.phone as owner_phone 
+                                                                 FROM bookings b 
+                                                                 JOIN properties p ON b.property_id = p.id 
+                                                                 JOIN users u ON p.owner_id = u.id 
+                                                                 WHERE b.user_id = ?", [$userId]) ?: []) : [];
+    }
+    if (!isset($_SESSION['user_compare'])) {
+        $_SESSION['user_compare'] = [];
+    }
+    if (!isset($_SESSION['user_chats'])) {
+        $_SESSION['user_chats'] = [];
+    }
+    if (!isset($_SESSION['user_notifications'])) {
+        $_SESSION['user_notifications'] = [];
+    }
+    if (!isset($_SESSION['user_reviews'])) {
+        $_SESSION['user_reviews'] = [];
+    }
+} else {
+// Test Account (Vishal Patel) Pre-seeded Mock Datasets
 // ============================================================
 // USER BOOKINGS DATASET
 // ============================================================
@@ -429,11 +474,27 @@ if (!isset($_SESSION['user_bookings'])) {
 }
 
 // ============================================================
-// USER WISHLIST DATASET
+// USER WISHLIST DATASET (DB BACKED)
 // ============================================================
-if (!isset($_SESSION['user_wishlist'])) {
-    $_SESSION['user_wishlist'] = [101, 102, 103, 104, 201, 301];
+if (!function_exists('loadUserWishlistFromDb')) {
+    function loadUserWishlistFromDb($userId = null) {
+        if (!$userId) {
+            $userId = function_exists('getLoggedInUserId') ? getLoggedInUserId() : ($_SESSION['user_id'] ?? ($_SESSION['user']['id'] ?? 2));
+        }
+        require_once __DIR__ . '/../database/db.php';
+        try {
+            $dbWishes = dbFetchAll("SELECT property_id FROM wishlists WHERE user_id = ?", [$userId]);
+            $ids = array_map(function($r) { return (int)$r['property_id']; }, $dbWishes ?: []);
+            $_SESSION['user_wishlist'] = $ids;
+            return $ids;
+        } catch (Exception $e) {
+            return $_SESSION['user_wishlist'] ?? [];
+        }
+    }
 }
+
+// Always load user wishlist from database
+loadUserWishlistFromDb();
 
 // ============================================================
 // USER COMPARE DATASET
@@ -571,6 +632,7 @@ if (!isset($_SESSION['user_reviews'])) {
         ]
     ];
 }
+} // End if (isTestUser())
 
 // ============================================================
 // HELPER FUNCTIONS

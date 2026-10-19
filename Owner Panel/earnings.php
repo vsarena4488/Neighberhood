@@ -53,17 +53,26 @@ require_once __DIR__ . '/includes/sidebar.php';
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($txns as $tx): ?>
+            <?php if (empty($txns)): ?>
               <tr>
-                <td><strong class="text-royal-blue"><?= htmlspecialchars($tx['id']) ?></strong></td>
-                <td><?= htmlspecialchars($tx['date']) ?></td>
-                <td><strong class="text-dark"><?= htmlspecialchars($tx['tenant']) ?></strong></td>
-                <td><?= htmlspecialchars($tx['property']) ?></td>
-                <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($tx['type']) ?></span></td>
-                <td><span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1"><i class="fas fa-check-circle me-1"></i> <?= htmlspecialchars($tx['status']) ?></span></td>
-                <td class="text-end"><strong class="text-success fs-6">+ ₹<?= number_format($tx['amount']) ?></strong></td>
+                <td colspan="7" class="text-center py-4 text-muted">
+                  <i class="fas fa-receipt fs-4 text-secondary mb-2 d-block"></i>
+                  No transaction history found yet. Payouts will appear once tenants book your properties.
+                </td>
               </tr>
-            <?php endforeach; ?>
+            <?php else: ?>
+              <?php foreach ($txns as $tx): ?>
+                <tr>
+                  <td><strong class="text-royal-blue"><?= htmlspecialchars($tx['id']) ?></strong></td>
+                  <td><?= htmlspecialchars($tx['date']) ?></td>
+                  <td><strong class="text-dark"><?= htmlspecialchars($tx['tenant']) ?></strong></td>
+                  <td><?= htmlspecialchars($tx['property']) ?></td>
+                  <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($tx['type']) ?></span></td>
+                  <td><span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1"><i class="fas fa-check-circle me-1"></i> <?= htmlspecialchars($tx['status']) ?></span></td>
+                  <td class="text-end"><strong class="text-success fs-6">+ ₹<?= number_format($tx['amount']) ?></strong></td>
+                </tr>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </tbody>
         </table>
       </div>
@@ -80,19 +89,19 @@ require_once __DIR__ . '/includes/sidebar.php';
           <form action="earnings.php" method="POST" onsubmit="alert('Withdrawal request of ₹' + document.getElementById('withdrawAmt').value + ' submitted successfully!');">
             <div class="modal-body p-4">
               <div class="p-3 bg-soft-lavender rounded-3 mb-3 text-royal-blue extra-small">
-                Available Withdrawable Balance: <strong class="fs-6">₹<?= number_format($earnings['withdrawable'] ?? 65000) ?></strong>
+                Available Withdrawable Balance: <strong class="fs-6">₹<?= number_format($earnings['withdrawable'] ?? 0) ?></strong>
               </div>
 
               <div class="mb-3">
                 <label class="form-label small fw-bold text-secondary mb-1">Withdrawal Amount (₹) *</label>
-                <input type="number" id="withdrawAmt" name="amount" class="form-control rounded-3" value="25000" max="<?= $earnings['withdrawable'] ?? 65000 ?>" required />
+                <input type="number" id="withdrawAmt" name="amount" class="form-control rounded-3" value="<?= min(25000, (int)($earnings['withdrawable'] ?? 0)) ?>" min="0" max="<?= (int)($earnings['withdrawable'] ?? 0) ?>" required />
               </div>
 
               <div class="mb-3">
                 <label class="form-label small fw-bold text-secondary mb-1">Select Bank Account / UPI ID *</label>
                 <select class="form-select rounded-3">
-                  <option value="bank" selected>HDFC Bank (A/C: XXXX-XXXX-4891)</option>
-                  <option value="upi">UPI ID (rajesh@okicici)</option>
+                  <option value="bank" selected>Bank Account (Primary Linked A/C)</option>
+                  <option value="upi">UPI ID (<?= htmlspecialchars(strtolower(preg_replace('/[^a-zA-Z0-9]/', '', explode(' ', $owner['name'] ?? 'owner')[0]))) ?>@upi)</option>
                 </select>
               </div>
             </div>

@@ -1,13 +1,26 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/database/db.php';
+
+$userId = function_exists('getLoggedInUserId') ? getLoggedInUserId() : ($_SESSION['user_id'] ?? ($_SESSION['user']['id'] ?? 2));
 
 // Handle Wishlist Removal
 if (isset($_GET['remove'])) {
   $remId = intval($_GET['remove']);
-  $_SESSION['user_wishlist'] = array_values(array_diff($_SESSION['user_wishlist'], [$remId]));
+  if ($userId && $remId) {
+    dbExecute("DELETE FROM wishlists WHERE user_id = ? AND property_id = ?", [$userId, $remId]);
+  }
+  loadUserWishlistFromDb($userId);
+  header("Location: wishlist.php");
+  exit;
 }
 if (isset($_GET['clear'])) {
-  $_SESSION['user_wishlist'] = [];
+  if ($userId) {
+    dbExecute("DELETE FROM wishlists WHERE user_id = ?", [$userId]);
+  }
+  loadUserWishlistFromDb($userId);
+  header("Location: wishlist.php");
+  exit;
 }
 
 $pageTitle = 'My Wishlist · NeighborNest';
@@ -15,7 +28,7 @@ require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/includes/sidebar.php';
 
 $allProperties = getPropertiesData();
-$wishlistIds = $_SESSION['user_wishlist'] ?? [];
+$wishlistIds = loadUserWishlistFromDb($userId);
 $wishlistItems = [];
 
 foreach ($wishlistIds as $wid) {

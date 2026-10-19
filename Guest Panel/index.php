@@ -822,47 +822,11 @@
         <span>NeighborHood</span>
       </a>
 
-      <!-- City Selector Dropdown in Navbar (Desktop) -->
-      <div class="ms-lg-3 me-auto d-none d-sm-flex align-items-center">
-        <div class="dropdown">
-          <button class="city-select-pill dropdown-toggle" type="button" id="navCityDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-location-dot text-bright-indigo"></i>
-            <span id="selected-nav-city">Bangalore</span>
-          </button>
-          <ul class="dropdown-menu shadow-lg border-0 rounded-4 mt-2" aria-labelledby="navCityDropdown" id="navbar-city-menu">
-            <li>
-              <h6 class="dropdown-header text-uppercase fs-xs">Select City Hub</h6>
-            </li>
-            <li><a class="dropdown-item city-option-btn active" href="javascript:void(0)" data-city="Bangalore"><i class="fas fa-city me-2 text-primary"></i> Bangalore</a></li>
-            <li><a class="dropdown-item city-option-btn" href="javascript:void(0)" data-city="Mumbai"><i class="fas fa-city me-2 text-primary"></i> Mumbai</a></li>
-            <li><a class="dropdown-item city-option-btn" href="javascript:void(0)" data-city="Delhi"><i class="fas fa-city me-2 text-primary"></i> Delhi / NCR</a></li>
-            <li><a class="dropdown-item city-option-btn" href="javascript:void(0)" data-city="Pune"><i class="fas fa-city me-2 text-primary"></i> Pune</a></li>
-            <li><a class="dropdown-item city-option-btn" href="javascript:void(0)" data-city="Hyderabad"><i class="fas fa-city me-2 text-primary"></i> Hyderabad</a></li>
-            <li><a class="dropdown-item city-option-btn" href="javascript:void(0)" data-city="Chennai"><i class="fas fa-city me-2 text-primary"></i> Chennai</a></li>
-            <li><a class="dropdown-item city-option-btn" href="javascript:void(0)" data-city="Noida"><i class="fas fa-city me-2 text-primary"></i> Noida / Gurgaon</a></li>
-          </ul>
-        </div>
-      </div>
-
       <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarContent">
-        <!-- Mobile City Selector -->
-        <div class="d-sm-none my-3 pt-2 border-top">
-          <label class="form-label small fw-bold text-secondary-custom mb-1"><i class="fas fa-location-dot text-bright-indigo me-1"></i> Current City:</label>
-          <select id="mobile-nav-city-select" class="form-select rounded-3 py-2 fw-medium">
-            <option value="Bangalore" selected>Bangalore</option>
-            <option value="Mumbai">Mumbai</option>
-            <option value="Delhi">Delhi / NCR</option>
-            <option value="Pune">Pune</option>
-            <option value="Hyderabad">Hyderabad</option>
-            <option value="Chennai">Chennai</option>
-            <option value="Noida">Noida / Gurgaon</option>
-          </select>
-        </div>
-
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-1">
           <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
@@ -875,7 +839,7 @@
             <a href="login.php" class="btn btn-nh-outline btn-sm">Log In</a>
           </li>
           <li class="nav-item mt-2 mt-lg-0">
-            <a href="register.php" class="btn btn-nh-primary btn-sm">List Property Free</a>
+            <a href="register.php" class="btn btn-nh-primary btn-sm">Register</a>
           </li>
         </ul>
       </div>
@@ -2368,8 +2332,9 @@
 
       currentCity = citySelect;
 
-      // Sync navbar city title
-      document.getElementById("selected-nav-city").innerText = citySelect;
+      // Sync navbar city title if present
+      const navCitySpan = document.getElementById("selected-nav-city");
+      if (navCitySpan) navCitySpan.innerText = citySelect;
       const listingLabel = document.getElementById("listing-count-label");
 
       let filtered = PROPERTIES_DATA.filter(p => {

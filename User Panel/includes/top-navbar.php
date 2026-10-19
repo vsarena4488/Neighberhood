@@ -81,7 +81,7 @@ $notificationsList = $_SESSION['user_notifications'] ?? [];
       <button class="btn btn-light topbar-profile-btn d-flex align-items-center gap-2 py-1 ps-1 pe-3 rounded-pill border bg-white shadow-sm" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         <img src="<?= htmlspecialchars($user['avatar'] ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80') ?>" alt="<?= htmlspecialchars($user['name'] ?? 'User') ?>" class="topbar-user-avatar" />
         <div class="text-start d-none d-md-block">
-          <span class="d-block small fw-bold text-dark lh-1"><?= htmlspecialchars($user['name'] ?? 'Vishal Patel') ?></span>
+          <span class="d-block small fw-bold text-dark lh-1"><?= htmlspecialchars($user['name'] ?? 'User') ?></span>
           <span class="fs-xs text-secondary-custom">Student / Tenant</span>
         </div>
         <i class="fas fa-chevron-down fs-xs text-muted ms-1"></i>
@@ -89,8 +89,8 @@ $notificationsList = $_SESSION['user_notifications'] ?? [];
 
       <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2" style="min-width: 220px;" aria-labelledby="userMenuDropdown">
         <li class="p-2 border-bottom mb-1">
-          <strong class="d-block small text-dark"><?= htmlspecialchars($user['name'] ?? 'Vishal Patel') ?></strong>
-          <span class="extra-small text-muted text-truncate d-block"><?= htmlspecialchars($user['email'] ?? 'vishal.patel@example.com') ?></span>
+          <strong class="d-block small text-dark"><?= htmlspecialchars($user['name'] ?? 'User') ?></strong>
+          <span class="extra-small text-muted text-truncate d-block"><?= htmlspecialchars($user['email'] ?? '') ?></span>
         </li>
         <li><a class="dropdown-item rounded-3 small py-2" href="profile.php"><i class="fas fa-user me-2 text-primary"></i> My Profile</a></li>
         <li><a class="dropdown-item rounded-3 small py-2" href="bookings.php"><i class="fas fa-calendar-check me-2 text-primary"></i> My Bookings</a></li>

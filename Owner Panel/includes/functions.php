@@ -7,7 +7,19 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Ensure default mock owner session exists
 if (!isset($_SESSION['owner'])) {
+    if (isset($_SESSION['user_id'])) {
+        require_once __DIR__ . '/../database/db.php';
+        $userRow = dbFetchOne("SELECT * FROM users WHERE id = ?", [$_SESSION['user_id']]);
+        if ($userRow) {
+            $userRow['verified'] = !empty($userRow['is_verified']);
+            $_SESSION['owner'] = $userRow;
+        }
+    }
+}
+
+if (!isset($_SESSION['owner'])) {
     $_SESSION['owner'] = [
+        'id' => 3,
         'name' => 'Rajesh Sharma',
         'email' => 'rajesh.sharma@neighborhood.com',
         'phone' => '+91 98765 43210',
@@ -28,6 +40,48 @@ if (!isset($_SESSION['owner'])) {
     ];
 }
 
+if (!function_exists('isTestOwner')) {
+    function isTestOwner() {
+        $email = $_SESSION['owner']['email'] ?? ($_SESSION['user_email'] ?? '');
+        $id = (int)($_SESSION['owner']['id'] ?? ($_SESSION['user_id'] ?? 0));
+        return ($email === 'rajesh.sharma@neighborhood.com' || $id === 3);
+    }
+}
+
+// For new/custom owners: give completely empty account (no mock or test data)
+if (!isTestOwner()) {
+    require_once __DIR__ . '/../database/db.php';
+    $ownerId = function_exists('getLoggedInOwnerId') ? getLoggedInOwnerId() : ($_SESSION['owner']['id'] ?? ($_SESSION['user_id'] ?? 0));
+    if (!isset($_SESSION['owner_properties'])) {
+        $_SESSION['owner_properties'] = ($ownerId > 0) ? (dbFetchAll("SELECT * FROM properties WHERE owner_id = ?", [$ownerId]) ?: []) : [];
+    }
+    if (!isset($_SESSION['owner_bookings'])) {
+        $_SESSION['owner_bookings'] = ($ownerId > 0) ? (dbFetchAll("SELECT b.*, p.title as property_title, u.name as tenant_name, u.email as tenant_email, u.phone as tenant_phone 
+                                                 FROM bookings b 
+                                                 JOIN properties p ON b.property_id = p.id 
+                                                 JOIN users u ON b.user_id = u.id 
+                                                 WHERE p.owner_id = ?", [$ownerId]) ?: []) : [];
+    }
+    if (!isset($_SESSION['owner_earnings'])) {
+        $_SESSION['owner_earnings'] = [
+            'total_lifetime' => 0,
+            'this_month' => 0,
+            'pending_escrow' => 0,
+            'withdrawable' => 0,
+            'transactions' => []
+        ];
+    }
+    if (!isset($_SESSION['owner_reviews'])) {
+        $_SESSION['owner_reviews'] = [];
+    }
+    if (!isset($_SESSION['owner_chats'])) {
+        $_SESSION['owner_chats'] = [];
+    }
+    if (!isset($_SESSION['owner_notifications'])) {
+        $_SESSION['owner_notifications'] = [];
+    }
+} else {
+// Test Account (Rajesh Sharma) Pre-seeded Mock Datasets
 // Master Properties Dataset for Owner
 if (!isset($_SESSION['owner_properties'])) {
     $_SESSION['owner_properties'] = [
@@ -403,6 +457,7 @@ if (!isset($_SESSION['owner_notifications'])) {
         ]
     ];
 }
+} // End if (isTestOwner())
 
 // Helper Functions
 function getUnreadOwnerMessagesCount() {

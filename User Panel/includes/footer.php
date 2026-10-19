@@ -133,20 +133,81 @@ $bookingsCount = count($_SESSION['user_bookings'] ?? []);
       });
 
       // ============================================
-      // WISHLIST TOGGLE
+      // WISHLIST TOGGLE (AJAX + DATABASE SYNC)
       // ============================================
       window.toggleWishlist = function(propertyId, btnElement) {
+        if (!propertyId) return;
+
         const icon = btnElement ? btnElement.querySelector("i") : null;
-        if (icon) {
-          if (icon.classList.contains("fas")) {
-            icon.classList.remove("fas", "text-danger");
-            icon.classList.add("far");
+        const textNode = btnElement ? Array.from(btnElement.childNodes).find(n => n.nodeType === 3 && n.textContent.trim().length > 0) : null;
+
+        // Optimistic UI toggle
+        const isCurrentlyActive = btnElement && (btnElement.classList.contains("active") || (icon && icon.classList.contains("fas")));
+
+        if (btnElement) {
+          if (isCurrentlyActive) {
+            btnElement.classList.remove("active");
+            if (icon) {
+              icon.classList.remove("fas", "text-danger");
+              icon.classList.add("far");
+            }
+            if (textNode) textNode.textContent = ' Wishlist';
           } else {
-            icon.classList.remove("far");
-            icon.classList.add("fas", "text-danger");
+            btnElement.classList.add("active");
+            if (icon) {
+              icon.classList.remove("far");
+              icon.classList.add("fas", "text-danger");
+            }
+            if (textNode) textNode.textContent = ' Saved';
           }
         }
-        console.log('🔄 Toggled wishlist for property:', propertyId);
+
+        // Send AJAX request to wishlist-toggle.php
+        const formData = new FormData();
+        formData.append('property_id', propertyId);
+
+        fetch('wishlist-toggle.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.status) {
+            const isWishlisted = (data.status === 'added');
+            if (btnElement) {
+              if (isWishlisted) {
+                btnElement.classList.add("active");
+                if (icon) {
+                  icon.classList.remove("far");
+                  icon.classList.add("fas", "text-danger");
+                }
+                if (textNode) textNode.textContent = ' Saved';
+              } else {
+                btnElement.classList.remove("active");
+                if (icon) {
+                  icon.classList.remove("fas", "text-danger");
+                  icon.classList.add("far");
+                }
+                if (textNode) textNode.textContent = ' Wishlist';
+              }
+            }
+
+            // Update badge counters across the page (sidebar, dashboard, etc.)
+            document.querySelectorAll('#sidebarWishlistBadge, .sidebar-badge-wishlist, .wishlist-counter').forEach(badge => {
+              badge.textContent = data.count;
+              if (badge.id === 'sidebarWishlistBadge' || badge.classList.contains('sidebar-badge')) {
+                badge.style.display = (data.count > 0) ? 'inline-block' : 'none';
+              }
+            });
+
+            console.log('✅ Wishlist database updated:', data.status, 'Property ID:', propertyId, 'Total:', data.count);
+          } else {
+            console.error('Wishlist toggle error:', data);
+          }
+        })
+        .catch(err => {
+          console.error('Wishlist fetch error:', err);
+        });
       };
 
       // ============================================
